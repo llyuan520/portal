@@ -7,7 +7,7 @@ import React from 'react'
 import { Route,Redirect,Switch } from 'react-router-dom';
 import {RouteWithSubRoutes} from './components'
 import {Layout} from 'antd'
-import {Home,About} from './modules';
+import {Home} from './modules';
 
 const PageNotFoundComponent =  ()=><div> 404 </div>;
 
