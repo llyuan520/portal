@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Layout} from 'antd';
+import {Layout,BackTop } from 'antd';
 import {Headers,Footers} from './components';
 import MainRoutes from './routes';
 
@@ -12,13 +12,16 @@ class App extends Component {
 
                 <Headers />
 
-                <Content style={{ padding: '0 50px' }}>
-                    <div className="mediaWidth" style={{ background: '#fff', padding: 24, minHeight: 280 }}>
-                        <MainRoutes />
-                    </div>
+                <Content>
+
+                    <MainRoutes />
+
                 </Content>
 
                 <Footers />
+
+
+                <BackTop />
 
             </Layout>
         );

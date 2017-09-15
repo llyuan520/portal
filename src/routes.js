@@ -19,11 +19,6 @@ const routes = [
         name:'首页'
     },
     {
-        path:'/about',
-        component:About,
-        name:'关于我们'
-    },
-    {
         path: '*',
         component: PageNotFoundComponent
     }
