@@ -7,7 +7,8 @@ import React from 'react'
 import { Route,Redirect,Switch } from 'react-router-dom';
 import {RouteWithSubRoutes} from './components'
 import {Layout} from 'antd'
-import {Home} from './modules';
+import {Home} from './modules/portal/home';
+import {SysManagement} from './modules/sysManagement/home';
 
 const PageNotFoundComponent =  ()=><div> 404 </div>;
 
@@ -16,9 +17,12 @@ const routes = [
     {
         path:'/home',
         component:Home,
-        name:'首页'
-    },
-    {
+        name:'门户首页'
+    },{
+        path:'/admin',
+        component:SysManagement,
+        name:'后台管理'
+    },{
         path: '*',
         component: PageNotFoundComponent
     }
@@ -47,4 +51,3 @@ const MainRoutes = () => (
 
 )
 export default MainRoutes
-

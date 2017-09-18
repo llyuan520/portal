@@ -17,6 +17,7 @@
  */
 import Symbol from 'core-js/es6/symbol';
 
+const __VERSION__ = '1.0.0';
 const __ls = Symbol('localStorage');
 const __store = Symbol('store');
 const __window = Symbol('window');

@@ -29,7 +29,7 @@ const data =[
 ]
 
 
-class Home extends Component{
+class SysManagement extends Component{
 
     state = {
         data : data,
@@ -41,7 +41,7 @@ class Home extends Component{
 
                  <div style={{background:'#fff', padding: '0 50px', }}>
                      <div className="mediaWidth" style={{  minHeight: 280 }}>
-                         供应链金融服务供应链金融服务供应链金融服务供应链金融服务
+                         后台首页
                      </div>
                  </div>
 
@@ -50,4 +50,4 @@ class Home extends Component{
      }
  }
 
- export default Home
+ export default SysManagement

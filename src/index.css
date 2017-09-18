@@ -3,6 +3,9 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+.p-main{
+  padding: 0 50px;
+}
 .mediaWidth{
   width:100%;
   max-width: 1500px !important;
