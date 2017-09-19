@@ -1,56 +1,72 @@
 /**
  * author       : liuliyuan
- * createTime   : 2017/9/15 11:07
+ * createTime   : 2017/9/19 18:42
  * description  :
  */
-import Store from '../store/es6-store';
+import storage from '../store/storage'
 
-// Add JWT methods here
-const parseJwt = token =>{
-    let base64Url = token.split('.')[1];
-    let base64 = base64Url.replace('-', '+').replace('_', '/');
-    return JSON.parse(window.atob(base64));
-    // return JSON.parse(decodeURIComponent(escape($window.atob(base64))));
-}
+const TOKEN = 'TOKEN'
+const USER = 'USER'
 
-const setToken = token =>{
-    Store.set('jwtToken', token);
-}
-
-const getToken = () =>{
-    return Store.get('jwtToken');
-}
-
-const setUser = user =>{
-    Store.set('currentUser', user);
-}
-
-const getUser = () =>{
-    return Store.get('currentUser');
-}
-
-const isAuthed = () =>{
-    let token = this.getToken();
-    let user = this.getUser();
-    if(token && user) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-const logout = () =>{
-    Store.remove('jwtToken');
-    Store.remove('currentUser');
-}
-
+let token = null
+let user = null
 
 export default {
-    parseJwt,
-    setToken,
-    getToken,
-    setUser,
-    getUser,
-    isAuthed,
-    logout
+    /**
+     * 是否登录
+     */
+    isLogin() {
+        return !!this.getToken()
+    },
+
+    /**
+     * 设置 token
+     * @param value {string} 值
+     */
+    setToken(value) {
+        token = value
+        storage.set(TOKEN, token)
+    },
+
+    /**
+     * 获取 token
+     */
+    getToken() {
+        return token || storage.get(TOKEN)
+    },
+
+    /**
+     * 设置用户
+     * @param value {string} 值
+     */
+    setUser(value) {
+        user = value
+        storage.set(USER, user)
+    },
+
+    /**
+     * 获取用户
+     */
+    getUser() {
+        return user || storage.get(USER)
+    },
+
+    /**
+     * 销毁 token 和 user
+     */
+    destroy() {
+        token = user = null
+        storage.remove(TOKEN)
+        storage.remove(USER)
+    },
+
+    /**
+     * 获取授权信息
+     */
+    getAuth() {
+        return {
+            auth: this.getToken(),
+            username: this.getUser().username
+        }
+    }
 }

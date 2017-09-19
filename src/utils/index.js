@@ -15,7 +15,7 @@ const getUrlParam = name =>{
 //获取url参数
 const getParameters = locationUrl =>{
     let url = decodeURI(locationUrl);//取访问地址url?后的部分
-    let obj = new Object(); //返回对象
+    let obj = {}; //返回对象
     let str;  //截取后的字符串
     let index = url.lastIndexOf('?');
     if(index !== -1) {
