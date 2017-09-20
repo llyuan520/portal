@@ -6,7 +6,6 @@
 import React,{Component} from 'react';
 import { Spin,Card,Row,Col,Button} from 'antd';
 import {request} from '../../../utils'
-
 import logoImg from '../../../components/header/media/logo-02.png'
 
 class Cooperativebillin extends Component{
@@ -14,38 +13,84 @@ class Cooperativebillin extends Component{
     constructor(props){
         super(props)
         this.state= {
+            dataX:[
+                {
+                    title:'',
+                    imgUrl:logoImg,
+                },{
+                    title:'',
+                    imgUrl:logoImg,
+                },{
+                    title:'',
+                    imgUrl:logoImg,
+                },{
+                    title:'',
+                    imgUrl:logoImg,
+                },{
+                    title:'',
+                    imgUrl:logoImg,
+                },{
+                    title:'',
+                    imgUrl:logoImg,
+                },{
+                    title:'',
+                    imgUrl:logoImg,
+                },{
+                    title:'',
+                    imgUrl:logoImg,
+                }
+            ],
+            xyjJumpUrl:'',
+            dataP:[
+                {
+                    title:'',
+                    imgUrl:logoImg,
+                },{
+                    title:'',
+                    imgUrl:logoImg,
+                },{
+                    title:'',
+                    imgUrl:logoImg,
+                }
+            ],
+
+            pytJumpUrl:'',
             companyId: props.companyId,
             refLoading: false,
         }
 
     }
 
-    fetch = companyId => {
+    fetch = () => {
 
         this.mounted && this.setState({ refLoading: true });
-        request.get(`/get/${companyId}`, {
+        request.get(`/link/queryPath`, {
 
         }).then(({data}) => {
+            console.log(data);
 
-            setTimeout(() => {
+
+            /*this.state.setState({
+                pytJumpUrl: data.data.homePath
+            })*/
+
+           /* const homePath =   `${data.homePath}&redirect&settlement`, //票易通协同开票地址
+                  homePath2 =   data.homePat`  //发票管理*/
+
+
+            if (data.code === 200) {
                 this.mounted && this.setState({
+                    pytJumpUrl: `${data.data.homePath}&redirect&settlement`, //票易通协同开票地址
                     refLoading: false,
                 });
-            }, 3000);
-
-            /*if (data.code === 200) {
-                this.mounted && this.setState({
-                    companyInfoData: {...data.data},
-                    refLoading: false,
-                });
-            }*/
+            }
 
         });
     }
 
     componentDidMount() {
 
-       this.fetch(this.state.companyId);
+       this.fetch();
 
     }
 
@@ -58,7 +103,7 @@ class Cooperativebillin extends Component{
     componentWillReceiveProps(nextProps){
 
         if(nextProps.companyId !== this.state.companyId){
-            this.fetch(nextProps.companyId);
+            this.fetch();
         }
     }
 
@@ -70,34 +115,20 @@ class Cooperativebillin extends Component{
                         <h3>给<span className="c108ee9">万科、保利地产</span>开票入口</h3>
                         <Card noHovering className="p-billing-itme">
                             <Row gutter={24} className="p-billing-img">
-                                <Col span={6}>
-                                    <img alt="" src={logoImg} />
-                                </Col>
-                                <Col span={6}>
-                                    <img alt="" src={logoImg} />
-                                </Col>
-                                <Col span={6}>
-                                    <img alt="" src={logoImg} />
-                                </Col>
-                                <Col span={6}>
-                                    <img alt="" src={logoImg} />
-                                </Col>
-                                <Col span={6}>
-                                    <img alt="" src={logoImg} />
-                                </Col>
-                                <Col span={6}>
-                                    <img alt="" src={logoImg} />
-                                </Col>
-                                <Col span={6}>
-                                    <img alt="" src={logoImg} />
-                                </Col>
-                                <Col span={6}>
-                                    <img alt="" src={logoImg} />
-                                </Col>
+                                {
+                                    this.state.dataX.map((item,i)=>(
+                                        <Col key={i} span={6}>
+                                            <img alt={item.title} src={item.imgUrl} />
+                                        </Col>
+                                    ))
+                                }
                             </Row>
                             <Row style={{ marginTop: '20px' }}>
                                 <Col span={24} style={{ textAlign: 'center' }}>
-                                    <Button type="primary" className="p-link-btn">协同开票</Button>
+                                    <a href={this.state.xyjJumpUrl} target="_blank">
+                                        <Button type="primary" className="p-link-btn">协同开票</Button>
+                                    </a>
+
                                 </Col>
                             </Row>
                         </Card>
@@ -108,19 +139,19 @@ class Cooperativebillin extends Component{
                         </h3>
                         <Card noHovering className="p-billing-itme">
                             <Row gutter={24} className="p-billing-img">
-                                <Col span={6}>
-                                    <img alt="" src={logoImg} />
-                                </Col>
-                                <Col span={6}>
-                                    <img alt="" src={logoImg} />
-                                </Col>
-                                <Col span={6}>
-                                    <img alt="" src={logoImg} />
-                                </Col>
+                                {
+                                    this.state.dataP.map((item,i)=>(
+                                        <Col key={i} span={6}>
+                                            <img alt={item.title} src={item.imgUrl} />
+                                        </Col>
+                                    ))
+                                }
                             </Row>
                             <Row style={{ marginTop: '20px' }}>
                                 <Col span={24} style={{ textAlign: 'center' }}>
-                                    <Button type="primary" className="p-link-btn">协同开票</Button>
+                                     <a href={this.state.pytJumpUrl} target="_blank">
+                                        <Button type="primary" className="p-link-btn">协同开票</Button>
+                                    </a>
                                 </Col>
                             </Row>
                         </Card>

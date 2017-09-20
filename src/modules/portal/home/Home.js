@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react';
-import { Layout,Spin} from 'antd';
+import { Layout} from 'antd';
 import CompanyInformation from './CompanyInformation'
 import BiddingInformation from './BiddingInformation'
 import InvoiceManagement from './InvoiceManagement'
@@ -93,7 +93,7 @@ class Home extends Component{
 
                          <div key={i} id={item.anchorId} className="p-main" style={{ background: i%2 !== 0  ? '' : '#fff' }}>
                              <div className="mediaWidth" style={{  padding: '40px 0' }}>
-                                 <h1 className="p-context-title" style={{color:item.color,borderLeft: `5px solid ${item.color}` }}> {item.title} --- {this.state.companyId}
+                                 <h1 className="p-context-title" style={{color:item.color,borderLeft: `5px solid ${item.color}` }}> {item.title}
                                      {
                                          item.title.indexOf('招标信息') !== -1 &&  <span style={{color:'#ddd',fontSize:12}}>
                                                      （推荐来自<span className="c108ee9">万科、保利地产、深圳地铁集团</span>等最新招标信息）

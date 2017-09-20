@@ -9,90 +9,89 @@ import {request,fMoney} from '../../../utils'
 
 const Option = Select.Option;
 
-const data =[
-    {
-        icon:'file',
-        title:'协同开票服务',
-        context:'24',
-        bgcolor:'#3ea5ff',
-        tage:'待开票',
-        btn:'去开票',
-        unit:'',
-        anchorHref:'#cooperativebillin',
-    },{
-        icon:'file',
-        title:'融资服务',
-        context:fMoney('123456789'),
-        bgcolor:'#00a136',
-        tage:'可融资金额',
-        btn:'去融资',
-        unit:'(元)',
-        anchorHref:'#',
-    },{
-        icon:'file',
-        title:'税务服务',
-        context:'国税申报、涉税查询',
-        bgcolor:'#6854a3',
-        tage:'',
-        btn:'去咨询',
-        unit:'(条)',
-        anchorHref:'#',
-    },{
-        icon:'file',
-        title:'最新招标服务',
-        context:'12',
-        bgcolor:'#ff9932',
-        tage:'与您最匹配的招标信息',
-        btn:'去招标',
-        unit:'',
-        anchorHref:'#biddingInformation',
-    },{
-        icon:'file',
-        title:'开票产品服务',
-        context: '协同直连400元/月',
-        bgcolor:'#428fb9',
-        tage:'当前使用产品',
-        btn:'去续费',
-        unit:'(可用30天)',
-        anchorHref:'#',
-    }
-]
-
-const projectCompany=[
-    {
-        companyId:'397',
-        companyName:'17爆款哑光磨砂果冻包'
-    },{
-        companyId:'143598',
-        companyName:'150cm小个子女装'
-    },{
-        companyId:'1904',
-        companyName:'17年爆款雪纺长裙'
-    },{
-        companyId:'19852',
-        companyName:'145cm女装'
-    },{
-        companyId:'447725',
-        companyName:'10元以下包邮 天天特价'
-    },{
-        companyId:'880',
-        companyName:'1岁宝宝秋装男'
-    }
-]
-
-
 
 class CompanyInformation extends Component{
     constructor(props) {
         super(props)
         this.state = {
+
             companyId: props.companyId,
-            projectCompany:[],
-            refLoading: false,
+            userId: 'admin',
+
+            companyList:[],
+            companyCode:'',
+            companyName:'',
+            selectCompanyCode:'',
+            selectCompanyName:'',
+
+            companyListKey: Date.now(),
             companyLoading: false,
             companyVisible: false,
-            coreCompanyLoaded:false,
+            companyListLoaded:false,
+
+            data : [
+                {
+                    icon:'file',
+                    title:'协同开票服务',
+                    productName:'',
+                    bgcolor:'#3ea5ff',
+                    tage:'待开票',
+                    btn:'去开票',
+                    unit:'',
+                    anchorHref:'#cooperativebillin',
+                    apiUrl:'/indexMessageOutline/queryDelayMakeInvoiceCount/',
+                    refLoading:false,
+                },{
+                    icon:'file',
+                    title:'融资服务',
+                    productName:fMoney('123456789'),
+                    bgcolor:'#00a136',
+                    tage:'可融资金额',
+                    btn:'去融资',
+                    unit:'',
+                    anchorHref:'#',
+                    apiUrl:'',
+                    refLoading:false,
+                },{
+                    icon:'file',
+                    title:'税务服务',
+                    productName:'国税申报、涉税查询',
+                    bgcolor:'#6854a3',
+                    tage:'',
+                    btn:'去咨询',
+                    unit:'',
+                    anchorHref:'#',
+                    apiUrl:'',
+                    refLoading:false,
+                },{
+                    icon:'file',
+                    title:'最新招标服务',
+                    productName:'12',
+                    bgcolor:'#ff9932',
+                    tage:'与您最匹配的招标信息',
+                    btn:'去招标',
+                    unit:'',
+                    anchorHref:'#biddingInformation',
+                    apiUrl:'',
+                    refLoading:false,
+                },{
+                    icon:'file',
+                    title:'开票产品服务',
+                    productName: '协同直连400元/月',
+                    bgcolor:'#428fb9',
+                    tage:'当前使用产品',
+                    btn:'去续费',
+                    unit:'',
+                    anchorHref:'#',
+                    apiUrl:'/indexMessageOutline/queryTOpsOrder/',
+                    refLoading:false,
+                }
+            ]
         }
+    }
+
+    static defaultProps = {
+        //companyId : '049d332afcae4fcc91de49c6bf94f267',
     }
 
     showModal = () => {
@@ -103,39 +102,117 @@ class CompanyInformation extends Component{
 
     handleOk = () => {
         this.setState({ companyLoading: true });
-        //setTimeout(() => {
-            this.setState({
-                companyLoading: false,
-                companyVisible: false,
-            },()=>{
-                this.props.changeCompanyId(this.state.companyId);
-            });
-            console.log(this.state.companyId);
 
-        //}, 3000);
-        this.fetch(this.state.companyId);
+        this.setState({
+            companyLoading: false,
+            companyVisible: false,
+        },()=>{
+            this.mounted && this.setState({
+                companyCode: this.state.selectCompanyCode,
+                companyName: this.state.selectCompanyName,
+            })
+
+            this.props.changeCompanyId(this.state.selectCompanyCode);
+        });
+
+        //切换公司之后调用
+        this.getAllFetch(this.state.selectCompanyName);
     }
 
     handleCancel = () => {
         this.setState({
-            companyVisible: false
+            companyVisible: false,
+            companyListKey: Date.now()+1,
         });
     }
 
     handleChange = value =>{
         this.setState({
-            companyId: value
+            selectCompanyCode: value.key,
+            selectCompanyName: value.label
         })
+    }
+
+    //根据companyName 获取所有信息
+    getAllFetch = companyCode =>{
+        const cartDate = this.state.data;
+        for(let i=0; i<cartDate.length; i++){
+            if(cartDate[i].apiUrl !== ''){
+
+                cartDate[i].refLoading = true;
+                this.mounted && this.setState({  data: cartDate });
+
+                request.get(`${cartDate[i].apiUrl}${companyCode}`, {
+                }).then(({data}) => {
+
+                    if (data.code === 200) {
+                        if(typeof(data.data) === 'string'){
+                            cartDate[i].productName = data.data;
+                            cartDate[i].refLoading = false;
+                        }else{
+                            //console.log(data);
+                            cartDate[i].productName = data.data.productName;
+                            switch(i)
+                            {
+                                case 1:
+                                    cartDate[i].unit = `${data.data.daysRemaining}(元)`;
+                                    break;
+                                case 3:
+                                    cartDate[i].unit = `${data.data.daysRemaining} (条)`;
+                                    break;
+                                case 4:
+                                    cartDate[i].unit = `(可用${data.data.daysRemaining}天)`;
+                                    break;
+                                default:
+                                    cartDate[i].unit = data.data.daysRemaining;
+                            }
+                            cartDate[i].refLoading = false;
+                        }
+                        this.mounted && this.setState({  data: cartDate });
+                    }
+
+                });
+            }
+        }
+
+    }
+
+    //获取供应商公司列表信息
+    getCompanyListFetch = (userId)=>{
+        request.get(`/indexMessageOutline/queryCompanyList/${userId}`)
+            .then((res)=>{
+                if(res.data.code ===200){
+
+                    this.mounted && this.setState({
+                        companyList:res.data.data,
+                        companyListLoaded: true,
+                    },()=>{
+                        this.mounted && this.setState({
+                            companyCode: this.state.companyList[0].companyCode,
+                            companyName: this.state.companyList[0].companyName,
+                        },()=>{
+                            this.getAllFetch(this.state.companyCode);
+                        })
+                    })
+
+                }
+            })
+            .catch(err=>{
+                this.mounted && this.setState({
+                    companyListLoaded:true
+                })
+            })
     }
 
     renderCompanyIdSelector(){
 
-        const options = projectCompany.map(item => <Option  key={item.companyId} >{item.companyName}</Option>);
+        const options = this.state.companyList.map(item => <Option key={item.companyCode} >{item.companyName}</Option>);
         return(
-            <Spin size='small' spinning={!this.state.coreCompanyLoaded}>
+            <Spin size='small' spinning={!this.state.companyListLoaded} key={this.state.companyListKey}>
                 <Select
                     showSearch
-                    defaultValue={this.state.companyId}
+                    labelInValue={true}
+                    defaultValue={{ key: this.state.companyCode,label: this.state.companyName }}
                     style={{ width: '100%' }}
                     placeholder="请选择公司名称"
                     optionFilterProp="children"
@@ -150,7 +227,22 @@ class CompanyInformation extends Component{
         )
     }
 
+    componentDidMount() {
 
+        //this.state.companyId &&
+        this.getCompanyListFetch(this.state.userId);
+
+    }
+
+    mounted = true;
+
+    componentWillUnmount(){
+        this.mounted = null;
+    }
+
+    componentWillReceiveProps(nextProps){
+
+    }
 
     handleClickAnchor=(href)=>{
 
@@ -182,7 +274,6 @@ class CompanyInformation extends Component{
                 let scrollT = document.body.scrollTop|| document.documentElement.scrollTop
                 let step = Math.floor(300/3*0.7);
                 document.documentElement.scrollTop = document.body.scrollTop = step + scrollT;
-                console.log(scrollT)
                 if(scrollT >= target){
                     document.body.scrollTop = document.documentElement.scrollTop = target;
                     clearTimeout(timer);
@@ -203,84 +294,16 @@ class CompanyInformation extends Component{
         }
     }
 
-
-    fetch = companyId => {
-
-        this.mounted && this.setState({ refLoading: true });
-        request.get(`/get/${companyId}`, {
-
-        }).then(({data}) => {
-
-            //setTimeout(() => {
-                this.mounted && this.setState({
-                    refLoading: false,
-                });
-            //}, 3000);
-
-            /*if (data.code === 200) {
-                this.mounted && this.setState({
-                    companyInfoData: {...data.data},
-                    refLoading: false,
-                });
-            }*/
-
-        });
-    }
-
-    getCompanyIdFetch = ()=>{
-        request.get('/core_enterprises')
-            .then(res=>{
-
-                setTimeout(() => {
-                    this.mounted && this.setState({
-                        coreCompanyLoaded:true,
-                        projectCompany: projectCompany,
-                    })
-                }, 5000);
-
-                /*if(res.data.code ===200){
-
-                    this.mounted && this.setState({
-                        coreCompany:res.data.data
-                    })
-
-                }*/
-            })
-            .catch(err=>{
-                this.mounted && this.setState({
-                    coreCompanyLoaded:true
-                })
-            })
-    }
-
-    componentDidMount() {
-
-        this.fetch(this.state.companyId);
-        this.state.companyId && this.getCompanyIdFetch();
-
-    }
-
-    mounted = true;
-
-    componentWillUnmount(){
-        this.mounted = null;
-    }
-
-    componentWillReceiveProps(nextProps){
-
-    }
-
     render(){
 
         const { companyLoading, companyVisible } = this.state;
 
         return(
-            <Spin size='small' spinning={this.state.refLoading}>
                 <div className="p-main">
                     <div className="mediaWidth" style={{  padding: '40px 0' }}>
                         <h1 style={{marginBottom:20,color: '#08c'}}>
                             <Icon type="apple-o" style={{marginRight:10 }} />
-                            日立电梯（中国）有限公司
+                            {this.state.companyName}
                             <span style={{ fontWeight: 'normal',color: '#333',cursor: 'pointer'}} onClick={this.showModal}>
                                  【切换<Icon type="caret-down" style={{ fontSize: 12,marginTop: 5,verticalAlign: 'text-top'}} />】
                              </span>
@@ -288,9 +311,9 @@ class CompanyInformation extends Component{
                         <div className="p-product-main">
 
                             {
-                                data.map((item,i)=>{
+                                this.state.data.map((item,i)=>{
                                     return(
-                                        <Card key={i}  noHovering className="p-product" bordered={false} style={{background:item.bgcolor}}>
+                                        <Card key={i} loading={item.refLoading} noHovering className="p-product" bordered={false} style={{background:item.bgcolor}}>
                                             <h2>
                                                 <Icon type={item.icon} style={{ fontSize: 24, color: '#fff' }} />
                                                 <b>{item.title}</b>
@@ -298,7 +321,7 @@ class CompanyInformation extends Component{
                                             <h3>
                                                 <b>
                                                     {
-                                                        item.context
+                                                        item.productName
                                                     }
                                                 </b>
                                                 {item.unit}
@@ -345,8 +368,6 @@ class CompanyInformation extends Component{
                         </Modal>
                     </div>
                 </div>
-
-            </Spin>
         )
     }
 }

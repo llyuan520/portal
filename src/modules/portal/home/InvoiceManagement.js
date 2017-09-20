@@ -9,44 +9,69 @@ import {Link} from 'react-router-dom';
 import {request} from '../../../utils'
 import xxfp from './img/xxfp.png'
 
-
 class InvoiceManagement extends Component{
 
     constructor(props){
         super(props)
         this.state= {
+            data:[
+                {
+                    title:'销项发票管理',
+                    context:'管理已开具的增值税发票',
+                    imgUrl:xxfp,
+                    pathUrl:'',
+                },{
+                    title:'销项发票管理',
+                    context:'管理已开具的增值税发票',
+                    imgUrl:xxfp,
+                    pathUrl:'',
+                },{
+                    title:'销项发票管理',
+                    context:'管理已开具的增值税发票',
+                    imgUrl:xxfp,
+                    pathUrl:'',
+                },{
+                    title:'销项发票管理',
+                    context:'管理已开具的增值税发票',
+                    imgUrl:xxfp,
+                    pathUrl:'',
+                }
+            ],
+
             companyId: props.companyId,
             refLoading: false,
         }
 
     }
 
-    fetch = companyId => {
+    fetch = () => {
 
         this.mounted && this.setState({ refLoading: true });
-        request.get(`/get/${companyId}`, {
+        request.get(`/link/queryPath`, {
 
         }).then(({data}) => {
 
-            setTimeout(() => {
-                this.mounted && this.setState({
-                    refLoading: false,
-                });
-            }, 3000);
+            if (data.code === 200) {
 
-            /*if (data.code === 200) {
-                this.mounted && this.setState({
-                    companyInfoData: {...data.data},
-                    refLoading: false,
+                this.setState((prevState, props) => {
+                    const preDate = [...prevState.data];
+                    return {
+                        data:preDate.map(item=>{
+                            item['pathUrl'] = data.data.homePath; //发票管理
+                            return item;
+                        }),
+                        refLoading: false,
+                    };
                 });
-            }*/
+
+            }
 
         });
     }
 
     componentDidMount() {
 
-        this.fetch(this.state.companyId);
+        this.fetch();
 
     }
 
@@ -59,7 +84,7 @@ class InvoiceManagement extends Component{
     componentWillReceiveProps(nextProps){
 
         if(nextProps.companyId !== this.state.companyId){
-            this.fetch(nextProps.companyId);
+            this.fetch();
         }
     }
 
@@ -67,34 +92,19 @@ class InvoiceManagement extends Component{
         return(
             <Spin size='small' spinning={this.state.refLoading}>
                <div className="p-invoice-main">
-                    <Card noHovering  bordered={true} className="p-invoice-list">
-                        <Link to="/home">
-                            <img src={xxfp} alt="xxfp" />
-                        </Link>
-                        <h2>销项发票管理</h2>
-                        <p>管理已开具的增值税发票</p>
-                    </Card>
-                    <Card noHovering  bordered={true} className="p-invoice-list">
-                        <Link to="/home">
-                            <img src={xxfp} alt="xxfp" />
-                        </Link>
-                        <h2>销项发票管理</h2>
-                        <p>管理已开具的增值税发票</p>
-                    </Card>
-                    <Card noHovering  bordered={true} className="p-invoice-list">
-                        <Link to="/home">
-                            <img src={xxfp} alt="xxfp" />
-                        </Link>
-                        <h2>进项发票管理</h2>
-                        <p>管理已开具的增值税发票</p>
-                    </Card>
-                    <Card noHovering  bordered={true} className="p-invoice-list">
-                        <Link to="/home">
-                            <img src={xxfp} alt="xxfp" />
-                        </Link>
-                        <h2>销项发票管理</h2>
-                        <p>管理已开具的增值税发票</p>
-                    </Card>
+
+                   {
+                       this.state.data.map((item,i)=>(
+                           <Card key={i} noHovering  bordered={true} className="p-invoice-list">
+                               <Link to="/home">
+                                   <img src={item.imgUrl} alt={item.title} />
+                               </Link>
+                               <h2>{item.title}</h2>
+                               <p>{item.context}</p>
+                           </Card>
+                       ))
+                   }
+
                 </div>
             </Spin>
         )

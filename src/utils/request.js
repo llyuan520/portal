@@ -8,13 +8,14 @@ import Axios from 'axios';
 import {message} from 'antd'
 
 const request = Axios.create({
-    baseApiUrl:window.baseApiUrl,
+    baseURL: window.baseURL,
     timeout:20000
 });
+
 request.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
     config.headers={
-        //Authorization:oauth.getToken(),
+        Authorization:oauth.getToken(),
         'X-Requested-With': 'XMLHttpRequest',
         //'Accept' : 'application/json',
     }
