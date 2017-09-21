@@ -5,28 +5,44 @@
  */
 
 import React,{ Component } from 'react';
-import { Layout,Menu,Row,Col,Icon,Avatar,Badge} from 'antd';
-import {Link} from 'react-router-dom';
+import { Layout,Menu,Row,Col,Icon,Avatar,Badge,Modal} from 'antd';
+import {withRouter,Link} from 'react-router-dom';
 import {message} from "../../config/index";
+
 import './Header.less';
 import logoImg from './media/logo-02.png';
 const { Header } = Layout;
 const SubMenu = Menu.SubMenu;
+const confirm = Modal.confirm;
 
 class Headers extends Component{
-    state = {
-        current: 'messages',
+    constructor(props){
+        super(props);
+        this.state = {
+            current: 'messages',
+            selectedPath:props.history.location.pathname
+        };
     }
-    handleClick = (e) => {
-        console.log('click ', e);
+
+    handleClick = ({item, key, keyPath})=>{
         this.setState({
-            current: e.key,
+            current: key,
         });
+
+        if(key==='messages'){
+            this.props.history.push('/home');
+        }else if(key==='sysManagement'){
+            this.props.history.push('/admin/companyInfo');
+        }
+    }
+
+    logout=()=>{
+        message.success('退出成功！');
     }
 
     render(){
         return(
-            <Header className="header">
+            <Header className="header user">
                 <Row className="mediaWidth">
                     <Col span={14}>
                         <div className="logo">
@@ -61,8 +77,22 @@ class Headers extends Component{
                                         123066
                                     </span>}>
                                 <Menu.Item key="sysManagement">
-                                    <span style={{display:'block',textAlign:'center',color:'#333'}}>
+                                    <span style={{display:'block',textAlign:'left',color:'#333'}}>
+                                        <Icon type="user" />
                                         后台管理
+                                    </span>
+                                </Menu.Item>
+                                <Menu.Item key="logout">
+                                    <span onClick={()=> {
+                                        confirm({
+                                            title: '系统提示',
+                                            content: '确定要退出吗',
+                                            onOk: () => this.logout(),
+                                            onCancel() { },
+                                        });
+                                    }} style={{display:'block',textAlign:'left',color:'#333'}} >
+                                        <Icon type="logout" />
+                                        退出
                                     </span>
                                 </Menu.Item>
                             </SubMenu>
@@ -78,7 +108,7 @@ class Headers extends Component{
     }
 }
 
-export default Headers
+export default withRouter(Headers)
 
 
 let timer = null;

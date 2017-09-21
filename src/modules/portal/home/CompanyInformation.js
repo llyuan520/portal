@@ -300,7 +300,7 @@ class CompanyInformation extends Component{
 
         return(
                 <div className="p-main">
-                    <div className="mediaWidth" style={{  padding: '40px 0' }}>
+                    <div className="mediaWidth" style={{  padding: '40px 0 12px 0' }}>
                         <h1 style={{marginBottom:20,color: '#08c'}}>
                             <Icon type="apple-o" style={{marginRight:10 }} />
                             {this.state.companyName}
@@ -310,35 +310,38 @@ class CompanyInformation extends Component{
                         </h1>
                         <div className="p-product-main">
 
-                            {
-                                this.state.data.map((item,i)=>{
-                                    return(
-                                        <Card key={i} loading={item.refLoading} noHovering className="p-product" bordered={false} style={{background:item.bgcolor}}>
-                                            <h2>
-                                                <Icon type={item.icon} style={{ fontSize: 24, color: '#fff' }} />
-                                                <b>{item.title}</b>
-                                            </h2>
-                                            <h3>
-                                                <b>
-                                                    {
-                                                        item.productName
-                                                    }
-                                                </b>
-                                                {item.unit}
-                                            </h3>
-                                            <p style={{ height: '28px', lineHeight: '28px'}}>
-                                                <span>{item.tage}</span>
-                                                <a
-                                                    //href={item.anchorHref}
-                                                    onClick={(href)=>this.handleClickAnchor(item.anchorHref)}
-                                                >
-                                                    <Button ghost style={{ float: 'right'}}>{item.btn}</Button>
-                                                </a>
-                                            </p>
-                                        </Card>
-                                    )
-                                })
-                            }
+                            <Row gutter={16}>
+                                {
+                                    this.state.data.map((item,i)=>(
+                                        <Col span={6} key={i} style={{width:'auto'}}>
+                                            <Card key={i} loading={item.refLoading} noHovering className="p-product" bordered={false} style={{background:item.bgcolor}}>
+                                                <h2>
+                                                    <Icon type={item.icon} style={{ fontSize: 24, color: '#fff' }} />
+                                                    <b>{item.title}</b>
+                                                </h2>
+                                                <h3>
+                                                    <b>
+                                                        {
+                                                            item.productName
+                                                        }
+                                                    </b>
+                                                    {item.unit}
+                                                </h3>
+                                                <p style={{ height: '28px', lineHeight: '28px'}}>
+                                                    <span>{item.tage}</span>
+                                                    <a
+                                                        className="p-this-btn"
+                                                        //href={item.anchorHref}
+                                                        onClick={(href)=>this.handleClickAnchor(item.anchorHref)}
+                                                    >
+                                                        <Button ghost style={{ float: 'right',    borderRadius:'50px'}}>{item.btn}</Button>
+                                                    </a>
+                                                </p>
+                                            </Card>
+                                        </Col>
+                                    ))
+                                }
+                            </Row>
                         </div>
 
                         <Modal

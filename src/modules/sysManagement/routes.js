@@ -4,47 +4,24 @@
  * description  :
  */
 import React from 'react'
-import { Route,Redirect,Switch } from 'react-router-dom';
-import {RouteWithSubRoutes} from '../../components'
-import {Layout} from 'antd'
-import {Home} from '../portal/home';
+import CompanyInfo from './companyInfo'
+import CompanySort from './companySort'
 
-const PageNotFoundComponent =  ()=><div> 404 </div>;
-
-//路由配置文件
 const routes = [
     {
-        path:'/home',
-        component:Home,
-        name:'门户首页'
+        path:'/admin/companyInfo',
+        component:CompanyInfo,
+        name:'公司信息',
+        icon:'user',
+        exact:true,
     },
     {
-        path: '*',
-        component: PageNotFoundComponent
+        path:'/admin/companySort',
+        component:CompanySort,
+        name:'公司分类',
+        icon:'user',
+        exact:true,
     }
-];
+]
 
-const MainRoutes = () => (
-
-    <Route render={({location})=>{
-
-        const homeRoute = () => (
-            <Redirect to="/home"/>
-        );
-        return(
-            <Layout>
-                <Route exact strict path="/" render={homeRoute} />
-                <Switch>
-                    {routes.map((route, index) => (
-
-                        <RouteWithSubRoutes key={index} {...route}/>
-                    ))}
-                </Switch>
-
-            </Layout>
-        )
-    }} />
-
-)
-export default MainRoutes
-
+export default routes

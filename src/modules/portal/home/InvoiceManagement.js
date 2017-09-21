@@ -4,10 +4,11 @@
  * description  :
  */
 import React,{Component} from 'react';
-import { Card,Spin} from 'antd';
-import {Link} from 'react-router-dom';
+import { Card,Spin,Row,Col,Button} from 'antd';
 import {request} from '../../../utils'
-import xxfp from './img/xxfp.png'
+import icon01 from './img/icon-01.png'
+import icon02 from './img/icon-02.png'
+import icon03 from './img/icon-03.png'
 
 class InvoiceManagement extends Component{
 
@@ -16,27 +17,24 @@ class InvoiceManagement extends Component{
         this.state= {
             data:[
                 {
-                    title:'销项发票管理',
-                    context:'管理已开具的增值税发票',
-                    imgUrl:xxfp,
-                    pathUrl:'',
+                    title:'销项结算单',
+                    context:'以结算单为基础和客户协作，开具符合双方标准的增值税发票',
+                    imgUrl:icon01,
                 },{
-                    title:'销项发票管理',
+                    title:'销项发票',
                     context:'管理已开具的增值税发票',
-                    imgUrl:xxfp,
-                    pathUrl:'',
+                    imgUrl:icon02,
                 },{
-                    title:'销项发票管理',
-                    context:'管理已开具的增值税发票',
-                    imgUrl:xxfp,
-                    pathUrl:'',
+                    title:'进项结算单',
+                    context:'以结算单为依据符合标准的增值税发票，指导供应商开具',
+                    imgUrl:icon03,
                 },{
-                    title:'销项发票管理',
-                    context:'管理已开具的增值税发票',
-                    imgUrl:xxfp,
-                    pathUrl:'',
+                    title:'进项发票',
+                    context:'管理已收到的增值税发票',
+                    imgUrl:icon02,
                 }
             ],
+            jumpUrl:'',
 
             companyId: props.companyId,
             refLoading: false,
@@ -53,7 +51,12 @@ class InvoiceManagement extends Component{
 
             if (data.code === 200) {
 
-                this.setState((prevState, props) => {
+                this.setState({
+                    jumpUrl:data.data.homePath, //发票管理
+                    refLoading: false,
+                })
+
+                /*this.setState((prevState, props) => {
                     const preDate = [...prevState.data];
                     return {
                         data:preDate.map(item=>{
@@ -62,7 +65,7 @@ class InvoiceManagement extends Component{
                         }),
                         refLoading: false,
                     };
-                });
+                });*/
 
             }
 
@@ -93,18 +96,34 @@ class InvoiceManagement extends Component{
             <Spin size='small' spinning={this.state.refLoading}>
                <div className="p-invoice-main">
 
-                   {
-                       this.state.data.map((item,i)=>(
-                           <Card key={i} noHovering  bordered={true} className="p-invoice-list">
-                               <Link to="/home">
-                                   <img src={item.imgUrl} alt={item.title} />
-                               </Link>
-                               <h2>{item.title}</h2>
-                               <p>{item.context}</p>
-                           </Card>
-                       ))
-                   }
+                   <Row gutter={16}>
+                       {
+                           this.state.data.map((item,i)=>(
+                               <Col span={6} key={i} >
+                                   <Card noHovering  bordered={true} className="p-invoice-list">
+                                       <Row>
+                                           <Col span={6}>
+                                               <img src={item.imgUrl} alt={item.title} />
 
+                                           </Col>
+                                           <Col span={18}>
+                                               <h2>{item.title}</h2>
+                                               <p>{item.context}</p>
+                                           </Col>
+                                       </Row>
+                                   </Card>
+                               </Col>
+                           ))
+                       }
+                   </Row>
+                   <Row style={{ marginTop: '40px' }}>
+                       <Col span={24} style={{ textAlign: 'center' }}>
+                           <a href={this.state.jumpUrl} target="_blank">
+                               <Button type="primary" className="p-link-btn">点击进入</Button>
+                           </a>
+
+                       </Col>
+                   </Row>
                 </div>
             </Spin>
         )

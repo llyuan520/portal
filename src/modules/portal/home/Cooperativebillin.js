@@ -123,7 +123,7 @@ class Cooperativebillin extends Component{
                                     ))
                                 }
                             </Row>
-                            <Row style={{ marginTop: '20px' }}>
+                            <Row style={{ marginTop: '40px' }}>
                                 <Col span={24} style={{ textAlign: 'center' }}>
                                     <a href={this.state.xyjJumpUrl} target="_blank">
                                         <Button type="primary" className="p-link-btn">协同开票</Button>
@@ -147,7 +147,7 @@ class Cooperativebillin extends Component{
                                     ))
                                 }
                             </Row>
-                            <Row style={{ marginTop: '20px' }}>
+                            <Row style={{ marginTop: '40px' }}>
                                 <Col span={24} style={{ textAlign: 'center' }}>
                                      <a href={this.state.pytJumpUrl} target="_blank">
                                         <Button type="primary" className="p-link-btn">协同开票</Button>

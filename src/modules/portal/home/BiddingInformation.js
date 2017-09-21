@@ -33,7 +33,7 @@ const columns = [{
     key:'5',
     render:(text,record)=>{
         return <div>
-            <Link to={`/home/${record.uuid}`}><Button type="primary">了解详情</Button></Link>
+            <Link to={`/home/${record.uuid}`}><Button type="btncff9932">了解详情</Button></Link>
         </div>
     }
 }];

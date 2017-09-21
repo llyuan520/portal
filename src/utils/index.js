@@ -41,6 +41,14 @@ const getParameters = locationUrl =>{
     return obj;
 }
 
+/**
+ * 判断是否为空
+ * @param val {string} 字符串
+ */
+const isEmpty = val=> {
+    return val === null || val === undefined || val.trim() === ''
+}
+
 //千位号
 const fMoney = (s,n=2)=>{
 
@@ -61,4 +69,4 @@ const fMoney = (s,n=2)=>{
     }
 }
 
-export { request,getUrlParam,getParameters,fMoney }
+export { request,getUrlParam,getParameters,fMoney,isEmpty }

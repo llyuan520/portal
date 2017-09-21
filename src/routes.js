@@ -8,7 +8,7 @@ import { Route,Redirect,Switch } from 'react-router-dom';
 import {RouteWithSubRoutes} from './components'
 import {Layout} from 'antd'
 import {Home} from './modules/portal/home';
-import {SysManagement} from './modules/sysManagement/home';
+import CompanyInfo from './modules/sysManagement/companyInfo';
 
 const PageNotFoundComponent =  ()=><div> 404 </div>;
 
@@ -20,8 +20,8 @@ const routes = [
         name:'门户首页'
     },{
         path:'/admin',
-        component:SysManagement,
-        name:'后台管理'
+        component:CompanyInfo,
+        name:'后台管理',
     },{
         path: '*',
         component: PageNotFoundComponent
