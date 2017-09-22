@@ -11,7 +11,7 @@ import {request} from '../../../utils'
 const columns = [{
     title: '公告标题',
     dataIndex: 'name',
-    sorter: true,
+    //sorter: true,
     render:(text,record)=>{
         return <div>
             <h2>
@@ -26,9 +26,17 @@ const columns = [{
 }, {
     title: '地区',
     dataIndex: 'gender',
+    render:(text,record)=>{
+        return '河北-石家庄' ;
+    }
+
 }, {
     title: '发布日期',
     dataIndex: 'email',
+    render:(text,record)=>{
+        return record.dob ;
+    }
+
 },{
     key:'5',
     render:(text,record)=>{

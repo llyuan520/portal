@@ -6,6 +6,7 @@
 import React,{Component} from 'react';
 import { Spin,Icon,Card,Row,Col,Button,Modal,Select} from 'antd';
 import {request,fMoney} from '../../../utils'
+import ReactPiwik from '../../../piwik';
 
 const Option = Select.Option;
 
@@ -116,7 +117,11 @@ class CompanyInformation extends Component{
         });
 
         //切换公司之后调用
+
         this.getAllFetch(this.state.selectCompanyName);
+
+        //TODO: 添加piwik点击事件跟踪
+        ReactPiwik.push(['trackEvent', '供应商公司列表', '按钮点击事件']);
     }
 
     handleCancel = () => {
@@ -150,7 +155,7 @@ class CompanyInformation extends Component{
                             cartDate[i].productName = data.data;
                             cartDate[i].refLoading = false;
                         }else{
-                            //console.log(data);
+                            console.log(data);
                             cartDate[i].productName = data.data.productName;
                             switch(i)
                             {

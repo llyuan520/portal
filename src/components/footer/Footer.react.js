@@ -15,8 +15,8 @@ const { Footer } = Layout;
 class Footers extends Component{
     render(){
 
-        const { match, location, history } = this.props;
-        let pathname = parseInt(location.pathname.indexOf('admin'),0);
+        const { location } = this.props;
+        let pathname = parseInt(location.pathname.indexOf('sysManagement'),0);
 
         return(
 

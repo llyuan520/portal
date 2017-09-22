@@ -8,7 +8,6 @@ import React,{ Component } from 'react';
 import { Layout,Menu,Row,Col,Icon,Avatar,Badge,Modal} from 'antd';
 import {withRouter,Link} from 'react-router-dom';
 import {message} from "../../config/index";
-
 import './Header.less';
 import logoImg from './media/logo-02.png';
 const { Header } = Layout;
@@ -32,7 +31,7 @@ class Headers extends Component{
         if(key==='messages'){
             this.props.history.push('/home');
         }else if(key==='sysManagement'){
-            this.props.history.push('/admin/companyInfo');
+            this.props.history.push('/sysManagement/companyInfo');
         }
     }
 

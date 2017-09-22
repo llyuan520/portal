@@ -17,14 +17,20 @@ const PortalBreadCrumb = props =>  {
 
     const { location } = props;
     const pathSnippets = location.pathname.split('/').filter(i => i);
+
     const breadcrumbNameMap = {};
     props.routes.forEach(item=>{
-        if(!item.to){
-            //要去掉url的:参数
-            breadcrumbNameMap[removeParam(item.path)] = item.name
-        }
+        item.subNav.forEach(subItem=>{
+            if(!subItem.to){
+                //要去掉url的:参数
+                breadcrumbNameMap[removeParam(subItem.path)] = subItem.name
+            }
+        })
     })
-    breadcrumbNameMap['/']='首页';
+
+
+
+    breadcrumbNameMap['/sysManagement']='首页';
 
     if(pathSnippets[1]==='home'){
         //如果是首页就踢出掉home，防止出现两个首页面包屑
@@ -41,7 +47,7 @@ const PortalBreadCrumb = props =>  {
 
     const extraBreadcrumbItems = newPathSnippets.map((_, index) => {
         const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
-        //const name = props.routes.filter(item => item.path===url)[0].name
+        //const name = props.routes.filter(item => item.path===url)[0].name;
         return <Breadcrumb.Item key={url}>
             {
                 //这条判断是为了在当前位置的时候禁止再点击当前位置的面包屑
@@ -52,7 +58,9 @@ const PortalBreadCrumb = props =>  {
         </Breadcrumb.Item>
     });
 
+
     const breadcrumbItems = [].concat(extraBreadcrumbItems);
+
     return(
         <Breadcrumb style={{ margin: '12px 0' }}>
             {breadcrumbItems}

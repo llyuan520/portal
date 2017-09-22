@@ -40,7 +40,7 @@ class Cooperativebillin extends Component{
                     imgUrl:logoImg,
                 }
             ],
-            xyjJumpUrl:'',
+            xyjJumpUrl:'http://t1.servingcloud.com/wims/yiw0000.page',
             dataP:[
                 {
                     title:'',
@@ -67,20 +67,9 @@ class Cooperativebillin extends Component{
         request.get(`/link/queryPath`, {
 
         }).then(({data}) => {
-            console.log(data);
-
-
-            /*this.state.setState({
-                pytJumpUrl: data.data.homePath
-            })*/
-
-           /* const homePath =   `${data.homePath}&redirect&settlement`, //票易通协同开票地址
-                  homePath2 =   data.homePat`  //发票管理*/
-
-
             if (data.code === 200) {
                 this.mounted && this.setState({
-                    pytJumpUrl: `${data.data.homePath}&redirect&settlement`, //票易通协同开票地址
+                    pytJumpUrl: `${data.data.homePath}&redirect=settlement`, //票易通协同开票地址
                     refLoading: false,
                 });
             }
