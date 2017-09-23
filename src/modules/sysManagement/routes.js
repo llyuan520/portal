@@ -23,7 +23,7 @@ const routes = [
                                 name: '公司分类',
                                 exact: true,
                             }, {
-                                path: '/sysManagement',
+                                path: `${pathSys}`,
                                 redirect: true,
                                 to: `${pathSys}/companyInfo`,
                             }]
