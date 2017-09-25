@@ -121,7 +121,7 @@ class CompanyInformation extends Component{
         this.getAllFetch(this.state.selectCompanyName);
 
         //TODO: 添加piwik点击事件跟踪
-        ReactPiwik.push(['trackEvent', '供应商公司列表', '按钮点击事件']);
+        ReactPiwik.push(['trackEvent', '供应商切换公司列表', '切换公司按钮点击事件']);
     }
 
     handleCancel = () => {
@@ -155,7 +155,7 @@ class CompanyInformation extends Component{
                             cartDate[i].productName = data.data;
                             cartDate[i].refLoading = false;
                         }else{
-                            console.log(data);
+                            //console.log(data);
                             cartDate[i].productName = data.data.productName;
                             switch(i)
                             {
@@ -235,7 +235,8 @@ class CompanyInformation extends Component{
     componentDidMount() {
 
         //this.state.companyId &&
-        this.getCompanyListFetch(this.state.userId);
+        //const userId = oauth.getUser().userId;
+        this.getCompanyListFetch(this.state.companyId);
 
     }
 
@@ -249,16 +250,19 @@ class CompanyInformation extends Component{
 
     }
 
-    handleClickAnchor=(href)=>{
+    handleClickAnchor= item => e =>{
 
-        const targetElement = document.getElementById(href.substring(1));
+        const targetElement = document.getElementById(item.anchorHref.substring(1));
         if (!targetElement) {
             return;
         }
         let eleOffsetTop = targetElement.offsetTop;
         this.goto(eleOffsetTop);
 
-        window.history.pushState(null, '', href);
+        window.history.pushState(null, '', item.anchorHref);
+
+        //TODO: 添加piwik点击事件跟踪
+        ReactPiwik.push(['trackEvent', `${item.title}`, `${item.btn}`]);
 
     }
 
@@ -337,7 +341,7 @@ class CompanyInformation extends Component{
                                                     <a
                                                         className="p-this-btn"
                                                         //href={item.anchorHref}
-                                                        onClick={(href)=>this.handleClickAnchor(item.anchorHref)}
+                                                        onClick={this.handleClickAnchor(item)}
                                                     >
                                                         <Button ghost style={{ float: 'right',    borderRadius:'50px'}}>{item.btn}</Button>
                                                     </a>

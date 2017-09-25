@@ -1,30 +1,30 @@
 import React, { Component } from 'react';
-import {Layout,BackTop} from 'antd';
+import {Layout} from 'antd';
 import {withRouter} from 'react-router-dom';
-import {Headers,Footers} from './components';
 import MainRoutes from './routes';
 
-const { Content } = Layout;
-
 class App extends Component {
+
+    componentDidMount() {
+
+    }
+
+    componentWillUnmount(){
+
+    }
+
+    componentWillReceiveProps(nextProps){
+
+
+    }
+
 
     render() {
 
 
         return (
-
-                <Layout className="layout">
-
-                    <Headers />
-
-                    <Content>
-                        <MainRoutes />
-                    </Content>
-
-                    <Footers />
-
-                    <BackTop />
-
+                <Layout>
+                    <MainRoutes />
                 </Layout>
 
         );

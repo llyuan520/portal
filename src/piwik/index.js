@@ -7,7 +7,6 @@
 export default class Piwik {
     constructor(opts) {
         const options = opts;
-
         options.enableLinkTracking = (options.enableLinkTracking !== undefined) ?
             options.enableLinkTracking : true;
         options.trackDocumentTitle = (options.trackDocumentTitle !== undefined) ?
@@ -35,6 +34,10 @@ export default class Piwik {
 
         Piwik.push(['setSiteId', this.options.siteId]);
         Piwik.push(['setTrackerUrl', `${url}piwik.php`]);
+
+        if (this.options.userId) {
+            Piwik.push(['setUserId', this.options.userId]);
+        }
 
         if (this.options.enableLinkTracking) {
             Piwik.push(['enableLinkTracking']);

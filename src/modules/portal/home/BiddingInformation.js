@@ -4,46 +4,20 @@
  * description  :
  */
 import React,{Component} from 'react';
-import { Icon,Button,Table } from 'antd';
-import {Link} from 'react-router-dom';
+import { Button,Table } from 'antd';
 import {request} from '../../../utils'
 
 const columns = [{
     title: '公告标题',
-    dataIndex: 'name',
-    //sorter: true,
-    render:(text,record)=>{
-        return <div>
-            <h2>
-                {record.name.title} - 水务集团2017、2018年度PPR管材及管件采购入围项目
-            </h2>
-            <p className="p-time-user">
-                <Icon type="calendar" style={{ fontSize: 16}} />截止日期： {record.dob}
-                <Icon type="user" style={{ fontSize: 16,marginLeft:'30px' }} />招标方 ：陕西雄峰钢构装饰工程有限公司
-            </p>
-        </div>
-    }
-}, {
-    title: '地区',
-    dataIndex: 'gender',
-    render:(text,record)=>{
-        return '河北-石家庄' ;
-    }
-
+    dataIndex: 'title',
+    render:(text,record)=> <h2>{record.title}</h2>
 }, {
     title: '发布日期',
-    dataIndex: 'email',
-    render:(text,record)=>{
-        return record.dob ;
-    }
-
+    dataIndex: 'createTime',
+    sorter: true,
 },{
-    key:'5',
-    render:(text,record)=>{
-        return <div>
-            <Link to={`/home/${record.uuid}`}><Button type="btncff9932">了解详情</Button></Link>
-        </div>
-    }
+    key:'3',
+    render:(text,record)=> <a href={record.requestURL} target="_blank"><Button type="btncff9932">了解详情</Button></a>
 }];
 
 class BiddingInformation extends Component{
@@ -64,8 +38,6 @@ class BiddingInformation extends Component{
             },
             biddingloading: false,
             tableKeyDate: Date.now(),
-
-
         }
 
     }
@@ -93,27 +65,24 @@ class BiddingInformation extends Component{
         //console.log('params:', params);
         this.setState({ biddingloading: true });
         //根据参数查询融资申请信息
-        request.get('https://randomuser.me/api',{
+        request.get('/indexMessageOutline/queryBizBids',{
             params:{
                 results: 5,
                 ...params,
-
             }
         }).then(({data}) => {
-            //console.log(data.data);
-           // if(data.code===200) {
+            console.log(data.data);
+
+            if(data.code===200) {
                 const pagination = {...this.state.pagination};
                 // Read total count from server
-                //pagination.total = data.data.total;
-                 //pagination.total = data.totalCount;
-                pagination.total = 200;
+                pagination.total = data.data.total;
                 this.setState({
-                    //data: [...data.data.list],
-                    data:data.results,
+                    data: [...data.data.list],
                     biddingloading: false,
                     pagination,
                 });
-            //}
+            }
         });
     }
 
@@ -135,7 +104,7 @@ class BiddingInformation extends Component{
 
                 <Table columns={columns}
                        key={this.state.tableKeyDate}
-                       rowKey={record => record.registered}
+                       rowKey={record => record.uuid}
                        dataSource={this.state.data}
                        pagination={this.state.pagination}
                        loading={this.state.biddingloading}

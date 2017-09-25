@@ -39,7 +39,7 @@ const UserFooter = ()=><Layout style={{background: '#40484E'}}>
                                 <Icon type="customer-service" className="p-iconSize" />
                                 <p>贴心</p>
                             </div>
-                            <p>7X24小时客服热线</p>
+                            <p>7X12小时客服热线</p>
                         </div>
                     </Col>
                     <Col className="gutter-row" span={6}>

@@ -76,10 +76,8 @@ request.interceptors.response.use(function (response) {
                 break
             case 401:
                 // 返回 401 清除token信息并跳转到登录页面
-                request.dispatch && request.dispatch({
-                    type:'LOG_OUT'
-                })
-                //message.error('登录超时,请重新登录',6)
+                oauth.destroy();
+                window.location.href='http://t1.servingcloud.com/wims/login.jsp'
                 error.message = '登录超时,请重新登录'
                 break;
             case 403:

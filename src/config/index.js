@@ -4,6 +4,9 @@
  * description  :
  */
 
+// Piwik 测试环境地址，上线修改
+export const piwikURL = 'http://120.25.216.215:9009/piwik/';
+
 export const copyRight = '©Copyright 深圳映山金喜商业咨询有限公司 版权所有 粤ICP备17046516号';
 export const linkList =[
     {

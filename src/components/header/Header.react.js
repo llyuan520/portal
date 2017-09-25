@@ -29,7 +29,7 @@ class Headers extends Component{
         });
 
         if(key==='messages'){
-            this.props.history.push('/home');
+            this.props.history.push('/dashboard/home');
         }else if(key==='sysManagement'){
             this.props.history.push('/sysManagement/companyInfo');
         }
@@ -45,7 +45,7 @@ class Headers extends Component{
                 <Row className="mediaWidth">
                     <Col span={14}>
                         <div className="logo">
-                            <Link to="/home">
+                            <Link to="/dashboard/home">
                                 <img src={logoImg} alt="logo" />
                             </Link>
                         </div>
@@ -73,7 +73,7 @@ class Headers extends Component{
                                 title={
                                     <span>
                                         <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />
-                                        123066
+                                         {/*{ oauth.getUser().userName || oauth.getUser().phone }*/}
                                     </span>}>
                                 <Menu.Item key="sysManagement">
                                     <span style={{display:'block',textAlign:'left',color:'#333'}}>
