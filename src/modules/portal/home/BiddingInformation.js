@@ -14,7 +14,7 @@ const columns = [{
 }, {
     title: '发布日期',
     dataIndex: 'createTime',
-    sorter: true,
+    //sorter: true,
 },{
     key:'3',
     render:(text,record)=> <a href={record.requestURL} target="_blank"><Button type="btncff9932">了解详情</Button></a>

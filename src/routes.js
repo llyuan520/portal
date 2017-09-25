@@ -16,7 +16,7 @@ const PageNotFoundComponent =  ()=><div> 404 </div>;
 //路由配置文件
 const routes = [
     {
-        path:'/Login',
+        path:'/login',
         component:Login,
         name:'登录'
     },{
@@ -39,7 +39,7 @@ const MainRoutes = () => (
     <Route render={({location})=>{
 
         const homeRoute = () => (
-            <Redirect to="/Login" />
+            <Redirect to="/login" />
         );
         return(
             <Layout>
