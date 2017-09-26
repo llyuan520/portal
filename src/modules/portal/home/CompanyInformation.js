@@ -7,6 +7,7 @@ import React,{Component} from 'react';
 import { Spin,Icon,Card,Row,Col,Button,Modal,Select} from 'antd';
 import {request,fMoney} from '../../../utils'
 import ReactPiwik from '../../../piwik';
+import oauth from '../../../oAuth';
 
 const Option = Select.Option;
 
@@ -15,9 +16,6 @@ class CompanyInformation extends Component{
     constructor(props) {
         super(props)
         this.state = {
-
-            companyId: props.companyId,
-            userId: 'admin',
 
             companyList:[],
             companyCode:'',
@@ -32,6 +30,7 @@ class CompanyInformation extends Component{
 
             data : [
                 {
+                    key:1,
                     icon:'file',
                     title:'协同开票服务',
                     productName:'',
@@ -43,6 +42,7 @@ class CompanyInformation extends Component{
                     apiUrl:'/indexMessageOutline/queryDelayMakeInvoiceCount/',
                     refLoading:false,
                 },{
+                    key:2,
                     icon:'file',
                     title:'融资服务',
                     productName:fMoney('123456789'),
@@ -54,6 +54,7 @@ class CompanyInformation extends Component{
                     apiUrl:'',
                     refLoading:false,
                 },{
+                    key:3,
                     icon:'file',
                     title:'税务服务',
                     productName:'国税申报、涉税查询',
@@ -65,6 +66,7 @@ class CompanyInformation extends Component{
                     apiUrl:'',
                     refLoading:false,
                 },{
+                    key:4,
                     icon:'file',
                     title:'最新招标服务',
                     productName:'12',
@@ -73,9 +75,10 @@ class CompanyInformation extends Component{
                     btn:'去招标',
                     unit:'',
                     anchorHref:'#biddingInformation',
-                    apiUrl:'',
+                    apiUrl:'/indexMessageOutline/queryValidBidsCount',
                     refLoading:false,
                 },{
+                    key:5,
                     icon:'file',
                     title:'开票产品服务',
                     productName: '协同直连400元/月',
@@ -91,9 +94,6 @@ class CompanyInformation extends Component{
         }
     }
 
-    static defaultProps = {
-        //companyId : '049d332afcae4fcc91de49c6bf94f267',
-    }
 
     showModal = () => {
         this.setState({
@@ -102,6 +102,7 @@ class CompanyInformation extends Component{
     }
 
     handleOk = () => {
+
         this.setState({ companyLoading: true });
 
         this.setState({
@@ -111,14 +112,13 @@ class CompanyInformation extends Component{
             this.mounted && this.setState({
                 companyCode: this.state.selectCompanyCode,
                 companyName: this.state.selectCompanyName,
+            },()=>{
+
+                //切换公司之后调用
+                this.getAllFetch(this.state.companyCode);
+                this.props.changeCompanyCode(this.state.companyCode);
             })
-
-            this.props.changeCompanyId(this.state.selectCompanyCode);
         });
-
-        //切换公司之后调用
-
-        this.getAllFetch(this.state.selectCompanyName);
 
         //TODO: 添加piwik点击事件跟踪
         ReactPiwik.push(['trackEvent', '供应商切换公司列表', '切换公司按钮点击事件']);
@@ -147,7 +147,12 @@ class CompanyInformation extends Component{
                 cartDate[i].refLoading = true;
                 this.mounted && this.setState({  data: cartDate });
 
-                request.get(`${cartDate[i].apiUrl}${companyCode}`, {
+                let url = `${cartDate[i].apiUrl}`;
+                    if(cartDate[i].key !== 4){
+                        url+=`${companyCode}`;
+                    }
+
+                request.get(url, {
                 }).then(({data}) => {
 
                     if (data.code === 200) {
@@ -155,21 +160,24 @@ class CompanyInformation extends Component{
                             cartDate[i].productName = data.data;
                             cartDate[i].refLoading = false;
                         }else{
-                            //console.log(data);
+
                             cartDate[i].productName = data.data.productName;
-                            switch(i)
+                            switch(cartDate[i].key)
                             {
                                 case 1:
+                                    cartDate[i].unit = `${data.data}(张)`;
+                                    break;
+                                case 2:
                                     cartDate[i].unit = `${data.data.daysRemaining}(元)`;
                                     break;
-                                case 3:
-                                    cartDate[i].unit = `${data.data.daysRemaining} (条)`;
-                                    break;
                                 case 4:
-                                    cartDate[i].unit = `(可用${data.data.daysRemaining}天)`;
+                                    cartDate[i].unit = `${data.data} (条)`;
+                                    break;
+                                case 5:
+                                    cartDate[i].unit = data.data.daysRemaining === null ? `(可用0天)` :  `(可用${data.data.daysRemaining}天)`;
                                     break;
                                 default:
-                                    cartDate[i].unit = data.data.daysRemaining;
+                                    cartDate[i].unit = data.data;
                             }
                             cartDate[i].refLoading = false;
                         }
@@ -196,7 +204,9 @@ class CompanyInformation extends Component{
                             companyCode: this.state.companyList[0].companyCode,
                             companyName: this.state.companyList[0].companyName,
                         },()=>{
+
                             this.getAllFetch(this.state.companyCode);
+                            this.props.changeCompanyCode(this.state.companyCode);
                         })
                     })
 
@@ -233,11 +243,8 @@ class CompanyInformation extends Component{
     }
 
     componentDidMount() {
-
-        //this.state.companyId &&
-        //const userId = oauth.getUser().userId;
-        this.getCompanyListFetch(this.state.companyId);
-
+        const name = oauth.getUser().sysXYJUserBO.name;
+        this.getCompanyListFetch(name);
     }
 
     mounted = true;
@@ -331,20 +338,28 @@ class CompanyInformation extends Component{
                                                 <h3>
                                                     <b>
                                                         {
-                                                            item.productName
+                                                            item.key !==2 && item.key !==3 ? item.productName : '敬请期待...'
+
                                                         }
                                                     </b>
                                                     {item.unit}
                                                 </h3>
                                                 <p style={{ height: '28px', lineHeight: '28px'}}>
-                                                    <span>{item.tage}</span>
-                                                    <a
-                                                        className="p-this-btn"
-                                                        //href={item.anchorHref}
-                                                        onClick={this.handleClickAnchor(item)}
-                                                    >
-                                                        <Button ghost style={{ float: 'right',    borderRadius:'50px'}}>{item.btn}</Button>
-                                                    </a>
+                                                    <span>
+                                                        {
+                                                            item.key !==2 && item.tage
+                                                        }
+                                                    </span>
+                                                    {
+                                                        item.key !==2 && item.key !==3 && item.key !==5 &&   <a
+                                                            className="p-this-btn"
+                                                            //href={item.anchorHref}
+                                                            onClick={this.handleClickAnchor(item)}
+                                                        >
+                                                            <Button ghost style={{ float: 'right',    borderRadius:'50px'}}>{item.btn}</Button>
+                                                        </a>
+                                                    }
+
                                                 </p>
                                             </Card>
                                         </Col>

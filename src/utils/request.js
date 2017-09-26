@@ -70,15 +70,15 @@ request.interceptors.response.use(function (response) {
 }, function (error) {
     // 对响应错误做点什么
     if (error.response) {
+        debugger
         switch (error.response.status) {
             case 400:
                 error.message = '请求错误'
                 break
             case 401:
                 // 返回 401 清除token信息并跳转到登录页面
-                oauth.destroy();
-                window.location.href='http://t1.servingcloud.com/wims/login.jsp'
                 error.message = '登录超时,请重新登录'
+                oauth.logout();
                 break;
             case 403:
                 error.message = '拒绝访问'

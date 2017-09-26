@@ -6,6 +6,8 @@
 import React,{Component} from 'react';
 import { Card,Spin,Row,Col,Button} from 'antd';
 import {request} from '../../../utils'
+import ReactPiwik from '../../../piwik';
+
 import icon01 from './img/icon-01.png'
 import icon02 from './img/icon-02.png'
 import icon03 from './img/icon-03.png'
@@ -36,7 +38,7 @@ class InvoiceManagement extends Component{
             ],
             jumpUrl:'',
 
-            companyId: props.companyId,
+            companyCode: props.companyCode,
             refLoading: false,
         }
 
@@ -48,15 +50,14 @@ class InvoiceManagement extends Component{
         request.get(`/link/queryPath`, {
 
         }).then(({data}) => {
-
             if (data.code === 200) {
 
-                this.setState({
+                this.mounted && this.setState({
                     jumpUrl:data.data.homePath, //发票管理
                     refLoading: false,
                 })
 
-                /*this.setState((prevState, props) => {
+                /*this.mounted && this.setState((prevState, props) => {
                     const preDate = [...prevState.data];
                     return {
                         data:preDate.map(item=>{
@@ -70,6 +71,14 @@ class InvoiceManagement extends Component{
             }
 
         });
+    }
+
+    handleClickAnchor= url => e =>{
+
+        window.open(url);
+        //TODO: 添加piwik点击事件跟踪
+        ReactPiwik.push(['trackEvent', '发票管理', '按钮点击事件']);
+
     }
 
     componentDidMount() {
@@ -86,7 +95,7 @@ class InvoiceManagement extends Component{
 
     componentWillReceiveProps(nextProps){
 
-        if(nextProps.companyId !== this.state.companyId){
+        if(nextProps.companyCode !== this.state.companyCode){
             this.fetch();
         }
     }
@@ -118,7 +127,10 @@ class InvoiceManagement extends Component{
                    </Row>
                    <Row style={{ marginTop: '40px' }}>
                        <Col span={24} style={{ textAlign: 'center' }}>
-                           <a href={this.state.jumpUrl} target="_blank">
+                           <a //href={this.state.jumpUrl}
+                              target="_blank"
+                              onClick={this.handleClickAnchor(this.state.jumpUrl)}
+                           >
                                <Button type="primary" className="p-link-btn">点击进入</Button>
                            </a>
 

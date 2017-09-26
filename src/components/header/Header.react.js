@@ -5,9 +5,11 @@
  */
 
 import React,{ Component } from 'react';
-import { Layout,Menu,Row,Col,Icon,Avatar,Badge,Modal} from 'antd';
+import { Layout,Menu,Row,Col,Icon,Avatar,Modal} from 'antd';
 import {withRouter,Link} from 'react-router-dom';
-import {message} from "../../config/index";
+import {messageInfo} from "../../config/index";
+import oauth from '../../oAuth';
+
 import './Header.less';
 import logoImg from './media/logo-02.png';
 const { Header } = Layout;
@@ -18,6 +20,7 @@ class Headers extends Component{
     constructor(props){
         super(props);
         this.state = {
+            userName: '',
             current: 'messages',
             selectedPath:props.history.location.pathname
         };
@@ -35,8 +38,32 @@ class Headers extends Component{
         }
     }
 
-    logout=()=>{
-        message.success('退出成功！');
+    componentDidMount() {
+        if(!!oauth.getUser() && !!oauth.getToken()){
+            if(oauth.getAuth()){
+                this.setState({
+                    userName : oauth.getAuth().sysUserBO.userName
+                })
+            }
+        }else{
+            oauth.logout()
+        }
+    }
+
+    mounted = true;
+
+    componentWillUnmount(){
+        this.mounted = null;
+    }
+
+    componentWillMount(){
+        if(oauth.isLogin()){
+            this.props.history.push('/dashboard')
+        }
+    }
+
+    componentWillReceiveProps(nextProps){
+
     }
 
     render(){
@@ -63,30 +90,30 @@ class Headers extends Component{
                             className="p-menu-root"
                             style={{ lineHeight: '64px',float:'right' }}
                         >
-                            <Menu.Item key="messages">
+                            {/*<Menu.Item key="messages">
                                 <Badge count={199}>
                                     <Icon type="mail" style={{fontSize: 24}} />
                                 </Badge>
                                 消息
-                            </Menu.Item>
+                            </Menu.Item>*/}
                             <SubMenu
                                 title={
                                     <span>
                                         <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />
-                                         {/*{ oauth.getUser().userName || oauth.getUser().phone }*/}
+                                         { this.state.userName }
                                     </span>}>
-                                <Menu.Item key="sysManagement">
+                                {/*<Menu.Item key="sysManagement">
                                     <span style={{display:'block',textAlign:'left',color:'#333'}}>
                                         <Icon type="user" />
                                         后台管理
                                     </span>
-                                </Menu.Item>
+                                </Menu.Item>*/}
                                 <Menu.Item key="logout">
                                     <span onClick={()=> {
                                         confirm({
                                             title: '系统提示',
                                             content: '确定要退出吗',
-                                            onOk: () => this.logout(),
+                                            onOk: () => oauth.logout(),
                                             onCancel() { },
                                         });
                                     }} style={{display:'block',textAlign:'left',color:'#333'}} >
@@ -162,7 +189,7 @@ class StartMarquee extends Component {
                 <div id="hotNews" className="q-hotNews" onMouseOver={this.handelOnMouserOver} onMouseOut={this.handelOnMouseOut}>
                     <ul id="hotNews1">
                         {
-                            message.map((item,i)=>{
+                            messageInfo.map((item,i)=>{
                                 return(
                                     <li key={i}>
                                         <a title={item.title} href={item.url} style={{color:'#fff'}}>

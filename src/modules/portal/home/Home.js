@@ -60,16 +60,16 @@ class Home extends Component{
     constructor(props){
         super(props)
         this.state= {
-            companyId: '397'
+            companyCode: ''
         }
 
-        this.changeCompanyId = this.changeCompanyId.bind(this);
+        this.changeCompanyCode = this.changeCompanyCode.bind(this);
     }
 
     //给其它组件传数据
-    changeCompanyId=companyId=>{
+    changeCompanyCode=companyCode=>{
         this.mounted && this.setState({
-            companyId
+            companyCode
         })
     }
 
@@ -86,10 +86,10 @@ class Home extends Component{
              <Layout>
 
                  {/*公司信息切换*/}
-                 <CompanyInformation  changeCompanyId={this.changeCompanyId}  companyId={this.state.companyId} />
+                 <CompanyInformation  changeCompanyCode={this.changeCompanyCode} />
 
                  {
-                     this.state.companyId && titleArry.map((item, i)=>(
+                     this.state.companyCode && titleArry.map((item, i)=>(
 
                          <div key={i} id={item.anchorId} className="p-main" style={{ background: i%2 !== 0  ? '' : '#fff' }}>
                              <div className="mediaWidth" style={{  padding: '40px 0' }}>
@@ -102,7 +102,7 @@ class Home extends Component{
                                  </h1>
 
                                  {
-                                     <item.component companyId={this.state.companyId} />
+                                     <item.component companyCode={this.state.companyCode} />
                                  }
 
                              </div>

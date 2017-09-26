@@ -66,7 +66,15 @@ export default {
     getAuth() {
         return {
             auth: this.getToken(),
-            username: this.getUser().username
+            username: this.getUser().sysUserBO.userName
         }
+    },
+
+    /**
+     * 退出登录
+     */
+    logout() {
+        this.destroy();
+        window.location.href='http://t1.servingcloud.com/wims/login.jsp';
     }
 }

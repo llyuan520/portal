@@ -4,8 +4,20 @@
  * description  :
  */
 
-// Piwik 测试环境地址，上线修改
-export const piwikURL = 'http://120.25.216.215:9009/piwik/';
+//TODO: 上线需要修改 Piwik 测试环境地址
+export const piwikData = {
+    URL:'http://120.25.216.215:9009/piwik/',
+    siteId:6,
+}
+
+//TODO:上线需要修改 Piwik 线上环境地址
+/*export const piwikData = {
+    URL:'https://t1.servingcloud.com:4433/piwik/',
+    siteId:102,
+}*/
+
+
+
 
 export const copyRight = '©Copyright 深圳映山金喜商业咨询有限公司 版权所有 粤ICP备17046516号';
 export const linkList =[
@@ -31,15 +43,12 @@ export const linkList =[
 ]
 
 
-export const message = [
+export const messageInfo = [
     {
         url:'',
-        title:'热烈庆祝供应链金融1！',
-    }, {
+        title:'热烈庆祝供应链金融上线成功！',
+    },{
         url:'',
-        title:'热烈庆祝供应链金融平台2！',
-    }, {
-        url:'',
-        title:'热烈庆祝供应链金融平台成3！',
+        title:'热烈庆祝喜盈佳门户网站上线成功！',
     }
 ];

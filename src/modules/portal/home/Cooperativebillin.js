@@ -8,11 +8,13 @@ import { Spin,Card,Row,Col,Button} from 'antd';
 import {request} from '../../../utils'
 import ReactPiwik from '../../../piwik';
 
-import vanke from './img/media/vanke.png';
-import bldc from './img/media/bldc.png';
-import blzy from './img/media/blzy.png';
-import jyjt from './img/media/jyjt.png';
-import tcdc from './img/media/tcdc.png';
+import logo013 from './img/media/logo-013.png';
+import logo01 from './img/media/logo-01.png';
+import logo05 from './img/media/logo-05.png';
+import logo010 from './img/media/logo-010.png';
+import logo09 from './img/media/logo-09.png';
+import logo011 from './img/media/logo-011.png';
+
 
 class Cooperativebillin extends Component{
 
@@ -22,26 +24,31 @@ class Cooperativebillin extends Component{
             dataX:[
                 {
                     title:'万科',
-                    imgUrl:vanke,
+                    imgUrl:logo013,
                 },{
-                    title:'保利地产',
-                    imgUrl:bldc,
-                },{
-                    title:'保利置业',
-                    imgUrl:blzy,
-                },{
-                    title:'建业集团',
-                    imgUrl:jyjt,
-                },{
-                    title:'同创地产',
-                    imgUrl:tcdc,
+                    title:'中国保利集团',
+                    imgUrl:logo01,
                 }
             ],
             xyjJumpUrl:'http://t1.servingcloud.com/wims/yiw0000.page?home',
-            dataP:[],
+            dataP:[
+                {
+                    title:'应力',
+                    imgUrl:logo05,
+                },{
+                    title:'深圳地铁',
+                    imgUrl:logo010,
+                },{
+                    title:'宝龙地产',
+                    imgUrl:logo09,
+                },{
+                    title:'世贸集团',
+                    imgUrl:logo011,
+                }
+            ],
 
             pytJumpUrl:'',
-            companyId: props.companyId,
+            companyCode: props.companyCode,
             refLoading: false,
         }
 
@@ -72,9 +79,10 @@ class Cooperativebillin extends Component{
 
     componentDidMount() {
 
-       this.fetch();
+        this.fetch();
 
     }
+
 
     mounted = true;
 
@@ -84,7 +92,7 @@ class Cooperativebillin extends Component{
 
     componentWillReceiveProps(nextProps){
 
-        if(nextProps.companyId !== this.state.companyId){
+        if(nextProps.companyCode !== this.state.companyCode){
             this.fetch();
         }
     }
@@ -93,13 +101,13 @@ class Cooperativebillin extends Component{
         return(
             <Spin size='small' spinning={this.state.refLoading}>
                 <Row gutter={40} className="p-billing">
-                    <Col span={24} className="p-billing-list">
+                    <Col span={12} className="p-billing-list">
                         <h3>给<span className="c108ee9">万科、保利地产</span>开票入口</h3>
                         <Card noHovering className="p-billing-itme">
                             <Row gutter={24} className="p-billing-img">
                                 {
                                     this.state.dataX.map((item,i)=>(
-                                        <Col key={i} span={4}>
+                                        <Col key={i} span={6}>
                                             <img alt={item.title} src={item.imgUrl} width="100%" />
                                         </Col>
                                     ))
@@ -112,9 +120,9 @@ class Cooperativebillin extends Component{
                             </Row>
                         </Card>
                     </Col>
-                    {/*<Col span={12} className="p-billing-list">
+                    <Col span={12} className="p-billing-list">
                         <h3>
-                            给<span className="c108ee9">金地集团、印力集团</span>开票入口
+                            给<span className="c108ee9">印力、深圳地铁、宝龙、世茂</span>开票入口
                         </h3>
                         <Card noHovering className="p-billing-itme">
                             <Row gutter={24} className="p-billing-img">
@@ -132,7 +140,7 @@ class Cooperativebillin extends Component{
                                 </Col>
                             </Row>
                         </Card>
-                    </Col>*/}
+                    </Col>
                 </Row>
             </Spin>
 
