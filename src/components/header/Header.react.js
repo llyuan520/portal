@@ -5,7 +5,7 @@
  */
 
 import React,{ Component } from 'react';
-import { Layout,Menu,Row,Col,Icon,Avatar,Modal} from 'antd';
+import { Layout,Menu,Row,Col,Icon,Avatar,Modal,Badge} from 'antd';
 import {withRouter,Link} from 'react-router-dom';
 import {messageInfo} from "../../config/index";
 import oauth from '../../oAuth';
@@ -32,9 +32,9 @@ class Headers extends Component{
         });
 
         if(key==='messages'){
-            this.props.history.push('/dashboard/home');
+            this.props.history.push('/dashboard');
         }else if(key==='sysManagement'){
-            this.props.history.push('/sysManagement/companyInfo');
+            this.props.history.push('/sysManagement');
         }
     }
 
@@ -42,7 +42,7 @@ class Headers extends Component{
         if(!!oauth.getUser() && !!oauth.getToken()){
             if(oauth.getAuth()){
                 this.setState({
-                    userName : oauth.getAuth().sysUserBO.userName
+                    userName : oauth.getAuth().username
                 })
             }
         }else{
@@ -57,9 +57,7 @@ class Headers extends Component{
     }
 
     componentWillMount(){
-        if(oauth.isLogin()){
-            this.props.history.push('/dashboard')
-        }
+
     }
 
     componentWillReceiveProps(nextProps){
@@ -77,7 +75,7 @@ class Headers extends Component{
                             </Link>
                         </div>
 
-                        <StartMarquee />
+                       <StartMarquee />
 
                     </Col>
                     <Col span={10}>
@@ -90,24 +88,24 @@ class Headers extends Component{
                             className="p-menu-root"
                             style={{ lineHeight: '64px',float:'right' }}
                         >
-                            {/*<Menu.Item key="messages">
+                            <Menu.Item key="messages">
                                 <Badge count={199}>
                                     <Icon type="mail" style={{fontSize: 24}} />
                                 </Badge>
                                 消息
-                            </Menu.Item>*/}
+                            </Menu.Item>
                             <SubMenu
                                 title={
                                     <span>
                                         <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />
                                          { this.state.userName }
                                     </span>}>
-                                {/*<Menu.Item key="sysManagement">
+                                <Menu.Item key="sysManagement">
                                     <span style={{display:'block',textAlign:'left',color:'#333'}}>
                                         <Icon type="user" />
                                         后台管理
                                     </span>
-                                </Menu.Item>*/}
+                                </Menu.Item>
                                 <Menu.Item key="logout">
                                     <span onClick={()=> {
                                         confirm({

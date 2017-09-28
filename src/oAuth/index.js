@@ -4,6 +4,7 @@
  * description  :
  */
 import storage from '../store/storage'
+import {configData} from '../config';
 
 const TOKEN = 'TOKEN';
 const USER = 'USER';
@@ -75,6 +76,6 @@ export default {
      */
     logout() {
         this.destroy();
-        window.location.href='http://t1.servingcloud.com/wims/login.jsp';
+        window.location.href=`${configData.address}wims/login.jsp`;
     }
 }

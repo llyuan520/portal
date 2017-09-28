@@ -42,6 +42,31 @@ class CompanyInformation extends Component{
                     apiUrl:'/indexMessageOutline/queryDelayMakeInvoiceCount/',
                     refLoading:false,
                 },{
+                    key:4,
+                    icon:'file',
+                    title:'最新招标服务',
+                    productName:'',
+                    bgcolor:'#ff9932',
+                    tage:'与您最匹配的招标信息',
+                    btn:'去招标',
+                    unit:'',
+                    anchorHref:'#biddingInformation',
+                    apiUrl:'/indexMessageOutline/queryValidBidsCount',
+                    refLoading:false,
+                },{
+                    key:5,
+                    icon:'file',
+                    title:'开票产品服务',
+                    productName: '',
+                    bgcolor:'#428fb9',
+                    tage:'当前使用产品',
+                    btn:'去续费',
+                    unit:'',
+                    anchorHref:'#',
+                    apiUrl:'/indexMessageOutline/queryTOpsOrder/',
+                    refLoading:false,
+
+                },{
                     key:2,
                     icon:'file',
                     title:'融资服务',
@@ -65,30 +90,6 @@ class CompanyInformation extends Component{
                     anchorHref:'#',
                     apiUrl:'',
                     refLoading:false,
-                },{
-                    key:4,
-                    icon:'file',
-                    title:'最新招标服务',
-                    productName:'12',
-                    bgcolor:'#ff9932',
-                    tage:'与您最匹配的招标信息',
-                    btn:'去招标',
-                    unit:'',
-                    anchorHref:'#biddingInformation',
-                    apiUrl:'/indexMessageOutline/queryValidBidsCount',
-                    refLoading:false,
-                },{
-                    key:5,
-                    icon:'file',
-                    title:'开票产品服务',
-                    productName: '协同直连400元/月',
-                    bgcolor:'#428fb9',
-                    tage:'当前使用产品',
-                    btn:'去续费',
-                    unit:'',
-                    anchorHref:'#',
-                    apiUrl:'/indexMessageOutline/queryTOpsOrder/',
-                    refLoading:false,
                 }
             ]
         }
@@ -110,10 +111,9 @@ class CompanyInformation extends Component{
             companyVisible: false,
         },()=>{
             this.mounted && this.setState({
-                companyCode: this.state.selectCompanyCode,
-                companyName: this.state.selectCompanyName,
+                companyCode: this.state.selectCompanyCode || this.state.companyCode,
+                companyName: this.state.selectCompanyName || this.state.companyName,
             },()=>{
-
                 //切换公司之后调用
                 this.getAllFetch(this.state.companyCode);
                 this.props.changeCompanyCode(this.state.companyCode);
@@ -156,32 +156,30 @@ class CompanyInformation extends Component{
                 }).then(({data}) => {
 
                     if (data.code === 200) {
-                        if(typeof(data.data) === 'string'){
-                            cartDate[i].productName = data.data;
-                            cartDate[i].refLoading = false;
-                        }else{
 
-                            cartDate[i].productName = data.data.productName;
-                            switch(cartDate[i].key)
-                            {
-                                case 1:
-                                    cartDate[i].unit = `${data.data}(张)`;
-                                    break;
-                                case 2:
-                                    cartDate[i].unit = `${data.data.daysRemaining}(元)`;
-                                    break;
-                                case 4:
-                                    cartDate[i].unit = `${data.data} (条)`;
-                                    break;
-                                case 5:
-                                    cartDate[i].unit = data.data.daysRemaining === null ? `(可用0天)` :  `(可用${data.data.daysRemaining}天)`;
-                                    break;
-                                default:
-                                    cartDate[i].unit = data.data;
-                            }
-                            cartDate[i].refLoading = false;
+                        cartDate[i].productName = data.data.productName;
+                        switch(cartDate[i].key)
+                        {
+                            case 1:
+                                cartDate[i].unit = `${data.data} (张)`;
+                                break;
+                            case 2:
+                                cartDate[i].unit = `${data.data.daysRemaining} (元)`;
+                                break;
+                            case 4:
+                                cartDate[i].unit = `${data.data} (条)`;
+                                break;
+                            case 5:
+                                cartDate[i].unit = data.data.daysRemaining === null ? ` (可用0天)` :  ` (可用${data.data.daysRemaining}天)`;
+                                break;
+                            default:
+                                cartDate[i].unit = data.data;
                         }
-                        this.mounted && this.setState({  data: cartDate });
+                        cartDate[i].refLoading = false;
+
+                        this.mounted && this.setState({
+                            data: cartDate
+                        });
                     }
 
                 });
@@ -259,13 +257,6 @@ class CompanyInformation extends Component{
 
     handleClickAnchor= item => e =>{
 
-        const targetElement = document.getElementById(item.anchorHref.substring(1));
-        if (!targetElement) {
-            return;
-        }
-        let eleOffsetTop = targetElement.offsetTop;
-        this.goto(eleOffsetTop);
-
         window.history.pushState(null, '', item.anchorHref);
 
         //TODO: 添加piwik点击事件跟踪
@@ -273,42 +264,6 @@ class CompanyInformation extends Component{
 
     }
 
-    goto=(target)=>{
-        const scrollT = document.body.scrollTop || document.documentElement.scrollTop;
-        if (scrollT > target) {
-            let timer = setInterval(function(){
-                let scrollT = document.body.scrollTop|| document.documentElement.scrollTop
-                let step = Math.floor(-scrollT/6);
-                document.documentElement.scrollTop = document.body.scrollTop = step + scrollT;
-                if(scrollT <= target){
-                    document.body.scrollTop = document.documentElement.scrollTop = target;
-                    clearTimeout(timer);
-                }
-            },20)
-        }else if(scrollT === 0){
-            let timer = setInterval(function(){
-                let scrollT = document.body.scrollTop|| document.documentElement.scrollTop
-                let step = Math.floor(300/3*0.7);
-                document.documentElement.scrollTop = document.body.scrollTop = step + scrollT;
-                if(scrollT >= target){
-                    document.body.scrollTop = document.documentElement.scrollTop = target;
-                    clearTimeout(timer);
-                }
-            },20)
-        }else if(scrollT < target){
-            let timer = setInterval(function(){
-                let scrollT = document.body.scrollTop|| document.documentElement.scrollTop
-                let step = Math.floor(scrollT/6);
-                document.documentElement.scrollTop = document.body.scrollTop = step + scrollT;
-                if(scrollT >= target){
-                    document.body.scrollTop = document.documentElement.scrollTop = target;
-                    clearTimeout(timer);
-                }
-            },20)
-        }else if(target === scrollT){
-            return false;
-        }
-    }
 
     render(){
 
@@ -318,7 +273,7 @@ class CompanyInformation extends Component{
                 <div className="p-main">
                     <div className="mediaWidth" style={{  padding: '40px 0 12px 0' }}>
                         <h1 style={{marginBottom:20,color: '#08c'}}>
-                            <Icon type="apple-o" style={{marginRight:10 }} />
+                            <Icon type="home" style={{marginRight:10 }} />
                             {this.state.companyName}
                             <span style={{ fontWeight: 'normal',color: '#333',cursor: 'pointer'}} onClick={this.showModal}>
                                  【切换<Icon type="caret-down" style={{ fontSize: 12,marginTop: 5,verticalAlign: 'text-top'}} />】
@@ -330,7 +285,7 @@ class CompanyInformation extends Component{
                                 {
                                     this.state.data.map((item,i)=>(
                                         <Col span={6} key={i} style={{width:'auto'}}>
-                                            <Card key={i} loading={item.refLoading} noHovering className="p-product" bordered={false} style={{background:item.bgcolor}}>
+                                            <Card loading={item.refLoading} noHovering className="p-product" bordered={false} style={{background:item.bgcolor}}>
                                                 <h2>
                                                     <Icon type={item.icon} style={{ fontSize: 24, color: '#fff' }} />
                                                     <b>{item.title}</b>
@@ -353,7 +308,7 @@ class CompanyInformation extends Component{
                                                     {
                                                         item.key !==2 && item.key !==3 && item.key !==5 &&   <a
                                                             className="p-this-btn"
-                                                            //href={item.anchorHref}
+                                                            href={item.anchorHref}
                                                             onClick={this.handleClickAnchor(item)}
                                                         >
                                                             <Button ghost style={{ float: 'right',    borderRadius:'50px'}}>{item.btn}</Button>

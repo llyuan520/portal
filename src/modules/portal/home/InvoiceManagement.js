@@ -57,28 +57,16 @@ class InvoiceManagement extends Component{
                     refLoading: false,
                 })
 
-                /*this.mounted && this.setState((prevState, props) => {
-                    const preDate = [...prevState.data];
-                    return {
-                        data:preDate.map(item=>{
-                            item['pathUrl'] = data.data.homePath; //发票管理
-                            return item;
-                        }),
-                        refLoading: false,
-                    };
-                });*/
-
             }
 
         });
     }
 
     handleClickAnchor= url => e =>{
-
-        window.open(url);
         //TODO: 添加piwik点击事件跟踪
         ReactPiwik.push(['trackEvent', '发票管理', '按钮点击事件']);
 
+        window.open(url);
     }
 
     componentDidMount() {

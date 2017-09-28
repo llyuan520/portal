@@ -7,6 +7,7 @@ import React,{Component} from 'react';
 import { Spin,Card,Row,Col,Button} from 'antd';
 import {request} from '../../../utils'
 import ReactPiwik from '../../../piwik';
+import {configData} from '../../../config';
 
 import logo013 from './img/media/logo-013.png';
 import logo01 from './img/media/logo-01.png';
@@ -30,7 +31,7 @@ class Cooperativebillin extends Component{
                     imgUrl:logo01,
                 }
             ],
-            xyjJumpUrl:'http://t1.servingcloud.com/wims/yiw0000.page?home',
+            xyjJumpUrl:`${configData.address}wims/yiw0000.page?home`,
             dataP:[
                 {
                     title:'应力',
@@ -71,10 +72,10 @@ class Cooperativebillin extends Component{
     }
 
     handleClick = url => e =>{
-        window.open(url);
-
         //TODO: 添加piwik点击事件跟踪
         ReactPiwik.push(['trackEvent', '协同开票', '点击跳转到喜盈佳还是票易通3.0']);
+
+        window.open(url);
     }
 
     componentDidMount() {

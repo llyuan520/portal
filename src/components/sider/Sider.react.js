@@ -65,7 +65,7 @@ class PortalSider extends Component{
 
                 <Menu
                     mode="inline"
-                    style={{ height: '100%' }}
+                    style={{ height: '100%',border:0, }}
 
                     defaultSelectedKeys={[this.state.selectedPath]}
                     defaultOpenKeys={[subKey]}

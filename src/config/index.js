@@ -4,22 +4,32 @@
  * description  :
  */
 
-//TODO: 上线需要修改 Piwik 测试环境地址
-export const piwikData = {
-    URL:'http://120.25.216.215:9009/piwik/',
-    siteId:6,
+
+//TODO:测试
+export const configData = {
+    piwikData : {
+        //测试
+        URL:'http://120.25.216.215:9009/piwik/',
+        siteId:6,
+    },
+    address : 'http://t1.servingcloud.com/',
 }
 
-//TODO:上线需要修改 Piwik 线上环境地址
-/*export const piwikData = {
-    URL:'https://t1.servingcloud.com:4433/piwik/',
-    siteId:102,
+
+
+//TODO:线上
+/*export const configData = {
+    piwikData : {
+        //线上
+        URL:'https://t1.servingcloud.com:4433/piwik/',
+        siteId:102,
+    },
+    address : 'http://vat.servingcloud.com/',
 }*/
 
 
 
-
-export const copyRight = '©Copyright 深圳映山金喜商业咨询有限公司 版权所有 粤ICP备17046516号';
+export const copyRight = 'servingcloud.com ©喜盈佳企业云服务有限公司 粤ICP备16030834号 粤公网安备 44030502000290号';
 export const linkList =[
     {
         url:'https://vat.servingcloud.com/wims/login.jsp',

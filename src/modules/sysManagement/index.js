@@ -5,6 +5,7 @@
  */
 import React, { Component } from 'react';
 import {Layout,BackTop} from 'antd';
+import {withRouter} from 'react-router-dom';
 import {Headers,Footers,RouteWithSubRoutes} from '../../components';
 import {Switch,Route } from 'react-router-dom';
 import PortalBreadCrumb from '../../modules/breadcrumb/Breadcrumb'
@@ -27,6 +28,7 @@ class SysManagement extends Component {
                         <div className="p-main">
                             <div className="mediaWidth" style={{  padding: '0' }}>
                                 <Content>
+
                                     <PortalBreadCrumb  location={this.props.location} routes={routes}  />
 
                                     <Layout style={{padding: '24px 0', background: '#fff' }}>
@@ -46,6 +48,7 @@ class SysManagement extends Component {
                                             </Switch>
                                         </Content>
                                     </Layout>
+
                                 </Content>
 
                             </div>
@@ -64,4 +67,4 @@ class SysManagement extends Component {
     }
 }
 
-export default SysManagement
+export default withRouter(SysManagement)

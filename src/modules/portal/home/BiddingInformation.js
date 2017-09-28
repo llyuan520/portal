@@ -6,6 +6,7 @@
 import React,{Component} from 'react';
 import { Button,Table,Icon } from 'antd';
 import {request} from '../../../utils'
+import ReactPiwik from '../../../piwik';
 
 const columns = [{
     title: '公告标题',
@@ -22,12 +23,30 @@ const columns = [{
         </div>
     }
 }, {
+    title: '地区',
+    dataIndex: 'area',
+}, {
     title: '发布日期',
     dataIndex: 'createTime',
     sorter: true,
 },{
     key:'3',
-    render:(text,record)=> <a href={record.requestURL} target="_blank"><Button type="btncff9932">了解详情</Button></a>
+    render:(text,record)=> {
+        return(
+            <a
+                //href={record.requestURL}
+                onClick={()=>{
+
+                    //TODO: 添加piwik点击事件跟踪
+                    ReactPiwik.push(['trackEvent', `${record.title}`, '了解详情']);
+
+                    window.open(record.requestURL);
+                }}
+                target="_blank">
+                <Button type="btncff9932">了解详情</Button>
+            </a>
+        )
+    }
 }];
 
 class BiddingInformation extends Component{
@@ -44,6 +63,8 @@ class BiddingInformation extends Component{
                 showQuickJumper: true,
                 current: 1,
                 pageSize: 5,
+                defaultPageSize:5,
+                pageSizeOptions:['5',' 10', '20', '30', '40'],
                 showTotal: (total, range) => `总数: ${total} 条`
             },
             loading: false,

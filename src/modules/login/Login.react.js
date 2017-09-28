@@ -17,7 +17,6 @@ class Login extends Component{
 
     fetch = (appName,token) => {
 
-
         this.mounted && this.setState({ refLoading: true });
         appName && token && request.post('/loginController/ssoLogin', {
             appName: appName,
@@ -44,8 +43,8 @@ class Login extends Component{
     }
 
     componentDidMount() {
-        const appName = getUrlParam('appName') || 'xyj',
-              token = getUrlParam('token') || 'LY5yytCt7hgd5Stohmdu6wbB/9iW5AxyDHJxvGYqGbyAZGhl+PN9m2ppFeNQY6x6qf1tlUK8ILeScS+KYyNHe70aNoqDbVqdpN+xSZ3MpRuhAqPEC8EKTdeow2WkrfYh+6mV2+9c/VdIlUCdO5i+KSFomZGY1l/P7nV0AjsQCVU=';
+        const appName = getUrlParam('appName'),
+              token = getUrlParam('token');
               oauth.setToken(token);
 
         if(appName && token){

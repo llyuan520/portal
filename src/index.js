@@ -3,16 +3,16 @@ import ReactDOM from 'react-dom';
 import { Router } from 'react-router-dom';
 import registerServiceWorker from './registerServiceWorker';
 import createBrowserHistory from 'history/createBrowserHistory';
-import {piwikData} from './config';
+import {configData} from './config';
 import ReactPiwik from './piwik';
 import App from './App';
-import './index.css';
+import './index.less'
 
 const history = createBrowserHistory();
 const piwik = new ReactPiwik({
     //TODO: 测试环境地址，上线修改
-    url: piwikData.URL,
-    siteId: piwikData.siteId,
+    url: configData.piwikData.URL,
+    siteId: configData.piwikData.siteId,
     //userId: oauth.getUser().userName || '',
     trackErrors: true,
 });
