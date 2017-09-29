@@ -3,10 +3,9 @@
  * createTime   : 2017/9/7 16:17
  * description  :
  */
-import CompanyInfo from './companyInfo'
-import CompanySort from './companySort'
+import CompanyInfoSearch from './companyInfo'
+import CompanySortSearch from './companyClass'
 const pathSys = '/sysManagement';
-
 const routes = [
                 {
                     name: '分类基础资料维护',
@@ -14,15 +13,15 @@ const routes = [
                     subKey:'companyInfo',
                     subNav: [{
                                 path: `${pathSys}/companyInfo`,
-                                component: CompanyInfo,
+                                component: CompanyInfoSearch,
                                 name: '公司信息',
-                                exact: true,
+                                //exact: true,
                             },{
-                                path: `${pathSys}/companySort`,
-                                component: CompanySort,
+                                path: `${pathSys}/companyClass`,
+                                component: CompanySortSearch,
                                 name: '公司分类',
-                                exact: true,
-                            }, {
+                                //exact: true,
+                            },{
                                 path: `${pathSys}`,
                                 redirect: true,
                                 to: `${pathSys}/companyInfo`,

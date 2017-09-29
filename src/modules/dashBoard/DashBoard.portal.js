@@ -4,9 +4,10 @@
  * description  :
  */
 import React, { Component } from 'react';
+import {Layout,BackTop} from 'antd';
 import {Headers,Footers,RouteWithSubRoutes} from '../../components'
 import {Switch,Route } from 'react-router-dom';
-import {Layout,BackTop } from 'antd'
+import oauth from '../../oAuth';
 
 //首页路由配置
 import {routes} from '../portal'
@@ -14,21 +15,19 @@ import {routes} from '../portal'
 const { Content } = Layout;
 class DashBoard extends Component {
 
-    /*componentWillMount(){
-        const props = this.props;
 
-        if(!props.isAuthenticated){
-            props.history.replace('/login');
+    componentWillMount(){
+        if(!oauth.isLogin()){
+            return oauth.logout();
         }
+    }
+
+    componentWillReceiveProps(nextProps){
+        console.log(nextProps);
 
     }
 
-    componentWillReceiveProps(nextPros){
-        const props = nextPros;
-        if(!props.isAuthenticated){
-            props.history.replace('/login');
-        }
-    }*/
+
     render() {
         return (
                 <Layout className="layout">

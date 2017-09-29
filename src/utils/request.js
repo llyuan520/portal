@@ -70,7 +70,6 @@ request.interceptors.response.use(function (response) {
 }, function (error) {
     // 对响应错误做点什么
     if (error.response) {
-        debugger
         switch (error.response.status) {
             case 400:
                 error.message = '请求错误'

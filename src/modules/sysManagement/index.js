@@ -12,9 +12,24 @@ import PortalBreadCrumb from '../../modules/breadcrumb/Breadcrumb'
 import routes from '../../modules/sysManagement/routes'
 import PortalSider from '../../components/sider'
 
+
+import oauth from '../../oAuth';
+
 const { Content } = Layout;
 
 class SysManagement extends Component {
+
+    componentWillMount(){
+        if(!oauth.isLogin()){
+            return oauth.logout();
+        }
+    }
+
+    componentWillReceiveProps(nextProps){
+        console.log(nextProps);
+
+    }
+
     render() {
         return (
 

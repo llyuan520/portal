@@ -4,18 +4,33 @@
  * description  :
  */
 import React, { Component } from 'react';
-import { Form, Row, Col, Input, Button, Icon } from 'antd';
+import {Form, Row, Col, Input, Button, Icon,Select} from 'antd';
+import { withRouter } from 'react-router'
+
+
 const FormItem = Form.Item;
+const Option = Select.Option;
 
 class Search extends Component {
-    state = {
-        expand: false,
-    };
+    constructor(props){
+        super(props)
+        this.state = {
+            expand: true,
+            projectCompany:[],
+            projectCompanyLoaded:false,
+            data: [],
+            status: undefined,
+        };
+
+    }
 
     handleSearch = (e) => {
-        e.preventDefault();
+        e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            console.log('Received values of form: ', values);
+            if (!err) {
+                this.props.search && this.props.search(values, Date.now());
+            }
+
         });
     }
 
@@ -28,50 +43,117 @@ class Search extends Component {
         this.setState({ expand: !expand });
     }
 
-    // To generate mock Form.Item
-    getFields() {
-        const count = this.state.expand ? 10 : 6;
+    getFields(start,end) {
+        const count = this.state.expand ? 10 : 0;
         const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
             labelCol: { span: 5 },
             wrapperCol: { span: 19 },
         };
-        const children = [];
-        for (let i = 0; i < 10; i++) {
+        const children = [
+
+        ];
+        const data = [
+            {
+                label:'分类名称',
+                type:'text',
+                fieldName:'companyName'
+            },
+            {
+                label:'分类来源',
+                type:'select',
+                fieldName:'typeStatus',
+                items: [
+                    {
+                        value:'1',
+                        label:'已分类',
+                    },{
+                        value:'-1',
+                        label:'未分类',
+                    }
+                ],
+            },
+            {
+                label:'分类关键字',
+                type:'text',
+                fieldName:'keywords',
+            }
+
+        ]
+
+
+        for (let i = 0; i < data.length; i++) {
+            let inputComponent;
+            if(data[i].type==='text'){
+                inputComponent = <Input placeholder={`请输入${data[i].label}`} />;
+            }else if(data[i].type==='select'){
+                inputComponent = (
+                    <Select placeholder={`请选择${data[i].label}`}>
+                        {
+                            data[i].items.map((item,i)=><Option key={i} value={item.value}>{item.label}</Option>)
+                        }
+                    </Select>
+                )
+            }
             children.push(
-                <Col span={8} key={i} style={{ display: i < count ? 'block' : 'none' }}>
-                    <FormItem {...formItemLayout} label={`Field ${i}`}>
-                        {getFieldDecorator(`field-${i}`)(
-                            <Input placeholder="placeholder" />
+                <Col span={8} key={i} style={{ display: i < count ? 'block' : 'none'}}>
+                    <FormItem {...formItemLayout} label={data[i].label}>
+                        {getFieldDecorator(data[i]['fieldName'],{
+                            initialValue:data[i].initialValue || undefined
+                        })(
+                            inputComponent
                         )}
                     </FormItem>
                 </Col>
             );
         }
-        return children;
+        return children.slice(start,end||null);
     }
 
-    render() {
+
+    componentDidMount(){
+
+    }
+
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
+    }
+
+    render(){
         return (
-            <Form
-                className="ant-advanced-search-form"
-                onSubmit={this.handleSearch}
-            >
-                <Row gutter={40}>{this.getFields()}</Row>
-                <Row>
-                    <Col span={24} style={{ textAlign: 'right' }}>
-                        <Button type="primary" htmlType="submit">Search</Button>
-                        <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
-                            Clear
-                        </Button>
-                        <a style={{ marginLeft: 8, fontSize: 12 }} onClick={this.toggle}>
-                            Collapse <Icon type={this.state.expand ? 'up' : 'down'} />
-                        </a>
-                    </Col>
-                </Row>
-            </Form>
+            <div>
+                <h2 className="title">
+                    查询条件
+                    <span style={{float:'right',cursor:'pointer' }} onClick={this.toggle}>
+                        <Icon type={this.state.expand ? 'up-circle-o' : 'down-circle-o'} />
+                    </span>
+                </h2>
+
+                <Form
+                    onSubmit={this.handleSearch}
+                    className="search-from"
+                    style={{display:this.state.expand ? 'block' : 'none'}}
+                >
+
+                    <Row gutter={40}>
+                        {
+                            this.getFields(0,3)
+                        }
+
+                    </Row>
+                    <Row>
+                        <Col span={24} style={{ textAlign: 'right' }}>
+                            <Button type="primary" htmlType="submit">查询</Button>
+                            <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
+                                重置
+                            </Button>
+                        </Col>
+                    </Row>
+                </Form>
+            </div>
         );
     }
-}
 
-export default Form.create()(Search);
+}
+export default Form.create()(withRouter(Search))

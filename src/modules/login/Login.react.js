@@ -68,13 +68,9 @@ class Login extends Component{
     }
 
     componentWillMount(){
-
-        /*if(oauth.isLogin()){
-            this.props.history.push('/dashboard')
-        }else{
-            this.fetch();
-            return;
-        }*/
+        if(!oauth.isLogin()){
+            return this.fetch();
+        }
     }
 
     componentWillReceiveProps(nextProps){
