@@ -5,23 +5,17 @@
  */
 import React, { Component } from 'react';
 import {withRouter} from 'react-router-dom';
+import { Layout,BackTop} from 'antd';
 import {Headers,RouteWithSubRoutes} from '../../components';
 import {Switch,Route } from 'react-router-dom';
 import PortalBreadCrumb from '../../modules/breadcrumb/Breadcrumb'
 import routes from '../../modules/sysManagement/routes'
 import PortalSider from '../../components/sider'
-
 import {copyRight} from "../../config/index";
-
-import { Layout, Menu, Breadcrumb, Icon ,BackTop} from 'antd';
-
-
-
 import oauth from '../../oAuth';
 import './styles.css';
 
-const { SubMenu } = Menu;
-const { Header, Content, Sider,Footer } = Layout;
+const { Header, Content,Footer } = Layout;
 
 class SysManagement extends Component {
 

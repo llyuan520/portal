@@ -5,9 +5,7 @@
  */
 import React, { Component } from 'react';
 import { Layout, Menu, Icon } from 'antd';
-import {withRouter,Link} from 'react-router-dom';
-import PropTypes from 'prop-types'
-import logoImg from '../../components/header/media/logo-02.png';
+import {withRouter} from 'react-router-dom';
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
@@ -19,20 +17,8 @@ class PortalSider extends Component{
     constructor(props){
         super(props);
         this.state = {
-            collapsed: true,
             selectedPath:props.history.location.pathname
         };
-    }
-
-    toggle = () => {
-        this.mounted && this.setState({
-            collapsed: !this.state.collapsed,
-        });
-    }
-    static propTypes = {
-        match: PropTypes.object.isRequired,
-        location: PropTypes.object.isRequired,
-        history: PropTypes.object.isRequired
     }
 
     mounted = true;
@@ -65,12 +51,6 @@ class PortalSider extends Component{
                 collapsible
                 style={{ background: '#fff' }}
             >
-                {/*<div style={{ textAlign: 'center',padding: '16px 0'}}>
-                    <Link to="/dashboard/home">
-                        <img src={logoImg} alt="logo" />
-                    </Link>
-                </div>*/}
-
                 <Menu
                     //theme='dark'
                     defaultSelectedKeys={[this.state.selectedPath]}
