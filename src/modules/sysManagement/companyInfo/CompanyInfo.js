@@ -6,8 +6,6 @@
 import React, { Component } from 'react';
 import Search from './Search.react'
 import Result from './Result.react'
-import {Layout} from 'antd'
-import '../styles.css';
 
 class CompanyInfoSearch extends Component {
     state = {
@@ -18,10 +16,10 @@ class CompanyInfoSearch extends Component {
 
     render(){
         return (
-            <Layout>
+            <div>
                 <Search />
                 <Result />
-            </Layout>
+            </div>
         );
     }
 

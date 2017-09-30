@@ -91,7 +91,7 @@ class Home extends Component{
                  {
                      this.state.companyCode && titleArry.map((item, i)=>(
 
-                         <div key={i} id={item.anchorId} className="p-main" style={{ background: i%2 !== 0  ? '' : '#fff' }}>
+                         <div key={i} id={item.anchorId} className="p-main" style={{ background: i%2 !== 0  ? '#ececec' : '#fff' }}>
                              <div className="mediaWidth" style={{  padding: '40px 0' }}>
                                  <h1 className="p-context-title" style={{color:item.color,borderLeft: `5px solid ${item.color}` }}> {item.title}
                                      {

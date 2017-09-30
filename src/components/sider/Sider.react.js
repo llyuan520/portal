@@ -5,11 +5,12 @@
  */
 import React, { Component } from 'react';
 import { Layout, Menu, Icon } from 'antd';
-import { withRouter } from 'react-router'
+import {withRouter,Link} from 'react-router-dom';
 import PropTypes from 'prop-types'
+import logoImg from '../../components/header/media/logo-02.png';
+
 const { SubMenu } = Menu;
 const { Sider } = Layout;
-
 
 
 class PortalSider extends Component{
@@ -60,16 +61,20 @@ class PortalSider extends Component{
 
         return(
             <Sider
-                width={200}
-                style={{ background: '#fff' }}>
+                trigger={null}
+                collapsible
+                style={{ background: '#fff' }}
+            >
+                {/*<div style={{ textAlign: 'center',padding: '16px 0'}}>
+                    <Link to="/dashboard/home">
+                        <img src={logoImg} alt="logo" />
+                    </Link>
+                </div>*/}
 
                 <Menu
-                    mode="inline"
-                    style={{ height: '100%',border:0, }}
-
+                    //theme='dark'
                     defaultSelectedKeys={[this.state.selectedPath]}
                     defaultOpenKeys={[subKey]}
-
                     selectedKeys={[this.state.selectedPath]}
                     onSelect={
                         ({item,key,selectedKeys})=>{
@@ -77,6 +82,7 @@ class PortalSider extends Component{
                         }
 
                     }
+                    mode="inline"
                 >
 
                     {
@@ -102,7 +108,6 @@ class PortalSider extends Component{
                             </SubMenu>
                         ))
                     }
-
                 </Menu>
             </Sider>
         )

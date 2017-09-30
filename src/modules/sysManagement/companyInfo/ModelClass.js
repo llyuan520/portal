@@ -21,11 +21,9 @@ class EditAddWithClass extends Component{
     }
 
     handleOk = (e) => {
-        console.log(this.props.id);
         this.handleSubmit()
     }
     handleCancel = (e) => {
-        console.log(this.props.id);
         this.props.changeVisable(false);
     }
 
@@ -33,26 +31,38 @@ class EditAddWithClass extends Component{
         e && e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);
+                //console.log('Received values of form: ', values);
                 this.setState({
                     submitLoading:true
                 })
 
                 if(this.props.modalType === 'create') {
 
-                    request.post('/companyType/saveCompanyTypeInfo', values)
+                    const dataInfo = {...values,key:this.props.selectedKeys}
+
+                    this.setState({
+                        submitLoading: false
+                    })
+                    //新增成功，关闭当前窗口,刷新父级组件
+                    this.props.changeVisable(false)
+                    this.props.fetchTree()
+
+                    request.post('/companyType/saveCompanyTypeInfo', dataInfo)
                         .then(({data}) => {
                             this.setState({
                                 submitLoading: false
                             })
                             if (data.code === 200) {
                                 message.success('新增分类成功！', 4)
-                                this.handleCancel()
+                                //新增成功，关闭当前窗口,刷新父级组件
+                                this.props.changeVisable(false)
+                                this.props.fetchTree()
                             } else {
                                 message.error(data.msg, 4)
                             }
                         })
                         .catch(err => {
+                            message.error(err.message)
                             this.setState({
                                 submitLoading: false
                             })
@@ -60,8 +70,14 @@ class EditAddWithClass extends Component{
                 }
 
                 if(this.props.modalType === 'edit'){
-                    const { defaultValue } = this.props;
-                    console.log(defaultValue);
+
+                    this.setState({
+                        submitLoading: false
+                    })
+                    //编辑成功，关闭当前窗口,刷新父级组件
+                    this.props.changeVisable(false)
+                    this.props.fetch()
+
 
                     request.post('/companyType/updateCompanyTypeInfo', values)
                         .then(({data}) => {
@@ -70,12 +86,17 @@ class EditAddWithClass extends Component{
                             })
                             if (data.code === 200) {
                                 message.success('编辑分类成功！', 4)
-                                this.handleCancel()
+
+                                //编辑成功，关闭当前窗口,刷新父级组件
+                                this.props.changeVisable(false)
+                                this.props.fetch()
+
                             } else {
                                 message.error(data.msg, 4)
                             }
                         })
                         .catch(err => {
+                            message.error(err.message)
                             this.setState({
                                 submitLoading: false
                             })
@@ -87,7 +108,7 @@ class EditAddWithClass extends Component{
 
     componentDidMount() {
 
-        console.log(this.props.uuid);
+        //console.log(this.props.keyVal);
     }
 
     mounted = true;
@@ -96,14 +117,18 @@ class EditAddWithClass extends Component{
     }
 
     componentWillReceiveProps(nextProps){
-        /*if(nextProps.uuid !== this.props.uuid){
-            this.fetch(nextProps.uuid);
-        }*/
-        console.log(nextProps)
+
+        //console.log(nextProps)
+
+        if(nextProps.selectedKeys !== this.props.selectedKeys){
+            
+        }
+
 
     }
 
     render() {
+        const {modalType} = this.props;
         const defaultValue = {...this.props.defaultValue}
         const { getFieldDecorator } = this.props.form;
 
@@ -121,7 +146,7 @@ class EditAddWithClass extends Component{
         return (
             <Modal
                 key={this.state.modelClassModalKey}
-                title={this.props.modalType ==='create' ? '新增分类' : '编辑分类' }
+                title={modalType ==='create' ? '新增分类' : '编辑分类' }
                 visible={this.props.visible}
                 okText="保存"
                 cancelText="取消"

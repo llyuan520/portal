@@ -8,11 +8,12 @@ import {Layout,BackTop} from 'antd';
 import {Headers,Footers,RouteWithSubRoutes} from '../../components'
 import {Switch,Route } from 'react-router-dom';
 import oauth from '../../oAuth';
+import '../../components/header/Header.less';
 
 //首页路由配置
 import {routes} from '../portal'
 
-const { Content } = Layout;
+const { Content,Header } = Layout;
 class DashBoard extends Component {
 
 
@@ -32,7 +33,11 @@ class DashBoard extends Component {
         return (
                 <Layout className="layout">
 
-                    <Headers  />
+                    <Header className="header user">
+                        <div className="mediaWidth">
+                            <Headers />
+                        </div>
+                    </Header>
 
                     <Content>
                         <Switch>

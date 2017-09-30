@@ -270,7 +270,7 @@ class CompanyInformation extends Component{
         const { companyLoading, companyVisible } = this.state;
 
         return(
-                <div className="p-main">
+                <div className="p-main" style={{background: '#ececec'}}>
                     <div className="mediaWidth" style={{  padding: '40px 0 12px 0' }}>
                         <h1 style={{marginBottom:20,color: '#08c'}}>
                             <Icon type="home" style={{marginRight:10 }} />

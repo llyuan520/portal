@@ -4,18 +4,24 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {Layout,BackTop} from 'antd';
 import {withRouter} from 'react-router-dom';
-import {Headers,Footers,RouteWithSubRoutes} from '../../components';
+import {Headers,RouteWithSubRoutes} from '../../components';
 import {Switch,Route } from 'react-router-dom';
 import PortalBreadCrumb from '../../modules/breadcrumb/Breadcrumb'
 import routes from '../../modules/sysManagement/routes'
 import PortalSider from '../../components/sider'
 
+import {copyRight} from "../../config/index";
+
+import { Layout, Menu, Breadcrumb, Icon ,BackTop} from 'antd';
+
+
 
 import oauth from '../../oAuth';
+import './styles.css';
 
-const { Content } = Layout;
+const { SubMenu } = Menu;
+const { Header, Content, Sider,Footer } = Layout;
 
 class SysManagement extends Component {
 
@@ -32,51 +38,37 @@ class SysManagement extends Component {
 
     render() {
         return (
+            <Layout>
+                <Header className="sys" style={{ padding: '0 24px'}} >
+                    <Headers />
+                </Header>
+                <Layout>
+                    <PortalSider menusData={routes} />
+                    <Layout style={{ padding: '0 24px 24px' }}>
+                        <PortalBreadCrumb  location={this.props.location} routes={routes}  />
+                        <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
+                            <Switch>
+                                {
+                                    routes.map((item,i)=>(
+                                        item.subNav.map((route, i) => (
+                                            <RouteWithSubRoutes key={i} {...route}/>
+                                        ))
+                                    ))
+                                }
+                                <Route path="*" component={()=><div> 404 </div>} />
+                            </Switch>
+                        </Content>
 
-            <Layout className="layout">
+                        <Footer style={{ textAlign: 'center' }}>
+                            {copyRight}
+                        </Footer>
 
-                <Headers  />
-
-                <Content>
-                    <Layout>
-
-                        <div className="p-main">
-                            <div className="mediaWidth" style={{  padding: '0' }}>
-                                <Content>
-
-                                    <PortalBreadCrumb  location={this.props.location} routes={routes}  />
-
-                                    <Layout style={{padding: '24px 0', background: '#fff' }}>
-
-                                        <PortalSider menusData={routes} />
-
-                                        <Content style={{ padding: '0 24px', minHeight: 280 }}>
-                                            <Switch>
-                                                {
-                                                    routes.map((item,i)=>(
-                                                        item.subNav.map((route, i) => (
-                                                            <RouteWithSubRoutes key={i} {...route}/>
-                                                        ))
-                                                    ))
-                                                }
-                                                <Route path="*" component={()=><div> 404 </div>} />
-                                            </Switch>
-                                        </Content>
-                                    </Layout>
-
-                                </Content>
-
-                            </div>
-                        </div>
-
+                        <BackTop />
                     </Layout>
-                </Content>
-
-                <Footers />
-
-                <BackTop />
-
+                </Layout>
             </Layout>
+
+
 
         )
     }

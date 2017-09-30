@@ -67,7 +67,7 @@ class Result extends Component {
                 ...params,
             }
         }).then(({data}) => {
-            console.log(data);
+            //console.log(data);
             if(data.code===200) {
                 const pagination = {...this.state.pagination};
                 // Read total count from server
@@ -93,7 +93,7 @@ class Result extends Component {
         }, 1000);
     }
     onSelectChange = (selectedRowKeys) => {
-        console.log('selectedRowKeys changed: ', selectedRowKeys);
+        //console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
     }
 
@@ -106,7 +106,7 @@ class Result extends Component {
     }
 
     handleDelect = id =>{
-        console.log(id);
+        //console.log(id);
     }
 
     componentDidMount() {
@@ -120,7 +120,7 @@ class Result extends Component {
 
     componentWillReceiveProps(nextProps){
 
-        console.log(nextProps.filters);
+        //console.log(nextProps.filters);
 
 
         //用来判断如果搜索字段是否有改变，改变了就需要把当前table选中页设置为1
@@ -231,6 +231,7 @@ class Result extends Component {
                             editClassKey:Date.now()
                         })
                     }}
+                    fetch={this.fetch.bind(this)}
                     visible={this.state.editClassVisible} />
 
             </div>

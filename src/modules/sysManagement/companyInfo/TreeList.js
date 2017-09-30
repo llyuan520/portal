@@ -4,55 +4,23 @@
  * description  :
  */
 import React,{Component} from 'react';
-import { Tree,Icon,Button } from 'antd';
+import { Tree,Icon,Button,Spin } from 'antd';
 import EditAddWithClass from './ModelClass'
+import {request} from '../../../utils';
 
 const TreeNode = Tree.TreeNode;
-
-const treeData = [{
-    title: '0-0',
-    key: '0-0',
-    children: [{
-        title: '0-0-0',
-        key: '0-0-0',
-        children: [
-            { title: '0-0-0-0', key: '0-0-0-0' },
-            { title: '0-0-0-1', key: '0-0-0-1' },
-            { title: '0-0-0-2', key: '0-0-0-2' },
-        ],
-    }, {
-        title: '0-0-1',
-        key: '0-0-1',
-        children: [
-            { title: '0-0-1-0', key: '0-0-1-0' },
-            { title: '0-0-1-1', key: '0-0-1-1' },
-            { title: '0-0-1-2', key: '0-0-1-2' },
-        ],
-    }, {
-        title: '0-0-2',
-        key: '0-0-2',
-    }],
-}, {
-    title: '0-1',
-    key: '0-1',
-    children: [
-        { title: '0-1-0-0', key: '0-1-0-0' },
-        { title: '0-1-0-1', key: '0-1-0-1' },
-        { title: '0-1-0-2', key: '0-1-0-2' },
-    ],
-}, {
-    title: '0-2',
-    key: '0-2',
-}];
-
 class TreeList extends Component {
     state = {
-        expandedKeys: ['0-0-0', '0-0-1'],
+        expandedKeys: [],
         autoExpandParent: true,
         selectedKeys: [],
+
+        treeData:[],
+        editClassKey:Date.now()+'1',
+        eidtLoading:false,
     }
     onExpand = (expandedKeys) => {
-        console.log('onExpand', arguments);
+        //console.log('onExpand', arguments);
         // if not set autoExpandParent to false, if children expanded, parent can not collapse.
         // or, you can remove all expanded children keys.
         this.setState({
@@ -63,7 +31,6 @@ class TreeList extends Component {
     onSelect = (selectedKeys, info) => {
         console.log('onSelect', info);
         console.log('selectedKeys', selectedKeys);
-
         this.setState({ selectedKeys });
     }
     renderTreeNodes = (data) => {
@@ -82,27 +49,64 @@ class TreeList extends Component {
     //弹出框
     showModal = () =>{
         this.setState({
-            editClassVisible: true,
-            uuid:''
+            editClassVisible: true
         });
     }
 
+    fetchTree = () => {
+        this.mounted && this.setState({ eidtLoading: true });
+        request.get('/companyType/queryCompanyTypeTree',{
+        }).then(({data}) => {
+            //console.log(data);
+            if(data.code===200) {
+                this.mounted && this.setState({
+                    treeData: data.data,
+                    eidtLoading: false,
+                });
+            }
+        });
+    }
+
+    componentDidMount() {
+        this.fetchTree();
+    }
+
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
+    }
+
+    componentWillReceiveProps(nextProps){
+
+        //console.log(nextProps);
+
+    }
+
     render() {
+        const { expandedKeys,autoExpandParent,selectedKeys } = this.state;
+        const hasSelected = selectedKeys.length > 0;
         return (
             <div>
-                <div style={{marginBottom:20}}>
-                    <Button type="primary" onClick={()=>this.showModal()}>新增分类</Button>
-                </div>
-                <Tree
-                    onExpand={this.onExpand}
-                    expandedKeys={this.state.expandedKeys}
-                    autoExpandParent={this.state.autoExpandParent}
-                    onSelect={this.onSelect}
-                    selectedKeys={this.state.selectedKeys}
-                >
-                    {this.renderTreeNodes(treeData)}
-                </Tree>
 
+                <Spin spinning={this.state.eidtLoading}>
+
+                    <div style={{marginBottom:20}}>
+                        <Button type="primary"
+                                disabled={!hasSelected}
+                                onClick={()=>this.showModal()}
+                        >新增分类</Button>
+                    </div>
+
+                    <Tree
+                        onExpand={this.onExpand}
+                        expandedKeys={expandedKeys}
+                        autoExpandParent={autoExpandParent}
+                        onSelect={this.onSelect}
+                        selectedKeys={selectedKeys}
+                    >
+                        {this.renderTreeNodes(this.state.treeData)}
+                    </Tree>
+                </Spin>
                 <EditAddWithClass
                     key={this.state.editClassKey}
                     modalType="create"
@@ -112,6 +116,8 @@ class TreeList extends Component {
                             editClassKey:Date.now()
                         })
                     }}
+                    selectedKeys={selectedKeys[0]}
+                    fetchTree={this.fetchTree.bind(this)}
                     visible={this.state.editClassVisible} />
             </div>
 

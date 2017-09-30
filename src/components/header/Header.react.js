@@ -5,14 +5,12 @@
  */
 
 import React,{ Component } from 'react';
-import { Layout,Menu,Row,Col,Icon,Avatar,Modal,Badge} from 'antd';
+import { Menu,Row,Col,Icon,Avatar,Modal,Badge} from 'antd';
 import {withRouter,Link} from 'react-router-dom';
 import {messageInfo} from "../../config/index";
 import oauth from '../../oAuth';
 
-import './Header.less';
 import logoImg from './media/logo-02.png';
-const { Header } = Layout;
 const SubMenu = Menu.SubMenu;
 const confirm = Modal.confirm;
 
@@ -21,15 +19,17 @@ class Headers extends Component{
         super(props);
         this.state = {
             userName: '',
-            current: 'messages',
+            current: '',
             selectedPath:props.history.location.pathname
         };
     }
 
     handleClick = ({item, key, keyPath})=>{
-        this.setState({
-            current: key,
-        });
+        if(this.state.selectedPath.indexOf(key) === 1){
+            this.setState({
+                current: key,
+            });
+        }
 
         if(key==='messages'){
             this.props.history.push('/dashboard');
@@ -39,6 +39,17 @@ class Headers extends Component{
     }
 
     componentDidMount() {
+        let key ='';
+
+        if(this.state.selectedPath.indexOf('messages') === 1){
+            key = 'messages';
+        }else if(this.state.selectedPath.indexOf('sysManagement') === 1){
+            key = 'sysManagement';
+        }
+        this.setState({
+            current: key,
+        });
+
         if(!!oauth.getUser() && !!oauth.getToken()){
             if(oauth.getAuth()){
                 this.setState({
@@ -61,73 +72,68 @@ class Headers extends Component{
     }
 
     componentWillReceiveProps(nextProps){
-
+        this.setState({
+            selectedPath:nextProps.location.pathname
+        })
     }
 
     render(){
         return(
-            <Header className="header user">
-                <Row className="mediaWidth">
-                    <Col span={14}>
-                        <div className="logo">
-                            <Link to="/dashboard/home">
-                                <img src={logoImg} alt="logo" />
-                            </Link>
-                        </div>
+            <Row>
+                <Col span={14}>
 
-                       <StartMarquee />
+                    <div className="logo hide">
+                        <Link to="/dashboard/home">
+                            <img src={logoImg} alt="logo" />
+                        </Link>
+                    </div>
+                    <StartMarquee />
 
-                    </Col>
-                    <Col span={10}>
-
-                        <Menu
-                            theme="dark"
-                            mode="horizontal"
-                            onClick={this.handleClick}
-                            selectedKeys={[this.state.current]}
-                            className="p-menu-root"
-                            style={{ lineHeight: '64px',float:'right' }}
-                        >
-                            <Menu.Item key="messages">
-                                <Badge count={199}>
-                                    <Icon type="mail" style={{fontSize: 24}} />
-                                </Badge>
-                                消息
+                </Col>
+                <Col span={10}>
+                    <Menu
+                        theme="dark"
+                        mode="horizontal"
+                        onClick={this.handleClick}
+                        selectedKeys={[this.state.current]}
+                        className="p-menu-root"
+                        style={{ lineHeight: '64px',float:'right' }}
+                    >
+                        <Menu.Item key="messages">
+                            <Badge count={199}>
+                                <Icon type="mail" style={{fontSize: 24}} />
+                            </Badge>
+                            消息
+                        </Menu.Item>
+                        <SubMenu
+                            title={
+                                <span>
+                                <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />
+                                    { this.state.userName }
+                            </span>}>
+                            <Menu.Item key="sysManagement">
+                            <span style={{display:'block',textAlign:'left',color:'#333'}}>
+                                <Icon type="user" />
+                                后台管理
+                            </span>
                             </Menu.Item>
-                            <SubMenu
-                                title={
-                                    <span>
-                                        <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />
-                                         { this.state.userName }
-                                    </span>}>
-                                <Menu.Item key="sysManagement">
-                                    <span style={{display:'block',textAlign:'left',color:'#333'}}>
-                                        <Icon type="user" />
-                                        后台管理
-                                    </span>
-                                </Menu.Item>
-                                <Menu.Item key="logout">
-                                    <span onClick={()=> {
-                                        confirm({
-                                            title: '系统提示',
-                                            content: '确定要退出吗',
-                                            onOk: () => oauth.logout(),
-                                            onCancel() { },
-                                        });
-                                    }} style={{display:'block',textAlign:'left',color:'#333'}} >
-                                        <Icon type="logout" />
-                                        退出
-                                    </span>
-                                </Menu.Item>
-                            </SubMenu>
-
-                        </Menu>
-
-
-                    </Col>
-                </Row>
-
-            </Header>
+                            <Menu.Item key="logout">
+                            <span onClick={()=> {
+                                confirm({
+                                    title: '系统提示',
+                                    content: '确定要退出吗',
+                                    onOk: () => oauth.logout(),
+                                    onCancel() { },
+                                });
+                            }} style={{display:'block',textAlign:'left',color:'#333'}} >
+                                <Icon type="logout" />
+                                退出
+                            </span>
+                            </Menu.Item>
+                        </SubMenu>
+                    </Menu>
+                </Col>
+            </Row>
         )
     }
 }
@@ -140,17 +146,6 @@ class StartMarquee extends Component {
 
     state={
         speed: 1500,
-    }
-
-    componentDidMount(){
-
-        //获取滚动部分
-        let element1=document.getElementById("hotNews1"),
-            element2=document.getElementById("hotNews2");
-
-        element2.innerHTML += element1.innerHTML;
-        clearTimeout(timer);
-        timer = setTimeout(()=>{this.marquee()}, this.state.speed);
     }
 
     marquee=()=>{
@@ -179,10 +174,30 @@ class StartMarquee extends Component {
     }
 
 
+    componentDidMount(){
+        //获取滚动部分
+        let element1=document.getElementById("hotNews1"),
+            element2=document.getElementById("hotNews2");
+
+        element2.innerHTML += element1.innerHTML;
+        clearTimeout(timer);
+        timer = setTimeout(()=>{this.marquee()}, this.state.speed);
+    }
+
+    componentWillUnmount(){
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+
+    }
+
     render(){
 
+
+
         return(
-            <div>
+            <div className="hide">
                 <Icon type="sound" style={{ position: 'absolute',fontSize: 16,color:'#fff',verticalAlign:'middle',marginRight:'10px',top:'24px' }} />
                 <div id="hotNews" className="q-hotNews" onMouseOver={this.handelOnMouserOver} onMouseOut={this.handelOnMouseOut}>
                     <ul id="hotNews1">
