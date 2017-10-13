@@ -9,6 +9,7 @@ import { Menu,Row,Col,Icon,Avatar,Modal,Badge} from 'antd';
 import {withRouter,Link} from 'react-router-dom';
 import {messageInfo} from "../../config/index";
 import oauth from '../../oAuth';
+import NoviceGuide from './NoviceGuide'
 
 import logoImg from './media/logo-02.png';
 const SubMenu = Menu.SubMenu;
@@ -20,13 +21,15 @@ class Headers extends Component{
         this.state = {
             userName: '',
             current: '',
-            selectedPath:props.history.location.pathname
+            selectedPath:props.history.location.pathname,
+            modalVisible: false,
+            modalClassKey:Date.now()+'1',
         };
     }
 
     handleClick = ({item, key, keyPath})=>{
         if(this.state.selectedPath.indexOf(key) === 1){
-            this.setState({
+            this.mounted && this.setState({
                 current: key,
             });
         }
@@ -35,7 +38,16 @@ class Headers extends Component{
             this.props.history.push('/dashboard');
         }else if(key==='sysManagement'){
             this.props.history.push('/sysManagement');
+        }else if(key === 'noviceGuide'){
+            this.setModalVisible(true);
         }
+    }
+
+    setModalVisible= status=>{
+        this.mounted && this.setState({
+            modalVisible:status,
+            modalClassKey:Date.now()
+        })
     }
 
     componentDidMount() {
@@ -46,13 +58,14 @@ class Headers extends Component{
         }else if(this.state.selectedPath.indexOf('sysManagement') === 1){
             key = 'sysManagement';
         }
-        this.setState({
+
+        this.mounted && this.setState({
             current: key,
         });
 
         if(!!oauth.getUser() && !!oauth.getToken()){
             if(oauth.getAuth()){
-                this.setState({
+                this.mounted && this.setState({
                     userName : oauth.getAuth().username
                 })
             }
@@ -72,68 +85,76 @@ class Headers extends Component{
     }
 
     componentWillReceiveProps(nextProps){
-        this.setState({
+        this.mounted && this.setState({
             selectedPath:nextProps.location.pathname
         })
     }
 
     render(){
         return(
-            <Row>
-                <Col span={14}>
+            <div>
+                <Row>
+                    <Col span={14}>
 
-                    <div className="logo hide">
-                        <Link to="/dashboard/home">
-                            <img src={logoImg} alt="logo" />
-                        </Link>
-                    </div>
-                    <StartMarquee />
+                        <div className="logo hide">
+                            <Link to="/dashboard/home">
+                                <img src={logoImg} alt="logo" />
+                            </Link>
+                        </div>
+                        <StartMarquee />
 
-                </Col>
-                <Col span={10}>
-                    <Menu
-                        theme="dark"
-                        mode="horizontal"
-                        onClick={this.handleClick}
-                        selectedKeys={[this.state.current]}
-                        className="p-menu-root"
-                        style={{ lineHeight: '64px',float:'right' }}
-                    >
-                        <Menu.Item key="messages">
-                            <Badge count={199}>
-                                <Icon type="mail" style={{fontSize: 24}} />
-                            </Badge>
-                            消息
-                        </Menu.Item>
-                        <SubMenu
-                            title={
-                                <span>
-                                <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />
-                                    { this.state.userName }
-                            </span>}>
-                            <Menu.Item key="sysManagement">
-                            <span style={{display:'block',textAlign:'left',color:'#333'}}>
-                                <Icon type="user" />
-                                后台管理
-                            </span>
+                    </Col>
+                    <Col span={10}>
+                        <Menu
+                            theme="dark"
+                            mode="horizontal"
+                            onClick={this.handleClick}
+                            selectedKeys={[this.state.current]}
+                            className="p-menu-root"
+                            style={{ lineHeight: '64px',float:'right' }}
+                        >
+                            <Menu.Item key="messages">
+                                <Badge count={199}>
+                                    <Icon type="mail" style={{fontSize: 24}} />
+                                </Badge>
+                                消息
                             </Menu.Item>
-                            <Menu.Item key="logout">
-                            <span onClick={()=> {
-                                confirm({
-                                    title: '系统提示',
-                                    content: '确定要退出吗',
-                                    onOk: () => oauth.logout(),
-                                    onCancel() { },
-                                });
-                            }} style={{display:'block',textAlign:'left',color:'#333'}} >
-                                <Icon type="logout" />
-                                退出
-                            </span>
+                            <Menu.Item key="noviceGuide">
+                                新手引导
                             </Menu.Item>
-                        </SubMenu>
-                    </Menu>
-                </Col>
-            </Row>
+                            <SubMenu
+                                title={
+                                    <span>
+                                    <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />
+                                        { this.state.userName }
+                                </span>}>
+                                <Menu.Item key="sysManagement">
+                                <span style={{display:'block',textAlign:'left',color:'#333'}}>
+                                    <Icon type="user" />
+                                    管理员入口
+                                </span>
+                                </Menu.Item>
+                                <Menu.Item key="logout">
+                                <span onClick={()=> {
+                                    confirm({
+                                        title: '系统提示',
+                                        content: '确定要退出吗',
+                                        onOk: () => oauth.logout(),
+                                        onCancel() { },
+                                    });
+                                }} style={{display:'block',textAlign:'left',color:'#333'}} >
+                                    <Icon type="logout" />
+                                    退出
+                                </span>
+                                </Menu.Item>
+                            </SubMenu>
+                        </Menu>
+                    </Col>
+                </Row>
+
+                {/*新手引导*/}
+                <NoviceGuide key={this.state.modalClassKey} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible.bind(this)} />
+            </div>
         )
     }
 }

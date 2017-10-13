@@ -11,6 +11,9 @@ import {request} from '../../../utils';
 const TreeNode = Tree.TreeNode;
 class TreeList extends Component {
     state = {
+        params:{},
+        hasSelected:false,
+
         expandedKeys: [],
         autoExpandParent: true,
         selectedKeys: [],
@@ -20,6 +23,7 @@ class TreeList extends Component {
         eidtLoading:false,
     }
     onExpand = (expandedKeys) => {
+        console.log('onExpand', expandedKeys);
         //console.log('onExpand', arguments);
         // if not set autoExpandParent to false, if children expanded, parent can not collapse.
         // or, you can remove all expanded children keys.
@@ -28,22 +32,60 @@ class TreeList extends Component {
             autoExpandParent: false,
         });
     }
+
     onSelect = (selectedKeys, info) => {
         console.log('onSelect', info);
-        console.log('selectedKeys', selectedKeys);
-        this.setState({ selectedKeys });
+
+        if(info.selectedNodes.length > 0){
+            const selectedNodes = info.selectedNodes[0].props.dataRef;
+            if(selectedNodes.level < 3){
+                this.setState({
+                    selectedKeys,
+                    hasSelected:true,
+                    params:{
+                        uuid:'',
+                        level:selectedNodes.level,
+                        parentId:selectedNodes.key,
+                        source:'1',
+                    }
+                });
+            }else{
+                this.setState({
+                    selectedKeys,
+                    hasSelected:false,
+                });
+            }
+
+        }else{
+            this.setState({
+                selectedKeys,
+                hasSelected:false,
+            });
+        }
+
     }
-    renderTreeNodes = (data) => {
-        return data.map((item) => {
+
+    renderTreeNodesChildren = (data) => {
+        return data && data.map((item) => {
             if (item.children) {
                 return (
                     <TreeNode title={<span><Icon type="folder-open" style={{ fontSize: 16 }} /> {item.title}</span>}  key={item.key} dataRef={item}>
-                        {this.renderTreeNodes(item.children)}
+                        {this.renderTreeNodesChildren(item.children)}
                     </TreeNode>
                 );
             }
-            return <TreeNode {...item} />;
+            return <TreeNode key={item.key} title={item.title} dataRef={item} />;
         });
+    }
+
+    renderTreeNodes = (data) => {
+        return (
+            <TreeNode title={<span><Icon type="folder-open" style={{fontSize: 16}}/> {data.title}</span>} key={data.key} dataRef={data}>
+                {
+                    this.renderTreeNodesChildren(data.children)
+                }
+            </TreeNode>
+        )
     }
 
     //弹出框
@@ -57,12 +99,12 @@ class TreeList extends Component {
         this.mounted && this.setState({ eidtLoading: true });
         request.get('/companyType/queryCompanyTypeTree',{
         }).then(({data}) => {
-            //console.log(data);
             if(data.code===200) {
                 this.mounted && this.setState({
                     treeData: data.data,
+                    expandedKeys:[data.data.key],
                     eidtLoading: false,
-                });
+                })
             }
         });
     }
@@ -83,8 +125,7 @@ class TreeList extends Component {
     }
 
     render() {
-        const { expandedKeys,autoExpandParent,selectedKeys } = this.state;
-        const hasSelected = selectedKeys.length > 0;
+        const {expandedKeys,autoExpandParent,selectedKeys,params,hasSelected } = this.state;
         return (
             <div>
 
@@ -92,7 +133,7 @@ class TreeList extends Component {
 
                     <div style={{marginBottom:20}}>
                         <Button type="primary"
-                                disabled={!hasSelected}
+                               disabled={!hasSelected}
                                 onClick={()=>this.showModal()}
                         >新增分类</Button>
                     </div>
@@ -117,7 +158,8 @@ class TreeList extends Component {
                         })
                     }}
                     selectedKeys={selectedKeys[0]}
-                    fetchTree={this.fetchTree.bind(this)}
+                    params = {params}
+                    refreshCurdTableTree={this.props.refreshCurdTableTree}
                     visible={this.state.editClassVisible} />
             </div>
 

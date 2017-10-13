@@ -57,12 +57,12 @@ class Search extends Component {
             {
                 label:'分类名称',
                 type:'text',
-                fieldName:'companyName'
+                fieldName:'name'
             },
             {
                 label:'分类来源',
                 type:'select',
-                fieldName:'typeStatus',
+                fieldName:'source',
                 items: [
                     {
                         value:'1',
@@ -118,6 +118,10 @@ class Search extends Component {
     mounted = true;
     componentWillUnmount(){
         this.mounted = null;
+    }
+
+    componentWillReceiveProps(nextProps){
+
     }
 
     render(){

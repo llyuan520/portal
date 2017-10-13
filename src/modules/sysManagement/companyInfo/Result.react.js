@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react';
-import {Table,Row,Col,Icon,Modal,Card} from 'antd';
+import {Table,Row,Col,Icon,Modal,Card,message} from 'antd';
 import {request} from '../../../utils';
 import TreeList from './TreeList'
 import EditAddWithClass from './ModelClass'
@@ -32,6 +32,8 @@ class Result extends Component {
             editClassVisible: false,
             defaultValue: {},
             editClassKey:Date.now()+'1',
+
+            refKeyDate:Date.now()+'2',
         };
     }
 
@@ -86,27 +88,44 @@ class Result extends Component {
         this.setState({ loading: true });
         // ajax request after empty completing
         setTimeout(() => {
-            this.setState({
+            this.mounted && this.setState({
                 selectedRowKeys: [],
                 loading: false,
             });
         }, 1000);
     }
-    onSelectChange = (selectedRowKeys) => {
-        //console.log('selectedRowKeys changed: ', selectedRowKeys);
-        this.setState({ selectedRowKeys });
-    }
+    //TODO:列表项是否可选择
+    /*onSelectChange = (selectedRowKeys) => {
+        this.mounted && this.setState({ selectedRowKeys });
+    }*/
 
     //弹出框
     showModal = data =>{
-        this.setState({
+        this.mounted && this.setState({
             editClassVisible: true,
             defaultValue:data
         });
     }
 
     handleDelect = id =>{
-        //console.log(id);
+        this.mounted && this.setState({ tableLoading: true });
+        request.post(`/companyType/deleteCompanyTypeInfo?uuid=${id}`, {
+        })
+            .then(({data}) => {
+                if (data.code === 200) {
+                    this.mounted && this.setState({ tableLoading: false });
+                    this.props.refreshCurdTableTree()
+                    message.success('删除成功！')
+                } else {
+                    message.error(data.msg, 4)
+                    this.mounted && this.setState({ tableLoading: false });
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.mounted && this.setState({ tableLoading: false });
+            })
+
     }
 
     componentDidMount() {
@@ -119,9 +138,6 @@ class Result extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-
-        //console.log(nextProps.filters);
-
 
         //用来判断如果搜索字段是否有改变，改变了就需要把当前table选中页设置为1
         if(nextProps.filters.lastUpdated !== this.props.filters.lastUpdated){
@@ -186,12 +202,12 @@ class Result extends Component {
                 },
             }
         ];
-
-        const { selectedRowKeys } = this.state;
+        //TODO:列表项是否可选择
+        /*const { selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
-        };
+        };*/
 
         return (
             <div>
@@ -203,13 +219,13 @@ class Result extends Component {
                 <Row gutter={24}>
                     <Col span={6} className="resultWrap">
                         <Card noHovering>
-                            <TreeList />
+                            <TreeList refreshCurdTableTree={this.props.refreshCurdTableTree} />
                         </Card>
                     </Col>
                     <Col span={18}>
                         <div className="resultWrap">
                             <Table columns={columns}
-                                   rowSelection={rowSelection}
+                                   //rowSelection={rowSelection}  //TODO: 列表项是否可选择
                                    key={this.state.tableKeyDate}
                                    rowKey={record => record.id}
                                    dataSource={this.state.data}
@@ -231,9 +247,8 @@ class Result extends Component {
                             editClassKey:Date.now()
                         })
                     }}
-                    fetch={this.fetch.bind(this)}
+                    refreshCurdTableTree={this.props.refreshCurdTableTree}
                     visible={this.state.editClassVisible} />
-
             </div>
         );
     }

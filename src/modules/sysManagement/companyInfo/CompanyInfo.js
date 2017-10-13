@@ -14,11 +14,24 @@ class CompanyInfoSearch extends Component {
         }
     };
 
+    refreshCurdTableTree = ()=>{
+        this.setState({
+            refKeyDate:Date.now()
+        })
+    }
+
     render(){
         return (
             <div>
-                <Search />
-                <Result />
+                <Search search={(values,lastUpdated)=>{
+                    this.setState({
+                        filters:{
+                            values,
+                            lastUpdated
+                        }
+                    })
+                }} />
+                <Result key={this.state.refKeyDate} filters={this.state.filters} refreshCurdTableTree={this.refreshCurdTableTree.bind(this)}  />
             </div>
         );
     }

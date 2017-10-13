@@ -60,7 +60,7 @@ class Home extends Component{
     constructor(props){
         super(props)
         this.state= {
-            companyCode: ''
+            companyCode: '',
         }
 
         this.changeCompanyCode = this.changeCompanyCode.bind(this);

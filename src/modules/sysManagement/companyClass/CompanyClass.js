@@ -25,7 +25,7 @@ class CompanySortSearch extends Component {
                         }
                     })
                 }} />
-                <Result lastUpdated={this.state.lastUpdated}  filters={this.state.filters} />
+                <Result filters={this.state.filters} />
             </div>
         );
     }

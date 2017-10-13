@@ -4,6 +4,7 @@
  * description  :
  */
 import request from './request.js';
+import {configData} from './../config';
 
 //获取url中的参数
 const getUrlParam = name =>{
@@ -69,4 +70,19 @@ const fMoney = (s,n=2)=>{
     }
 }
 
-export { request,getUrlParam,getParameters,fMoney,isEmpty }
+/**
+ * author       : liuliyuan
+ * createTime   : 2017/9/22 15:59
+ * description  : 参考地址 http://npm.taobao.org/package/react-piwik
+ *              ： https://github.com/joernroeder/piwik-react-router
+ */
+const PiwikReactRouter = require('piwik-react-router');
+const piwik = PiwikReactRouter({
+    //TODO: 测试环境地址，上线修改
+    url: configData.piwikData.URL,
+    siteId: configData.piwikData.siteId,
+    //userId: oauth.getUser().userName || '',
+    trackErrors: true,
+});
+
+export { request,getUrlParam,getParameters,fMoney,isEmpty,piwik}

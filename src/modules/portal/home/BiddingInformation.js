@@ -5,8 +5,7 @@
  */
 import React,{Component} from 'react';
 import { Button,Table,Icon } from 'antd';
-import {request} from '../../../utils'
-import ReactPiwik from '../../../piwik';
+import {request,piwik} from '../../../utils'
 
 const columns = [{
     title: '公告标题',
@@ -38,7 +37,7 @@ const columns = [{
                 onClick={()=>{
 
                     //TODO: 添加piwik点击事件跟踪
-                    ReactPiwik.push(['trackEvent', `${record.title}`, '了解详情']);
+                    piwik.push(['trackEvent', `${record.title}`, '了解详情']);
 
                     window.open(record.requestURL);
                 }}

@@ -5,8 +5,7 @@
  */
 import React,{Component} from 'react';
 import { Spin,Card,Row,Col,Button} from 'antd';
-import {request} from '../../../utils'
-import ReactPiwik from '../../../piwik';
+import {request,piwik} from '../../../utils'
 import {configData} from '../../../config';
 
 import logo013 from './img/media/logo-013.png';
@@ -73,7 +72,7 @@ class Cooperativebillin extends Component{
 
     handleClick = url => e =>{
         //TODO: 添加piwik点击事件跟踪
-        ReactPiwik.push(['trackEvent', '协同开票', '点击跳转到喜盈佳还是票易通3.0']);
+        piwik.push(['trackEvent', '协同开票', '点击跳转到喜盈佳还是票易通3.0']);
 
         window.open(url);
     }

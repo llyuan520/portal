@@ -5,8 +5,7 @@
  */
 import React,{Component} from 'react';
 import { Spin,Icon,Card,Row,Col,Button,Modal,Select} from 'antd';
-import {request,fMoney} from '../../../utils'
-import ReactPiwik from '../../../piwik';
+import {request,fMoney,piwik} from '../../../utils'
 import oauth from '../../../oAuth';
 
 const Option = Select.Option;
@@ -90,6 +89,18 @@ class CompanyInformation extends Component{
                     anchorHref:'#',
                     apiUrl:'',
                     refLoading:false,
+                },{
+                    key:6,
+                    icon:'file',
+                    title:'项目管理',
+                    productName:'管理你的项目',
+                    bgcolor:'#4BB1A6',
+                    tage:'',
+                    btn:'去管理',
+                    unit:'',
+                    anchorHref:'#',
+                    apiUrl:'',
+                    refLoading:false,
                 }
             ]
         }
@@ -121,7 +132,7 @@ class CompanyInformation extends Component{
         });
 
         //TODO: 添加piwik点击事件跟踪
-        ReactPiwik.push(['trackEvent', '供应商切换公司列表', '切换公司按钮点击事件']);
+        piwik.push(['trackEvent', '供应商切换公司列表', '切换公司按钮点击事件']);
     }
 
     handleCancel = () => {
@@ -260,7 +271,7 @@ class CompanyInformation extends Component{
         window.history.pushState(null, '', item.anchorHref);
 
         //TODO: 添加piwik点击事件跟踪
-        ReactPiwik.push(['trackEvent', `${item.title}`, `${item.btn}`]);
+        piwik.push(['trackEvent', `${item.title}`, `${item.btn}`]);
 
     }
 

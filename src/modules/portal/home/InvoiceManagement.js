@@ -5,8 +5,7 @@
  */
 import React,{Component} from 'react';
 import { Card,Spin,Row,Col,Button} from 'antd';
-import {request} from '../../../utils'
-import ReactPiwik from '../../../piwik';
+import {request,piwik} from '../../../utils'
 
 import icon01 from './img/icon-01.png'
 import icon02 from './img/icon-02.png'
@@ -64,7 +63,7 @@ class InvoiceManagement extends Component{
 
     handleClickAnchor= url => e =>{
         //TODO: 添加piwik点击事件跟踪
-        ReactPiwik.push(['trackEvent', '发票管理', '按钮点击事件']);
+        piwik.push(['trackEvent', '发票管理', '按钮点击事件']);
 
         window.open(url);
     }

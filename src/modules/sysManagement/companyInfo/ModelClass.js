@@ -32,38 +32,31 @@ class EditAddWithClass extends Component{
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 //console.log('Received values of form: ', values);
-                this.setState({
+                this.mounted && this.setState({
                     submitLoading:true
                 })
 
                 if(this.props.modalType === 'create') {
 
-                    const dataInfo = {...values,key:this.props.selectedKeys}
-
-                    this.setState({
+                    const dataInfo = {...values,...this.props.params, level: this.props.params.level+1} //提交的时候为选中的当前级别加1，表示只添加到下层级
+                    this.mounted && this.setState({
                         submitLoading: false
                     })
-                    //新增成功，关闭当前窗口,刷新父级组件
-                    this.props.changeVisable(false)
-                    this.props.fetchTree()
 
                     request.post('/companyType/saveCompanyTypeInfo', dataInfo)
                         .then(({data}) => {
-                            this.setState({
-                                submitLoading: false
-                            })
                             if (data.code === 200) {
                                 message.success('新增分类成功！', 4)
                                 //新增成功，关闭当前窗口,刷新父级组件
                                 this.props.changeVisable(false)
-                                this.props.fetchTree()
+                                this.props.refreshCurdTableTree();
                             } else {
                                 message.error(data.msg, 4)
                             }
                         })
                         .catch(err => {
                             message.error(err.message)
-                            this.setState({
+                            this.mounted && this.setState({
                                 submitLoading: false
                             })
                         })
@@ -71,25 +64,21 @@ class EditAddWithClass extends Component{
 
                 if(this.props.modalType === 'edit'){
 
-                    this.setState({
+                    const updateDateInfo = {...this.props.defaultValue, ...values}
+                    console.log(updateDateInfo);
+
+                    this.mounted && this.setState({
                         submitLoading: false
                     })
-                    //编辑成功，关闭当前窗口,刷新父级组件
-                    this.props.changeVisable(false)
-                    this.props.fetch()
 
-
-                    request.post('/companyType/updateCompanyTypeInfo', values)
+                    request.post('/companyType/updateCompanyTypeInfo', updateDateInfo)
                         .then(({data}) => {
-                            this.setState({
-                                submitLoading: false
-                            })
                             if (data.code === 200) {
                                 message.success('编辑分类成功！', 4)
 
                                 //编辑成功，关闭当前窗口,刷新父级组件
                                 this.props.changeVisable(false)
-                                this.props.fetch()
+                                this.props.refreshCurdTableTree();
 
                             } else {
                                 message.error(data.msg, 4)
@@ -97,7 +86,7 @@ class EditAddWithClass extends Component{
                         })
                         .catch(err => {
                             message.error(err.message)
-                            this.setState({
+                            this.mounted && this.setState({
                                 submitLoading: false
                             })
                         })
@@ -119,7 +108,6 @@ class EditAddWithClass extends Component{
     componentWillReceiveProps(nextProps){
 
         //console.log(nextProps)
-
         if(nextProps.selectedKeys !== this.props.selectedKeys){
             
         }
@@ -166,9 +154,9 @@ class EditAddWithClass extends Component{
                                 {
                                     required: true, message: '请输入名称',
                                 },
-                                {
+                               /* {
                                     pattern:/^[^ ]+$/,message:'不能包含空格'
-                                }
+                                }*/
                             ],
                         })(
                             <Input placeholder="请输入分类名称" />
@@ -181,11 +169,11 @@ class EditAddWithClass extends Component{
                     >
                         {getFieldDecorator('keywords', {
                             initialValue: defaultValue.keywords || '',
-                            rules: [
+                            /*rules: [
                                 {
                                     pattern:/^[^ ]+$/,message:'不能包含空格'
                                 }
-                            ],
+                            ],*/
                         })(
                             <Input placeholder="请输入分类关键字" />
                         )}
@@ -197,11 +185,11 @@ class EditAddWithClass extends Component{
                     >
                         {getFieldDecorator('remark', {
                             initialValue: defaultValue.remark || '',
-                            rules: [
+                            /*rules: [
                                 {
                                     pattern:/^[^ ]+$/,message:'不能包含空格'
                                 }
-                            ],
+                            ],*/
                         })(
                             <TextArea placeholder="请输入分类描述" rows={4} />
                         )}
