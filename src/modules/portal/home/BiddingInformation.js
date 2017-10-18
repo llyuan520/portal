@@ -5,6 +5,7 @@
  */
 import React,{Component} from 'react';
 import { Button,Table,Icon } from 'antd';
+import {Link} from 'react-router-dom';
 import {request,piwik} from '../../../utils'
 
 const columns = [{
@@ -32,18 +33,19 @@ const columns = [{
     key:'3',
     render:(text,record)=> {
         return(
-            <a
-                //href={record.requestURL}
-                onClick={()=>{
 
-                    //TODO: 添加piwik点击事件跟踪
-                    piwik.push(['trackEvent', `${record.title}`, '了解详情']);
+            <Link to={{
+                pathname: `/dashboard/tenderDetails/${record.uuid}`,
+            }}
+                  target="_blank"
+                  onClick={()=>{
 
-                    window.open(record.requestURL);
-                }}
-                target="_blank">
+                      //TODO: 添加piwik点击事件跟踪
+                      piwik.push(['trackEvent', `${record.title}`, '了解详情']);
+                  }}
+            >
                 <Button type="btncff9932">了解详情</Button>
-            </a>
+            </Link>
         )
     }
 }];
@@ -101,7 +103,7 @@ class BiddingInformation extends Component{
                 ...params,
             }
         }).then(({data}) => {
-
+            console.log(data);
             if(data.code===200) {
                 const pagination = {...this.state.pagination};
                 // Read total count from server

@@ -5,6 +5,7 @@
  */
 import request from './request.js';
 import {configData} from './../config';
+import composeMenus from './composeMenus'
 
 //获取url中的参数
 const getUrlParam = name =>{
@@ -85,4 +86,4 @@ const piwik = PiwikReactRouter({
     trackErrors: true,
 });
 
-export { request,getUrlParam,getParameters,fMoney,isEmpty,piwik}
+export { request,getUrlParam,getParameters,fMoney,isEmpty,piwik,composeMenus}

@@ -7,7 +7,6 @@ import React, { Component } from 'react';
 import { Layout, Menu, Icon } from 'antd';
 import {withRouter} from 'react-router-dom';
 
-const { SubMenu } = Menu;
 const { Sider } = Layout;
 
 
@@ -35,16 +34,6 @@ class PortalSider extends Component{
 
     render(){
 
-        let data = this.props.menusData;
-        let subKey = '';
-        for(let i=0; i<data.length; i++){
-            for(let j=0; j<data[i].subNav.length; j++){
-                if(data[i].subNav[j].path === this.state.selectedPath){
-                    subKey = data[i].subKey;
-                }
-            }
-        }
-
         return(
             <Sider
                 trigger={null}
@@ -54,7 +43,6 @@ class PortalSider extends Component{
                 <Menu
                     //theme='dark'
                     defaultSelectedKeys={[this.state.selectedPath]}
-                    defaultOpenKeys={[subKey]}
                     selectedKeys={[this.state.selectedPath]}
                     onSelect={
                         ({item,key,selectedKeys})=>{
@@ -66,27 +54,14 @@ class PortalSider extends Component{
                 >
 
                     {
-                        this.props.menusData.map((item,i)=>(
-                            <SubMenu key={item.subKey}
-                                     title={
-                                         <span>
-                                             <Icon type={item.icon} />
-                                             {item.name}
-                                         </span>
-                                     }>
-                                {
-                                    item.subNav.length >0 && item.subNav.map(subItem=>{
-                                        return(
-
-                                            <Menu.Item key={subItem.path}>
-                                                <Icon type={subItem.icon} />
-                                                <span>{subItem.name}</span>
-                                            </Menu.Item>
-                                        )
-                                    })
-                                }
-                            </SubMenu>
-                        ))
+                        this.props.menusData.map(item=>{
+                            return (
+                                <Menu.Item key={item.path}>
+                                    <Icon type={item.icon}/>
+                                    <span>{item.name}</span>
+                                </Menu.Item>
+                            )
+                        })
                     }
                 </Menu>
             </Sider>

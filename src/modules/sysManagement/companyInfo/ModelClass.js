@@ -39,9 +39,6 @@ class EditAddWithClass extends Component{
                 if(this.props.modalType === 'create') {
 
                     const dataInfo = {...values,...this.props.params, level: this.props.params.level+1} //提交的时候为选中的当前级别加1，表示只添加到下层级
-                    this.mounted && this.setState({
-                        submitLoading: false
-                    })
 
                     request.post('/companyType/saveCompanyTypeInfo', dataInfo)
                         .then(({data}) => {
@@ -65,11 +62,6 @@ class EditAddWithClass extends Component{
                 if(this.props.modalType === 'edit'){
 
                     const updateDateInfo = {...this.props.defaultValue, ...values}
-                    console.log(updateDateInfo);
-
-                    this.mounted && this.setState({
-                        submitLoading: false
-                    })
 
                     request.post('/companyType/updateCompanyTypeInfo', updateDateInfo)
                         .then(({data}) => {

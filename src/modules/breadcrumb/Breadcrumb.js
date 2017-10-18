@@ -20,15 +20,11 @@ const PortalBreadCrumb = props =>  {
 
     const breadcrumbNameMap = {};
     props.routes.forEach(item=>{
-        item.subNav.forEach(subItem=>{
-            if(!subItem.to){
-                //要去掉url的:参数
-                breadcrumbNameMap[removeParam(subItem.path)] = subItem.name
-            }
-        })
+        if(!item.to){
+            //要去掉url的:参数
+            breadcrumbNameMap[removeParam(item.path)] = item.name
+        }
     })
-
-
 
     breadcrumbNameMap['/sysManagement']='首页';
 

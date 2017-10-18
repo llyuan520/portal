@@ -107,7 +107,9 @@ class EditClass extends PureComponent{
     }
     onCheck = (checkedKeys) => {
         console.log('onCheck', checkedKeys);
-        this.setState({ checkedKeys });
+        this.setState({
+            checkedKeys,
+        });
     }
     onSelect = (selectedKeys, info) => {
         console.log('onSelect', info);
