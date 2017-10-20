@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{PureComponent} from 'react';
-import {Modal,Tree,Input} from 'antd';
+import {Modal,Tree,Input,Button} from 'antd';
 import {request} from '../../../utils';
 
 const TreeNode = Tree.TreeNode;
@@ -55,7 +55,13 @@ class EditClass extends PureComponent{
         autoExpandParent: true,
 
         dataList : [],
+        submitLoading:false,
         editClassModalKey:Date.now()+'1',
+
+    }
+
+    static defaultProps={
+        modalType:'look'
     }
 
     handleOk = (e) => {
@@ -155,18 +161,19 @@ class EditClass extends PureComponent{
     }
 
     fetch = uuid => {
+
         //根据参数查询融资申请信息
-        request.get(`/companyType/queryCompanyTypeInfo/${uuid}`,{
+        /*request.get(`/companyInfo/queryCompanyTypeUuids/${uuid}`,{
         }).then(({data}) => {
             console.log(data);
             if(data.code===200) {
                 this.generateList(treeData);
             }
-        });
+        });*/
     }
 
     componentDidMount() {
-        console.log(this.props.uuid);
+
     }
 
     mounted = true;
@@ -175,31 +182,35 @@ class EditClass extends PureComponent{
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.uuid !== this.props.uuid){
-            this.fetch(nextProps.uuid);
-        }
-        console.log(nextProps)
 
+        if(nextProps.defaultItem.uuid !== this.props.defaultItem.uuid){
+            this.fetch(nextProps.defaultItem.uuid);
+        }
     }
 
     render() {
-
+        const {modalType,visible} = this.props;
         return (
             <Modal
                 key={this.state.editClassModalKey}
-                title="编辑分类"
-                visible={this.props.visible}
-                okText="保存"
-                cancelText="取消"
+                confirmLoading={this.state.submitLoading}
+                title={modalType ==='look' ? '查看' : '编辑分类' }
+                visible={visible}
                 maskClosable={false}
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}
+                footer={modalType ==='look' ? null : [
+                    <Button key="clear" onClick={this.handleCancel}>取消</Button>,
+                    <Button key="ok" type="primary"  onClick={this.handleOk}>
+                        保存
+                    </Button>
+                ]}
             >
                 <div>
                     <Search style={{ marginBottom: 8 }} placeholder="Search" onChange={this.onChange} />
                     <div style={{height:400,overflowY: 'auto'}}>
                         <Tree
-                            checkable
+                            checkable={modalType !=='look'}
                             onExpand={this.onExpand}
                             expandedKeys={this.state.expandedKeys}
                             autoExpandParent={this.state.autoExpandParent}

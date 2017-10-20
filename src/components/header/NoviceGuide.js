@@ -6,6 +6,12 @@
 import React,{Component} from 'react';
 import { Modal, Button } from 'antd';
 
+import img1 from './images/1.png';
+import img2 from './images/2.png';
+import img3 from './images/3.png';
+import img4 from './images/4.png';
+import img5 from './images/5.png';
+
 class NoviceGuide extends Component{
     constructor(props){
         super(props)
@@ -15,14 +21,20 @@ class NoviceGuide extends Component{
 
             current: 0,
             steps : [{
-                        title: 'First',
-                        content: 'First-content',
+                        title: '供应商门户',
+                        content: img1,
                     }, {
-                        title: 'Second',
-                        content: 'Second-content',
+                        title: '总门户预览',
+                        content: img2,
                     }, {
-                        title: 'Last',
-                        content: 'Last-content',
+                        title: '协同开票',
+                        content: img3,
+                    }, {
+                        title: '发票管理',
+                        content: img4,
+                    }, {
+                        title: '招标信息',
+                        content: img5,
                     }]
         }
     }
@@ -36,14 +48,22 @@ class NoviceGuide extends Component{
         this.mounted && this.setState({ current });
     }
 
+    componentDidMount() {
+
+    }
+
     mounted = true;
 
     componentWillUnmount(){
         this.mounted = null;
     }
 
+    componentWillReceiveProps(nextProps){
+
+    }
+
     render() {
-        const { current,steps } = this.state;
+        const { current,steps,visible } = this.state;
         return (
             <div>
                 <Modal
@@ -51,12 +71,15 @@ class NoviceGuide extends Component{
                     title="新手指引"
                     wrapClassName="vertical-center-modal"
                     maskClosable={false}
-                    visible={this.state.visible}
+                    visible={visible}
                     onCancel={() => this.props.setModalVisible(false)}
+                    width="640px"
                     footer={null}
                 >
                     <div>
-                        <div className="steps-content">{steps[current].content}</div>
+                        <div className="steps-content">
+                            <img alt={steps[current].title} src={steps[current].content} />
+                        </div>
                         <div className="steps-action" style={{textAlign:'right'}}>
                             {
                                 current > 0

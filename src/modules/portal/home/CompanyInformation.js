@@ -7,6 +7,7 @@ import React,{Component} from 'react';
 import { Spin,Icon,Card,Row,Col,Button,Modal,Select} from 'antd';
 import {request,fMoney,piwik} from '../../../utils'
 import oauth from '../../../oAuth';
+import {configData} from '../../../../src/config/index'
 
 const Option = Select.Option;
 
@@ -268,11 +269,13 @@ class CompanyInformation extends Component{
 
     handleClickAnchor= item => e =>{
 
-        window.history.pushState(null, '', item.anchorHref);
-
-        //TODO: 添加piwik点击事件跟踪
-        piwik.push(['trackEvent', `${item.title}`, `${item.btn}`]);
-
+        if(item.key === 6){
+           window.location=configData.homeProjectUrl;
+        }else{
+            window.history.pushState(null, '', item.anchorHref);
+            //TODO: 添加piwik点击事件跟踪
+            piwik.push(['trackEvent', `${item.title}`, `${item.btn}`]);
+        }
     }
 
 

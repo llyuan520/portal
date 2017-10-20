@@ -13,7 +13,6 @@ class CompanySortSearch extends Component {
             lastUpdated:Date.now()
         }
     };
-
     render(){
         return (
             <div>

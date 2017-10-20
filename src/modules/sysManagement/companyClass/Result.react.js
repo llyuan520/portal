@@ -4,9 +4,12 @@
  * description  :
  */
 import React,{PureComponent} from 'react';
-import {Table,Row,Col,Badge,Icon,Button} from 'antd';
+import {Table,Row,Col,Badge,Icon,Button,message,Input,Modal,Form} from 'antd';
 import {request} from '../../../utils';
 import EditClass from './EditClass'
+
+const FormItem = Form.Item;
+const { TextArea } = Input;
 
 class Result extends PureComponent {
     constructor(props) {
@@ -23,16 +26,22 @@ class Result extends PureComponent {
             tableLoading: false,
             tableKeyDate: Date.now(),
 
+            selectedRows:[], //选中的list
             selectedRowKeys: [],  // Check here to configure the default column
-            loading: false,
+            scopeloading: false,
+            companyTypeloading: false,
+
+
 
             editClassVisible: false,
-            uuid: '',
             editClassKey:Date.now()+'1',
+
+            defaultItem: {},
+            editBusinessScopeVisible: false,
+            editBusinessScopeKey:Date.now()+'2',
+
         };
     }
-
-
 
     handleTableChange = (pagination, filters, sorter) => {
         const pager = { ...this.state.pagination };
@@ -64,7 +73,6 @@ class Result extends PureComponent {
                 ...params,
             }
         }).then(({data}) => {
-            console.log(data);
             if(data.code===200) {
                 const pagination = {...this.state.pagination};
                 // Read total count from server
@@ -78,28 +86,105 @@ class Result extends PureComponent {
         });
     }
 
-    //选中多少条数据
-    start = () => {
-        this.setState({ loading: true });
-        // ajax request after empty completing
-        setTimeout(() => {
-            this.setState({
-                selectedRowKeys: [],
-                loading: false,
-            });
-        }, 1000);
-    }
-    onSelectChange = (selectedRowKeys) => {
-        console.log('selectedRowKeys changed: ', selectedRowKeys);
-        this.setState({ selectedRowKeys });
+    onSelectChange = (selectedRowKeys, selectedRows) => {
+        this.setState({
+            selectedRowKeys,
+            selectedRows
+        });
     }
 
     //弹出框
-    showModal = uuid =>{
+    handleEditScope = record =>{
+        this.setState({
+            editBusinessScopeVisible: true,
+            defaultItem:record
+        });
+    }
+
+    //选中多少条数据
+    handleAssociationClass = (type, record) => {
         this.setState({
             editClassVisible: true,
-            uuid:uuid
+            type: type,
+            defaultItem:record
         });
+    }
+
+
+    //获取公司分类
+    handleInitCompanyType=()=>{
+        const bolist = {
+            list : this.state.selectedRows.map(item=>{
+                return {
+                    companyName:item.companyName,
+                    scope:item.scope,
+                    uuid:item.uuid,
+                }
+            })
+        };
+        this.setState({ companyTypeloading: true });
+        request.post('/companyInfo/initCompanyTypes', bolist)
+            .then(({data}) => {
+                if (data.code === 200) {
+                    this.setState({
+                        selectedRowKeys: [],
+                        selectedRows:[],
+                        companyTypeloading: false,
+                    },()=>{
+                        this.fetch();
+                        message.success('初始化分类成功！')
+                    });
+
+
+                } else {
+                    message.error(data.msg, 4)
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.mounted && this.setState({
+                    companyTypeloading: false
+                })
+            })
+    }
+
+    //获取经营范围
+    handleInitScope=()=>{
+        const bolist = {
+            list : this.state.selectedRows.map(item=>{
+                return {
+                    companyName:item.companyName,
+                    uuid:item.uuid,
+                }
+            })
+        };
+        this.setState({ scopeloading: true });
+        request.post('/companyInfo/initScope', bolist)
+            .then(({data}) => {
+                if (data.code === 200) {
+                    this.setState({
+                        selectedRowKeys: [],
+                        selectedRows:[],
+                        scopeloading: false,
+                    },()=>{
+                        this.fetch();
+                        message.success('获取经营范围成功！')
+                    });
+
+                } else {
+                    message.error(data.msg, 4)
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.mounted && this.setState({
+                    scopeloading: false
+                })
+            })
+    }
+
+    refreshCurdTable=()=>{
+        this.fetch();
     }
 
     componentDidMount() {
@@ -113,8 +198,7 @@ class Result extends PureComponent {
 
     componentWillReceiveProps(nextProps){
 
-        console.log(nextProps.filters.lastUpdated, this.props.filters.lastUpdated);
-
+        //console.log(nextProps.filters.lastUpdated, this.props.filters.lastUpdated);
 
         //用来判断如果搜索字段是否有改变，改变了就需要把当前table选中页设置为1
         if(nextProps.filters.lastUpdated !== this.props.filters.lastUpdated){
@@ -142,14 +226,12 @@ class Result extends PureComponent {
                 dataIndex: 'typeStatus',
                 render: (text, record) => {
                     let txt = '';
-                    switch (record.typeStatus){
-                        case '1':
+                    switch (parseInt(record.typeStatus,0)){
+                        case 1:
                             txt = <Badge count={'已分类'} style={{ backgroundColor: '#87d068' }} />;
                             break;
-                        case'-1':
+                        case -1:
                             txt = <Badge count={'未分类'} style={{ backgroundColor: '#ccc' }} />;
-                            break;
-                        default:
                             break;
                     }
                     return txt;
@@ -161,13 +243,19 @@ class Result extends PureComponent {
                 title: '统一社会信用代码',
                 dataIndex: 'certificatesNo',
             }, {
+                title: '经营范围',
+                dataIndex: 'scope',
+                width:'30%'
+            }, {
                 title: '操作',
                 dataIndex: '5',
                 className:"textc",
                 render: (text, record) => {
                     return(
                         <div>
-                            <Icon onClick={(uuid)=>this.showModal(record.uuid)} type="edit" />
+                            <Icon title="编辑经营范围" onClick={()=>this.handleEditScope(record)} type="edit" style={{marginRight:'10px'}} />
+                            {/*<Icon title="查看分类" type="search" onClick={()=>this.handleAssociationClass('look', record)} style={{marginRight:'10px'}} />
+                            <Icon title="关联分类" onClick={()=>this.handleAssociationClass('edit', record)} type="link" />*/}
                         </div>
                     )
 
@@ -177,7 +265,7 @@ class Result extends PureComponent {
             }
         ];
 
-        const { loading, selectedRowKeys } = this.state;
+        const {scopeloading,companyTypeloading,selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
@@ -188,22 +276,25 @@ class Result extends PureComponent {
             <div>
                 <Row className="title" style={{marginTop:20}}>
                     <Col span={24}>
-                        <h2>供应商分类维护查询</h2>
+                        <h2>公司信息查询</h2>
                     </Col>
                 </Row>
                 <div className="resultWrap">
                     <div className="table-operations">
-                        <Button
-                            type="primary"
-                            onClick={this.start}
-                            disabled={!hasSelected}
-                            loading={loading}
-                        >
-                            关联分类
+                        <Button type="primary"
+                                ghost
+                                disabled={!hasSelected}
+                                loading={scopeloading}
+                                onClick={this.handleInitScope}>
+                            获取经营范围
                         </Button>
-                        <Button onClick={()=>this.showModal()}>导出</Button>
-                        <Button>导入</Button>
-                        <Button>下载导入模板</Button>
+                        <Button type="primary"
+                                ghost
+                                disabled={!hasSelected}
+                                loading={companyTypeloading}
+                                onClick={this.handleInitCompanyType}>
+                            初始化分类
+                        </Button>
                     </div>
 
                     <Table columns={columns}
@@ -220,14 +311,28 @@ class Result extends PureComponent {
 
                 <EditClass
                     key={this.state.editClassKey}
-                    uuid={this.state.uuid}
+                    modalType={this.state.type}
+                    defaultItem={this.state.defaultItem}
                     changeVisable={ status =>{
                         this.setState({
                             editClassVisible:status,
                             editClassKey:Date.now()
                         })
                     }}
+                    refreshCurdTable={this.refreshCurdTable.bind(this)}
                     visible={this.state.editClassVisible} />
+
+                <EditBusinessScopeModel
+                    key={this.state.editBusinessScopeKey}
+                    defaultItem={this.state.defaultItem}
+                    changeVisable={ status =>{
+                        this.setState({
+                            editBusinessScopeVisible:status,
+                            editBusinessScopeKey:Date.now()
+                        })
+                    }}
+                    refreshCurdTable={this.refreshCurdTable.bind(this)}
+                    visible={this.state.editBusinessScopeVisible} />
 
             </div>
         );
@@ -235,4 +340,101 @@ class Result extends PureComponent {
 }
 
 export default Result
+
+
+class EditBusinessScope extends PureComponent{
+    state = {
+        submitLoading:false,
+        editBusinessScopesModalKey:Date.now(),
+    }
+
+    handleOk = (e) => {
+        this.handleSubmit()
+    }
+    handleCancel = (e) => {
+        this.props.changeVisable(false);
+    }
+
+    handleSubmit = (e) => {
+        e && e.preventDefault();
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+               // console.log('Received values of form: ', values);
+                this.mounted && this.setState({
+                    submitLoading:true
+                })
+
+                request.post('/companyInfo/updateCompanyInfo', {...values,uuid:this.props.defaultItem.uuid})
+                    .then(({data}) => {
+                        if (data.code === 200) {
+                            message.success('保存成功！', 4)
+                            //新增成功，关闭当前窗口,刷新父级组件
+                            this.props.changeVisable(false);
+                            this.props.refreshCurdTable();
+                        } else {
+                            message.error(data.msg, 4)
+                        }
+                    })
+                    .catch(err => {
+                        message.error(err.message)
+                        this.mounted && this.setState({
+                            submitLoading: false
+                        })
+                    })
+            }
+        });
+    }
+
+    componentDidMount() {
+
+    }
+
+    mounted = true;
+    componentWillUnmount(){
+        this.mounted = null;
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.defaultItem !== this.props.defaultItem){
+
+        }
+
+    }
+
+    render() {
+
+        const defaultItem = {...this.props.defaultItem};
+        const { getFieldDecorator } = this.props.form;
+
+        return (
+            <Modal
+                key={this.state.editBusinessScopesModalKey}
+                confirmLoading={this.state.submitLoading}
+                title="编辑"
+                visible={this.props.visible}
+                okText="保存"
+                cancelText="取消"
+                maskClosable={false}
+                onOk={this.handleOk}
+                onCancel={this.handleCancel}
+            >
+                <Form layout="vertical" onSubmit={this.handleSubmit}>
+                    <FormItem
+                        label="经营范围"
+                    >
+                        {getFieldDecorator('scope', {
+                            initialValue: defaultItem.scope || '',
+                        })(
+                            <TextArea placeholder="请输入分类描述" rows={8} />
+                        )}
+                    </FormItem>
+                </Form>
+            </Modal>
+        );
+    }
+}
+
+const EditBusinessScopeModel = Form.create()(EditBusinessScope);
+
+
 

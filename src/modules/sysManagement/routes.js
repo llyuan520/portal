@@ -11,12 +11,12 @@ const pathSys = '/sysManagement';
 const routes = [
     {
             path: `${pathSys}/companyInfo`,
-            component: CompanyInfoSearch,
+            component: CompanySortSearch,
             name: '公司信息',
             exact: true,
         },{
             path: `${pathSys}/companyClass`,
-            component: CompanySortSearch,
+            component: CompanyInfoSearch,
             name: '公司分类',
             exact: true,
         },{

@@ -179,12 +179,12 @@ class Result extends Component {
                 render: (text, record) => {
                     return(
                         <div>
-                            <Icon style={{ fontSize: 16,marginRight:10 }}
+                            <Icon title="编辑分类" style={{ fontSize: 16,marginRight:10 }}
                                   onClick={(uuid)=>this.showModal(record)}
                                   type="edit"
                             />
 
-                            <Icon type="delete"
+                            <Icon title="删除" type="delete"
                                   style={{ fontSize: 16, color: 'red' }}
                                   onClick={()=> {
                                       confirm({
@@ -213,12 +213,12 @@ class Result extends Component {
             <div>
                 <Row className="title" style={{marginTop:20}}>
                     <Col span={24}>
-                        <h2>供应商基础资料维护查询</h2>
+                        <h2>公司基础资料维护查询</h2>
                     </Col>
                 </Row>
                 <Row gutter={24}>
                     <Col span={6} className="resultWrap">
-                        <Card noHovering>
+                        <Card noHovering style={{overflow:'scroll',height: '600px'}}>
                             <TreeList refreshCurdTableTree={this.props.refreshCurdTableTree} />
                         </Card>
                     </Col>

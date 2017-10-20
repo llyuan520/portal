@@ -33,7 +33,6 @@ const columns = [{
     key:'3',
     render:(text,record)=> {
         return(
-
             <Link to={{
                 pathname: `/dashboard/tenderDetails/${record.uuid}`,
             }}

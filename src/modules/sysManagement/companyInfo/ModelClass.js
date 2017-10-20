@@ -126,6 +126,7 @@ class EditAddWithClass extends Component{
         return (
             <Modal
                 key={this.state.modelClassModalKey}
+                confirmLoading={this.state.submitLoading}
                 title={modalType ==='create' ? '新增分类' : '编辑分类' }
                 visible={this.props.visible}
                 okText="保存"

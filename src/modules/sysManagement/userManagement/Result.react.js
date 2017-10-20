@@ -118,7 +118,6 @@ class Result extends PureComponent {
             defaultValueDate:record,
         });
     }
-
     refreshCurdTable = ()=>{
         this.fetch();
     }

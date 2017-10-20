@@ -10,6 +10,8 @@ import {withRouter,Link} from 'react-router-dom';
 import {messageInfo} from "../../config/index";
 import oauth from '../../oAuth';
 import NoviceGuide from './NoviceGuide'
+import {request} from '../../utils';
+
 
 import logoImg from './media/logo-02.png';
 const SubMenu = Menu.SubMenu;
@@ -51,6 +53,7 @@ class Headers extends Component{
     }
 
     componentDidMount() {
+
         let key ='';
 
         if(this.state.selectedPath.indexOf('messages') === 1){
@@ -67,11 +70,25 @@ class Headers extends Component{
             if(oauth.getAuth()){
                 this.mounted && this.setState({
                     userName : oauth.getAuth().username
+                },()=>{
+                    //默认判断是否已经自动弹出
+                    if(parseInt(oauth.getUser().sysUserBO.notificationStatus, 0) === 0){
+                        this.setModalVisible(true);
+                        request.post('/userManage/modifyNotificationStatus', {
+                            userName: this.state.userName,
+                            notificationStatus: 1
+                        }).then(({data}) => {
+                            //console.log(data);
+                        }).catch(err => {
+
+                        })
+                    }
                 })
             }
         }else{
             oauth.logout()
         }
+
     }
 
     mounted = true;

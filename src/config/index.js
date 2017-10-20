@@ -13,6 +13,7 @@ export const configData = {
         siteId:6,
     },
     address : 'http://t1.servingcloud.com/',
+    homeProjectUrl:'http://t1.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM01',
 }
 
 
@@ -25,6 +26,7 @@ export const configData = {
         siteId:102,
     },
     address : 'http://vat.servingcloud.com/',
+    homeProjectUrl:'http://vat.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM01',
 }*/
 
 
