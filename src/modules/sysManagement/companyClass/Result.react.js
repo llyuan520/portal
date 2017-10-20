@@ -233,6 +233,8 @@ class Result extends PureComponent {
                         case -1:
                             txt = <Badge count={'未分类'} style={{ backgroundColor: '#ccc' }} />;
                             break;
+                        default:
+                            break;
                     }
                     return txt;
                 },
@@ -253,9 +255,9 @@ class Result extends PureComponent {
                 render: (text, record) => {
                     return(
                         <div>
+                            <Icon title="查看分类" type="search" onClick={()=>this.handleAssociationClass('look', record)} style={{marginRight:'10px'}} />
                             <Icon title="编辑经营范围" onClick={()=>this.handleEditScope(record)} type="edit" style={{marginRight:'10px'}} />
-                            {/*<Icon title="查看分类" type="search" onClick={()=>this.handleAssociationClass('look', record)} style={{marginRight:'10px'}} />
-                            <Icon title="关联分类" onClick={()=>this.handleAssociationClass('edit', record)} type="link" />*/}
+                            <Icon title="关联分类" onClick={()=>this.handleAssociationClass('edit', record)} type="link" />
                         </div>
                     )
 

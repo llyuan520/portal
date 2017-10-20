@@ -10,52 +10,18 @@ import {request} from '../../../utils';
 const TreeNode = Tree.TreeNode;
 const Search = Input.Search;
 
-const treeData = [{
-    title: '0-0',
-    key: '0-0',
-    children: [{
-        title: '0-0-0',
-        key: '0-0-0',
-        children: [
-            { title: '0-0-0-0', key: '0-0-0-0' },
-            { title: '0-0-0-1', key: '0-0-0-1' },
-            { title: '0-0-0-2', key: '0-0-0-2' },
-        ],
-    }, {
-        title: '0-0-1',
-        key: '0-0-1',
-        children: [
-            { title: '0-0-1-0', key: '0-0-1-0' },
-            { title: '0-0-1-1', key: '0-0-1-1' },
-            { title: '0-0-1-2', key: '0-0-1-2' },
-        ],
-    }, {
-        title: '0-0-2',
-        key: '0-0-2',
-    }],
-}, {
-    title: '0-1',
-    key: '0-1',
-    children: [
-        { title: '0-1-0-0', key: '0-1-0-0' },
-        { title: '0-1-0-1', key: '0-1-0-1' },
-        { title: '0-1-0-2', key: '0-1-0-2' },
-    ],
-}, {
-    title: '0-2',
-    key: '0-2',
-}];
-
 class EditClass extends PureComponent{
     state = {
-        expandedKeys: ['0-0-0', '0-0-1'],
+        expandedKeys: [],
         checkedKeys:  ['0-0-0'],
         selectedKeys: [],
         searchValue: '',
         autoExpandParent: true,
 
         dataList : [],
-        submitLoading:false,
+
+        treeData:[],
+        treeLoading:false,
         editClassModalKey:Date.now()+'1',
 
     }
@@ -66,6 +32,25 @@ class EditClass extends PureComponent{
 
     handleOk = (e) => {
         console.log(this.props.uuid);
+        /*request.post('/companyInfo/updateCompanyInfo', dataInfo)
+            .then(({data}) => {
+                if (data.code === 200) {
+                    message.success('新增分类成功！', 4)
+                    //新增成功，关闭当前窗口,刷新父级组件
+                    this.props.changeVisable(false)
+                    this.props.refreshCurdTableTree();
+                } else {
+                    message.error(data.msg, 4)
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+                this.mounted && this.setState({
+                    submitLoading: false
+                })
+            })*/
+
+
         this.props.changeVisable(false);
     }
     handleCancel = (e) => {
@@ -111,8 +96,12 @@ class EditClass extends PureComponent{
             autoExpandParent: false,
         });
     }
-    onCheck = (checkedKeys) => {
-        console.log('onCheck', checkedKeys);
+    onCheck = (checkedKeys,info) => {
+        console.log('info', info);
+        if(info.checked) {
+            const selectedNodes = info.node.props.dataRef;
+            console.log('onCheck', selectedNodes);
+        }
         this.setState({
             checkedKeys,
         });
@@ -126,7 +115,7 @@ class EditClass extends PureComponent{
         const value = e.target.value;
         const expandedKeys = this.state.dataList.map((item) => {
             if (item.key.indexOf(value) > -1) {
-                return this.getParentKey(item.key, treeData);
+                return this.getParentKey(item.key, this.state.treeData);
             }
             return null;
         }).filter((item, i, self) => item && self.indexOf(item) === i);
@@ -151,29 +140,53 @@ class EditClass extends PureComponent{
             ) : <span>{item.key}</span>;
             if (item.children) {
                 return (
-                    <TreeNode key={item.key} title={title}>
+                    <TreeNode key={item.key} title={item.title} dataRef={item}>
                         {this.renderTreeNodes(item.children)}
                     </TreeNode>
                 );
             }
-            return <TreeNode key={item.key} title={title} />;
+            return <TreeNode key={item.key} title={item.title} dataRef={item} />;
         });
     }
 
     fetch = uuid => {
 
-        //根据参数查询融资申请信息
-        /*request.get(`/companyInfo/queryCompanyTypeUuids/${uuid}`,{
+        //根据参数查询融资申请信息 ${uuid}
+        request.get(`/companyInfo/queryCompanyTypeUuids/3`,{
         }).then(({data}) => {
-            console.log(data);
             if(data.code===200) {
-                this.generateList(treeData);
+                this.setState({
+                    expandedKeys: [...data.data],
+                    checkedKeys: [...data.data],
+                    selectedKeys: [...data.data],
+                });
             }
-        });*/
+        });
+    }
+
+    fetchTree = () => {
+        this.mounted && this.setState({ treeLoading: true });
+        request.get('/companyType/queryCompanyTypeTree',{
+        }).then(({data}) => {
+
+            const item = [];
+            item.push(data.data);
+
+            if(data.code===200) {
+                this.mounted && this.setState({
+                    treeData: [...item],
+                    treeLoading: false,
+                },()=>{
+                    this.fetch(this.props.defaultItem.uuid);
+                })
+            }
+        });
+
+
     }
 
     componentDidMount() {
-
+        this.fetchTree();
     }
 
     mounted = true;
@@ -183,9 +196,9 @@ class EditClass extends PureComponent{
 
     componentWillReceiveProps(nextProps){
 
-        if(nextProps.defaultItem.uuid !== this.props.defaultItem.uuid){
+        /*if(nextProps.defaultItem.uuid !== this.props.defaultItem.uuid){
             this.fetch(nextProps.defaultItem.uuid);
-        }
+        }*/
     }
 
     render() {
@@ -193,7 +206,7 @@ class EditClass extends PureComponent{
         return (
             <Modal
                 key={this.state.editClassModalKey}
-                confirmLoading={this.state.submitLoading}
+                confirmLoading={this.state.treeLoading}
                 title={modalType ==='look' ? '查看' : '编辑分类' }
                 visible={visible}
                 maskClosable={false}
@@ -209,8 +222,10 @@ class EditClass extends PureComponent{
                 <div>
                     <Search style={{ marginBottom: 8 }} placeholder="Search" onChange={this.onChange} />
                     <div style={{height:400,overflowY: 'auto'}}>
-                        <Tree
-                            checkable={modalType !=='look'}
+                            <Tree
+                                checkable
+                            //checkable={modalType !=='look'}
+
                             onExpand={this.onExpand}
                             expandedKeys={this.state.expandedKeys}
                             autoExpandParent={this.state.autoExpandParent}
@@ -219,7 +234,7 @@ class EditClass extends PureComponent{
                             onSelect={this.onSelect}
                             selectedKeys={this.state.selectedKeys}
                         >
-                            {this.renderTreeNodes(treeData)}
+                            {this.renderTreeNodes(this.state.treeData)}
                         </Tree>
                     </div>
 

@@ -218,7 +218,7 @@ class Result extends Component {
                 </Row>
                 <Row gutter={24}>
                     <Col span={6} className="resultWrap">
-                        <Card noHovering style={{overflow:'scroll',height: '600px'}}>
+                        <Card noHovering>
                             <TreeList refreshCurdTableTree={this.props.refreshCurdTableTree} />
                         </Card>
                     </Col>

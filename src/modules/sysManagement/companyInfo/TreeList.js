@@ -65,27 +65,17 @@ class TreeList extends Component {
 
     }
 
-    renderTreeNodesChildren = (data) => {
-        return data && data.map((item) => {
+    renderTreeNodes = data => {
+        return data.map((item) => {
             if (item.children) {
                 return (
                     <TreeNode title={<span><Icon type="folder-open" style={{ fontSize: 16 }} /> {item.title}</span>}  key={item.key} dataRef={item}>
-                        {this.renderTreeNodesChildren(item.children)}
+                        {this.renderTreeNodes(item.children)}
                     </TreeNode>
                 );
             }
             return <TreeNode key={item.key} title={item.title} dataRef={item} />;
         });
-    }
-
-    renderTreeNodes = (data) => {
-        return (
-            <TreeNode title={<span><Icon type="folder-open" style={{fontSize: 16}}/> {data.title}</span>} key={data.key} dataRef={data}>
-                {
-                    this.renderTreeNodesChildren(data.children)
-                }
-            </TreeNode>
-        )
     }
 
     //弹出框
@@ -99,9 +89,12 @@ class TreeList extends Component {
         this.mounted && this.setState({ eidtLoading: true });
         request.get('/companyType/queryCompanyTypeTree',{
         }).then(({data}) => {
+            const item = [];
+            item.push(data.data);
+
             if(data.code===200) {
                 this.mounted && this.setState({
-                    treeData: data.data,
+                    treeData: [...item],
                     expandedKeys:[data.data.key],
                     eidtLoading: false,
                 })
@@ -138,16 +131,19 @@ class TreeList extends Component {
                         >新增分类</Button>
                     </div>
 
-                    <Tree
-                        onExpand={this.onExpand}
-                        expandedKeys={expandedKeys}
-                        autoExpandParent={autoExpandParent}
-                        onSelect={this.onSelect}
-                        selectedKeys={selectedKeys}
-                    >
-                        {this.renderTreeNodes(this.state.treeData)}
-                    </Tree>
+                    <div style={{overflow:'scroll',height: '600px'}}>
+                        <Tree
+                            onExpand={this.onExpand}
+                            expandedKeys={expandedKeys}
+                            autoExpandParent={autoExpandParent}
+                            onSelect={this.onSelect}
+                            selectedKeys={selectedKeys}
+                        >
+                            {this.renderTreeNodes(this.state.treeData)}
+                        </Tree>
+                    </div>
                 </Spin>
+
                 <EditAddWithClass
                     key={this.state.editClassKey}
                     modalType="create"
