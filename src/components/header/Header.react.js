@@ -22,6 +22,7 @@ class Headers extends Component{
         super(props);
         this.state = {
             userName: '',
+            administrator:0, //是否管理员  0否，1是
             current: '',
             selectedPath:props.history.location.pathname,
             modalVisible: false,
@@ -69,7 +70,8 @@ class Headers extends Component{
         if(!!oauth.getUser() && !!oauth.getToken()){
             if(oauth.getAuth()){
                 this.mounted && this.setState({
-                    userName : oauth.getAuth().username
+                    userName : oauth.getAuth().username,
+                    administrator: oauth.getUser().sysUserBO.administrator,
                 },()=>{
                     //默认判断是否已经自动弹出
                     if(parseInt(oauth.getUser().sysUserBO.notificationStatus, 0) === 0){
@@ -118,7 +120,7 @@ class Headers extends Component{
                                 <img src={logoImg} alt="logo" />
                             </Link>
                         </div>
-                        <StartMarquee />
+                        {/*<StartMarquee />*/}
 
                     </Col>
                     <Col span={10}>
@@ -130,12 +132,12 @@ class Headers extends Component{
                             className="p-menu-root"
                             style={{ lineHeight: '64px',float:'right' }}
                         >
-                            <Menu.Item key="messages">
+                            {/*<Menu.Item key="messages">
                                 <Badge count={199}>
                                     <Icon type="mail" style={{fontSize: 24}} />
                                 </Badge>
                                 消息
-                            </Menu.Item>
+                            </Menu.Item>*/}
                             <Menu.Item key="noviceGuide">
                                 新手引导
                             </Menu.Item>
@@ -145,24 +147,27 @@ class Headers extends Component{
                                     <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" style={{ verticalAlign:'middle',marginRight:'10px' }} />
                                         { this.state.userName }
                                 </span>}>
-                                <Menu.Item key="sysManagement">
-                                <span style={{display:'block',textAlign:'left',color:'#333'}}>
-                                    <Icon type="user" />
-                                    管理员入口
-                                </span>
-                                </Menu.Item>
+                                {
+                                    this.state.administrator === 1 && <Menu.Item key="sysManagement">
+                                    <span style={{display:'block',textAlign:'left',color:'#333'}}>
+                                        <Icon type="user" />
+                                        管理员入口
+                                    </span>
+                                    </Menu.Item>
+                                }
+
                                 <Menu.Item key="logout">
-                                <span onClick={()=> {
-                                    confirm({
-                                        title: '系统提示',
-                                        content: '确定要退出吗',
-                                        onOk: () => oauth.logout(),
-                                        onCancel() { },
-                                    });
-                                }} style={{display:'block',textAlign:'left',color:'#333'}} >
-                                    <Icon type="logout" />
-                                    退出
-                                </span>
+                                    <span onClick={()=> {
+                                        confirm({
+                                            title: '系统提示',
+                                            content: '确定要退出吗',
+                                            onOk: () => oauth.logout(),
+                                            onCancel() { },
+                                        });
+                                    }} style={{display:'block',textAlign:'left',color:'#333'}} >
+                                        <Icon type="logout" />
+                                        退出
+                                    </span>
                                 </Menu.Item>
                             </SubMenu>
                         </Menu>

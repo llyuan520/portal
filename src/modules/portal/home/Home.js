@@ -110,8 +110,6 @@ class Home extends Component{
                      ))
                  }
 
-
-
              </Layout>
          )
      }

@@ -78,7 +78,7 @@ class CompanyInformation extends Component{
                     anchorHref:'#',
                     apiUrl:'',
                     refLoading:false,
-                },{
+               /* },{
                     key:3,
                     icon:'file',
                     title:'税务服务',
@@ -89,7 +89,7 @@ class CompanyInformation extends Component{
                     unit:'',
                     anchorHref:'#',
                     apiUrl:'',
-                    refLoading:false,
+                    refLoading:false,*/
                 },{
                     key:6,
                     icon:'file',
@@ -115,7 +115,6 @@ class CompanyInformation extends Component{
     }
 
     handleOk = () => {
-
         this.setState({ companyLoading: true });
 
         this.setState({
@@ -214,7 +213,6 @@ class CompanyInformation extends Component{
                             companyCode: this.state.companyList[0].companyCode,
                             companyName: this.state.companyList[0].companyName,
                         },()=>{
-
                             this.getAllFetch(this.state.companyCode);
                             this.props.changeCompanyCode(this.state.companyCode);
                         })
@@ -270,7 +268,7 @@ class CompanyInformation extends Component{
     handleClickAnchor= item => e =>{
 
         if(item.key === 6){
-           window.location=configData.homeProjectUrl;
+           window.open(configData.homeProjectUrl);
         }else{
             window.history.pushState(null, '', item.anchorHref);
             //TODO: 添加piwik点击事件跟踪

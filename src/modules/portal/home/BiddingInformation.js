@@ -96,9 +96,10 @@ class BiddingInformation extends Component{
         //console.log('params:', params);
         this.mounted && this.setState({ loading: true });
         //根据参数查询融资申请信息
-        request.get('/indexMessageOutline/queryBizBids',{
+        request.get('/bizBids/queryBizBids',{
             params:{
                 results: 5,
+                companyCode:this.state.companyCode,
                 ...params,
             }
         }).then(({data}) => {
@@ -127,9 +128,13 @@ class BiddingInformation extends Component{
     }
 
     componentWillReceiveProps(nextProps){
-
         if(nextProps.companyCode !== this.state.companyCode){
-            this.fetch();
+            this.mounted && this.setState({
+                companyCode:nextProps.companyCode
+            },()=>{
+                this.fetch();
+            })
+
         }
     }
 

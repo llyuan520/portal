@@ -26,7 +26,7 @@ export const configData = {
         siteId:102,
     },
     address : 'http://vat.servingcloud.com/',
-    homeProjectUrl:'http://vat.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM01',
+    homeProjectUrl:'https://vat.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM02',
 }*/
 
 

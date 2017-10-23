@@ -258,6 +258,7 @@ class Result extends PureComponent {
                             <Icon title="查看分类" type="search" onClick={()=>this.handleAssociationClass('look', record)} style={{marginRight:'10px'}} />
                             <Icon title="编辑经营范围" onClick={()=>this.handleEditScope(record)} type="edit" style={{marginRight:'10px'}} />
                             <Icon title="关联分类" onClick={()=>this.handleAssociationClass('edit', record)} type="link" />
+                            {/*<Icon title="编辑经营范围" onClick={()=>this.handleEditScope(record)} type="edit" />*/}
                         </div>
                     )
 

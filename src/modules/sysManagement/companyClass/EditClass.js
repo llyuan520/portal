@@ -4,22 +4,24 @@
  * description  :
  */
 import React,{PureComponent} from 'react';
-import {Modal,Tree,Input,Button} from 'antd';
+import {Modal,Tree,Input,Button,message} from 'antd';
 import {request} from '../../../utils';
 
 const TreeNode = Tree.TreeNode;
 const Search = Input.Search;
 
+
 class EditClass extends PureComponent{
     state = {
         expandedKeys: [],
-        checkedKeys:  ['0-0-0'],
+        checkedKeys:  [],
         selectedKeys: [],
         searchValue: '',
         autoExpandParent: true,
 
-        dataList : [],
 
+        dataList : [],
+        checkeList:[],
         treeData:[],
         treeLoading:false,
         editClassModalKey:Date.now()+'1',
@@ -31,46 +33,44 @@ class EditClass extends PureComponent{
     }
 
     handleOk = (e) => {
-        console.log(this.props.uuid);
-        /*request.post('/companyInfo/updateCompanyInfo', dataInfo)
+        console.log(this.props);
+        const dataInfo = {
+            companyId:this.props.defaultItem.uuid,
+            companyTypes:[...this.state.selectedKeys]
+        }
+        console.log(dataInfo);
+        request.post('/companyInfo/updateCompanyInfo', dataInfo)
             .then(({data}) => {
                 if (data.code === 200) {
-                    message.success('新增分类成功！', 4)
+                    message.success('修改分类成功！');
                     //新增成功，关闭当前窗口,刷新父级组件
-                    this.props.changeVisable(false)
-                    this.props.refreshCurdTableTree();
+                    this.props.changeVisable(false);
+                    this.props.refreshCurdTable();
                 } else {
                     message.error(data.msg, 4)
                 }
             })
             .catch(err => {
                 message.error(err.message)
-                this.mounted && this.setState({
-                    submitLoading: false
-                })
-            })*/
-
-
-        this.props.changeVisable(false);
+                this.props.changeVisable(false);
+                this.props.refreshCurdTable();
+            })
     }
+
     handleCancel = (e) => {
-        console.log(this.props.uuid);
         this.props.changeVisable(false);
     }
-
-
 
     generateList = (data) => {
         for (let i = 0; i < data.length; i++) {
             const node = data[i];
             const key = node.key;
-            this.state.dataList.push({ key, title: key });
+            this.state.dataList.push({ key, title: node.title });
             if (node.children) {
                 this.generateList(node.children, node.key);
             }
         }
     };
-
 
     getParentKey = (key, tree) => {
         let parentKey;
@@ -96,12 +96,8 @@ class EditClass extends PureComponent{
             autoExpandParent: false,
         });
     }
-    onCheck = (checkedKeys,info) => {
-        console.log('info', info);
-        if(info.checked) {
-            const selectedNodes = info.node.props.dataRef;
-            console.log('onCheck', selectedNodes);
-        }
+    onCheck = (checkedKeys) => {
+        console.log('checkedKeys', checkedKeys);
         this.setState({
             checkedKeys,
         });
@@ -114,12 +110,14 @@ class EditClass extends PureComponent{
     onChange = (e) => {
         const value = e.target.value;
         const expandedKeys = this.state.dataList.map((item) => {
-            if (item.key.indexOf(value) > -1) {
+            if (item.title.indexOf(value) > -1) {
+
                 return this.getParentKey(item.key, this.state.treeData);
             }
             return null;
         }).filter((item, i, self) => item && self.indexOf(item) === i);
-        this.setState({
+
+        this.mounted && this.setState({
             expandedKeys,
             searchValue: value,
             autoExpandParent: true,
@@ -127,38 +125,65 @@ class EditClass extends PureComponent{
     }
 
     renderTreeNodes = data => {
-        return data.map((item) => {
-            const index = item.key.indexOf(this.state.searchValue);
-            const beforeStr = item.key.substr(0, index);
-            const afterStr = item.key.substr(index + this.state.searchValue.length);
+        return data.map((item,i) => {
+            const index = item.title.indexOf(this.state.searchValue);
+            const beforeStr = item.title.substr(0, index);
+            const afterStr = item.title.substr(index + this.state.searchValue.length);
+
             const title = index > -1 ? (
                 <span>
               {beforeStr}
                     <span style={{ color: '#f50' }}>{this.state.searchValue}</span>
                     {afterStr}
             </span>
-            ) : <span>{item.key}</span>;
+            ) : <span>{item.title}</span>;
             if (item.children) {
                 return (
-                    <TreeNode key={item.key} title={item.title} dataRef={item}>
+                    <TreeNode key={item.key} title={title} dataRef={item} >
                         {this.renderTreeNodes(item.children)}
                     </TreeNode>
                 );
             }
-            return <TreeNode key={item.key} title={item.title} dataRef={item} />;
+            return <TreeNode key={item.key} title={title} dataRef={item} />;
         });
     }
 
     fetch = uuid => {
-
-        //根据参数查询融资申请信息 ${uuid}
-        request.get(`/companyInfo/queryCompanyTypeUuids/3`,{
+        request.get(`/companyInfo/queryCompanyTypeUuids/${uuid}`,{
         }).then(({data}) => {
+            console.log(data);
+            data.data = ["AV7M1lz98mcubbSC-YNl",
+                        "AV7M1lzB8mcubbSC-YNk",
+                        "AV7M1l0-8mcubbSC-YNm",
+                        "AV7M1lyE8mcubbSC-YNj",
+                        "AV7M1lwJ8mcubbSC-YNi",
+                        "AV7M1mCu8mcubbSC-YNx",
+                        "AV7M1mBr8mcubbSC-YNw",
+                        "AV7M1l_u8mcubbSC-YNv",
+                        "AV7M1l338mcubbSC-YNo",
+                        "AV7M1l458mcubbSC-YNp",
+                        "AV7M1l568mcubbSC-YNq",
+                        "AV7M1l2A8mcubbSC-YNn",
+                        "AV7M1mHi8mcubbSC-YN1",
+                        "AV7M1mGa8mcubbSC-YN0",
+                        "AV7M1mFe8mcubbSC-YNz",
+                        "AV7M1mIl8mcubbSC-YN2",
+                        "AV7M1mDs8mcubbSC-YNy",
+                        "AV7M1l8q8mcubbSC-YNs",
+                        "AV7M1l9r8mcubbSC-YNt",
+                        "AV7M1l-w8mcubbSC-YNu",
+                        "AV7M1l698mcubbSC-YNr",
+                        "AV7M1lub8mcubbSC-YNh",
+                        "AV8KKukj8mcubbSC-YOP",
+                        "AV85MOsG8mcubbSC-YW8",
+                        "AV68TuJ48mcubbSC-YGn"];
             if(data.code===200) {
-                this.setState({
-                    expandedKeys: [...data.data],
-                    checkedKeys: [...data.data],
-                    selectedKeys: [...data.data],
+                this.setState((prevState) => {
+                    return {
+                        expandedKeys: prevState.expandedKeys.length > 0 ? [...data.data] : ['0'],
+                        checkedKeys: [...data.data],
+                        selectedKeys: [...data.data],
+                    };
                 });
             }
         });
@@ -178,6 +203,7 @@ class EditClass extends PureComponent{
                     treeLoading: false,
                 },()=>{
                     this.fetch(this.props.defaultItem.uuid);
+                    this.generateList(this.state.treeData);
                 })
             }
         });
@@ -203,6 +229,7 @@ class EditClass extends PureComponent{
 
     render() {
         const {modalType,visible} = this.props;
+        const {expandedKeys,autoExpandParent,checkedKeys,selectedKeys,treeData } = this.state;
         return (
             <Modal
                 key={this.state.editClassModalKey}
@@ -220,21 +247,22 @@ class EditClass extends PureComponent{
                 ]}
             >
                 <div>
-                    <Search style={{ marginBottom: 8 }} placeholder="Search" onChange={this.onChange} />
+                    <Search style={{ marginBottom: 8 }} placeholder="搜索" onChange={this.onChange} />
+
                     <div style={{height:400,overflowY: 'auto'}}>
-                            <Tree
-                                checkable
+                        <Tree
+                            checkable
                             //checkable={modalType !=='look'}
 
                             onExpand={this.onExpand}
-                            expandedKeys={this.state.expandedKeys}
-                            autoExpandParent={this.state.autoExpandParent}
+                            expandedKeys={expandedKeys}
+                            autoExpandParent={autoExpandParent}
                             onCheck={this.onCheck}
-                            checkedKeys={this.state.checkedKeys}
+                            checkedKeys={checkedKeys}
                             onSelect={this.onSelect}
-                            selectedKeys={this.state.selectedKeys}
+                            selectedKeys={selectedKeys}
                         >
-                            {this.renderTreeNodes(this.state.treeData)}
+                            {this.renderTreeNodes(treeData)}
                         </Tree>
                     </div>
 
