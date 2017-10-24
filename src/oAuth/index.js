@@ -53,6 +53,17 @@ export default {
     },
 
     /**
+     * 修改是否默认弹出新手引导
+     */
+    setTagSysUserBONotificationStatus(val){
+        const data = storage.get(USER);
+        data.sysUserBO.notificationStatus = val;
+        storage.remove(USER);
+        //保存token和用户信息
+        this.setUser(data);
+    },
+
+    /**
      * 销毁 token 和 user
      */
     destroy() {
@@ -67,7 +78,9 @@ export default {
     getAuth() {
         return {
             auth: this.getToken(),
-            username: this.getUser().sysUserBO.userName
+            username: this.getUser().sysUserBO.userName,
+            administrator: this.getUser().sysUserBO.administrator,
+            notificationStatus: this.getUser().sysUserBO.notificationStatus,
         }
     },
 

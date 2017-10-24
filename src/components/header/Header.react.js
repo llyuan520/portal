@@ -71,8 +71,10 @@ class Headers extends Component{
             if(oauth.getAuth()){
                 this.mounted && this.setState({
                     userName : oauth.getAuth().username,
-                    administrator: oauth.getUser().sysUserBO.administrator,
+                    administrator: oauth.getAuth().administrator,
+                    notificationStatus:oauth.getAuth().notificationStatus,
                 },()=>{
+
                     //默认判断是否已经自动弹出
                     if(parseInt(oauth.getUser().sysUserBO.notificationStatus, 0) === 0){
                         this.setModalVisible(true);
@@ -80,11 +82,14 @@ class Headers extends Component{
                             userName: this.state.userName,
                             notificationStatus: 1
                         }).then(({data}) => {
-                            //console.log(data);
+                            if(data.code === 200){
+                                oauth.setTagSysUserBONotificationStatus(1);
+                            }
                         }).catch(err => {
 
                         })
                     }
+
                 })
             }
         }else{

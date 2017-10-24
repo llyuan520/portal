@@ -33,13 +33,12 @@ class EditClass extends PureComponent{
     }
 
     handleOk = (e) => {
-        console.log(this.props);
         const dataInfo = {
             companyId:this.props.defaultItem.uuid,
-            companyTypes:[...this.state.selectedKeys]
+            companyTypes:[...this.state.checkedKeys]
         }
         console.log(dataInfo);
-        request.post('/companyInfo/updateCompanyInfo', dataInfo)
+        request.post('/companyInfo/assignCompanyType', dataInfo)
             .then(({data}) => {
                 if (data.code === 200) {
                     message.success('修改分类成功！');
@@ -97,10 +96,22 @@ class EditClass extends PureComponent{
         });
     }
     onCheck = (checkedKeys) => {
-        console.log('checkedKeys', checkedKeys);
+        //console.log('checkedKeys', checkedKeys);
         this.setState({
             checkedKeys,
         });
+        /*if(checkedKeys.length<7) {
+            this.setState({
+                checkedKeys,
+            });
+        }else{
+            const data = checkedKeys.slice(0,6);
+            this.setState({
+                checkedKeys: [...data],
+            });
+            return message.warning('选中的分类不能大于5条！',4);
+        }*/
+
     }
     onSelect = (selectedKeys, info) => {
         console.log('onSelect', info);
@@ -125,7 +136,7 @@ class EditClass extends PureComponent{
     }
 
     renderTreeNodes = data => {
-        return data.map((item,i) => {
+        return data.map((item) => {
             const index = item.title.indexOf(this.state.searchValue);
             const beforeStr = item.title.substr(0, index);
             const afterStr = item.title.substr(index + this.state.searchValue.length);
@@ -137,6 +148,7 @@ class EditClass extends PureComponent{
                     {afterStr}
             </span>
             ) : <span>{item.title}</span>;
+
             if (item.children) {
                 return (
                     <TreeNode key={item.key} title={title} dataRef={item} >
@@ -152,31 +164,7 @@ class EditClass extends PureComponent{
         request.get(`/companyInfo/queryCompanyTypeUuids/${uuid}`,{
         }).then(({data}) => {
             console.log(data);
-            data.data = ["AV7M1lz98mcubbSC-YNl",
-                        "AV7M1lzB8mcubbSC-YNk",
-                        "AV7M1l0-8mcubbSC-YNm",
-                        "AV7M1lyE8mcubbSC-YNj",
-                        "AV7M1lwJ8mcubbSC-YNi",
-                        "AV7M1mCu8mcubbSC-YNx",
-                        "AV7M1mBr8mcubbSC-YNw",
-                        "AV7M1l_u8mcubbSC-YNv",
-                        "AV7M1l338mcubbSC-YNo",
-                        "AV7M1l458mcubbSC-YNp",
-                        "AV7M1l568mcubbSC-YNq",
-                        "AV7M1l2A8mcubbSC-YNn",
-                        "AV7M1mHi8mcubbSC-YN1",
-                        "AV7M1mGa8mcubbSC-YN0",
-                        "AV7M1mFe8mcubbSC-YNz",
-                        "AV7M1mIl8mcubbSC-YN2",
-                        "AV7M1mDs8mcubbSC-YNy",
-                        "AV7M1l8q8mcubbSC-YNs",
-                        "AV7M1l9r8mcubbSC-YNt",
-                        "AV7M1l-w8mcubbSC-YNu",
-                        "AV7M1l698mcubbSC-YNr",
-                        "AV7M1lub8mcubbSC-YNh",
-                        "AV8KKukj8mcubbSC-YOP",
-                        "AV85MOsG8mcubbSC-YW8",
-                        "AV68TuJ48mcubbSC-YGn"];
+
             if(data.code===200) {
                 this.setState((prevState) => {
                     return {
@@ -189,25 +177,22 @@ class EditClass extends PureComponent{
         });
     }
 
+
     fetchTree = () => {
         this.mounted && this.setState({ treeLoading: true });
         request.get('/companyType/queryCompanyTypeTree',{
         }).then(({data}) => {
-
             const item = [];
             item.push(data.data);
-
             if(data.code===200) {
                 this.mounted && this.setState({
                     treeData: [...item],
                     treeLoading: false,
                 },()=>{
-                    this.fetch(this.props.defaultItem.uuid);
                     this.generateList(this.state.treeData);
                 })
             }
         });
-
 
     }
 
@@ -221,15 +206,15 @@ class EditClass extends PureComponent{
     }
 
     componentWillReceiveProps(nextProps){
-
-        /*if(nextProps.defaultItem.uuid !== this.props.defaultItem.uuid){
+        if(nextProps.defaultItem.uuid){
             this.fetch(nextProps.defaultItem.uuid);
-        }*/
+        }
     }
 
     render() {
         const {modalType,visible} = this.props;
-        const {expandedKeys,autoExpandParent,checkedKeys,selectedKeys,treeData } = this.state;
+        const {expandedKeys,autoExpandParent,checkedKeys,selectedKeys,treeData,checkeList } = this.state;
+
         return (
             <Modal
                 key={this.state.editClassModalKey}
@@ -247,13 +232,12 @@ class EditClass extends PureComponent{
                 ]}
             >
                 <div>
+
                     <Search style={{ marginBottom: 8 }} placeholder="搜索" onChange={this.onChange} />
 
                     <div style={{height:400,overflowY: 'auto'}}>
                         <Tree
-                            checkable
-                            //checkable={modalType !=='look'}
-
+                            checkable={modalType !=='look'}
                             onExpand={this.onExpand}
                             expandedKeys={expandedKeys}
                             autoExpandParent={autoExpandParent}
@@ -262,7 +246,10 @@ class EditClass extends PureComponent{
                             onSelect={this.onSelect}
                             selectedKeys={selectedKeys}
                         >
-                            {this.renderTreeNodes(treeData)}
+                            {
+                                modalType !=='look' ? this.renderTreeNodes(treeData) : this.renderTreeNodes(checkeList)
+                            }
+
                         </Tree>
                     </div>
 
