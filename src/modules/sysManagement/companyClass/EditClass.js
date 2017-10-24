@@ -163,8 +163,6 @@ class EditClass extends PureComponent{
     fetch = uuid => {
         request.get(`/companyInfo/queryCompanyTypeUuids/${uuid}`,{
         }).then(({data}) => {
-            console.log(data);
-
             if(data.code===200) {
                 this.setState((prevState) => {
                     return {
