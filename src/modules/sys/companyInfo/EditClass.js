@@ -32,6 +32,7 @@ class EditClass extends PureComponent{
     }
 
     handleOk = (e) => {
+        this.mounted && this.setState({ treeLoading: true });
         const dataInfo = {
             companyId:this.props.defaultItem.uuid,
             companyTypes:[...this.state.checkedKeys]
@@ -44,6 +45,7 @@ class EditClass extends PureComponent{
                     //新增成功，关闭当前窗口,刷新父级组件
                     this.props.changeVisable(false);
                     this.props.refreshCurdTable();
+                    this.mounted && this.setState({ treeLoading: false });
                 } else {
                     message.error(data.msg, 4)
                 }
@@ -221,7 +223,6 @@ class EditClass extends PureComponent{
         return (
             <Modal
                 key={this.state.editClassModalKey}
-                confirmLoading={this.state.treeLoading}
                 title={modalType ==='look' ? '查看' : '编辑分类' }
                 visible={visible}
                 maskClosable={false}
@@ -229,7 +230,7 @@ class EditClass extends PureComponent{
                 onCancel={this.handleCancel}
                 footer={modalType ==='look' ? null : [
                     <Button key="clear" onClick={this.handleCancel}>取消</Button>,
-                    <Button key="ok" type="primary"  onClick={this.handleOk}>
+                    <Button key="ok" type="primary" loading={this.state.treeLoading}  onClick={this.handleOk}>
                         保存
                     </Button>
                 ]}
