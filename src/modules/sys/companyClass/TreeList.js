@@ -126,7 +126,7 @@ class TreeList extends Component {
 
                     <div style={{marginBottom:20}}>
                         <Button type="primary"
-                               disabled={!hasSelected}
+                                disabled={!hasSelected}
                                 onClick={()=>this.showModal()}
                         >新增分类</Button>
                     </div>

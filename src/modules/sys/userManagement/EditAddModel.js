@@ -34,55 +34,55 @@ class EditAddModel extends Component{
 
                 //console.log('Received values of form: ', values);
 
-                 this.mounted && this.setState({
-                     submitLoading:true
-                 })
+                this.mounted && this.setState({
+                    submitLoading:true
+                })
 
-                 if(this.props.modalType === 'create') {
+                if(this.props.modalType === 'create') {
 
-                     request.post('/userManage/saveUserInfo', {...values})
-                         .then(({data}) => {
-                             if (data.code === 200) {
-                                 message.success('新增成功！', 4)
-                                 //新增成功，关闭当前窗口,刷新父级组件
-                                 this.props.changeVisable(false);
-                                 this.props.refreshCurdTable();
-                             } else {
-                                 message.error(data.msg, 4)
-                             }
-                         })
-                         .catch(err => {
-                             message.error(err.message)
-                             this.mounted && this.setState({
-                                 submitLoading: false
-                             })
-                         })
-                 }
+                    request.post('/userManage/saveUserInfo', {...values})
+                        .then(({data}) => {
+                            if (data.code === 200) {
+                                message.success('新增成功！', 4)
+                                //新增成功，关闭当前窗口,刷新父级组件
+                                this.props.changeVisable(false);
+                                this.props.refreshCurdTable();
+                            } else {
+                                message.error(data.msg, 4)
+                            }
+                        })
+                        .catch(err => {
+                            message.error(err.message)
+                            this.mounted && this.setState({
+                                submitLoading: false
+                            })
+                        })
+                }
 
-                 if(this.props.modalType === 'edit'){
+                if(this.props.modalType === 'edit'){
 
-                     request.post('/userManage/modifyUserInfo', {...values})
-                         .then(({data}) => {
-                             if (data.code === 200) {
-                                 message.success('编辑成功！', 4);
+                    request.post('/userManage/modifyUserInfo', {...values})
+                        .then(({data}) => {
+                            if (data.code === 200) {
+                                message.success('编辑成功！', 4);
 
-                                 //编辑成功，关闭当前窗口,刷新父级组件
-                                 this.props.changeVisable(false);
-                                 this.props.refreshCurdTable();
+                                //编辑成功，关闭当前窗口,刷新父级组件
+                                this.props.changeVisable(false);
+                                this.props.refreshCurdTable();
 
-                             } else {
-                                 message.error(data.msg, 4)
-                             }
-                         })
-                         .catch(err => {
-                             message.error(err.message)
-                             this.mounted && this.setState({
-                                 submitLoading: false
-                             })
-                         })
-                 }
-             }
-         });
+                            } else {
+                                message.error(data.msg, 4)
+                            }
+                        })
+                        .catch(err => {
+                            message.error(err.message)
+                            this.mounted && this.setState({
+                                submitLoading: false
+                            })
+                        })
+                }
+            }
+        });
     }
 
     componentDidMount() {
@@ -228,28 +228,28 @@ class EditAddModel extends Component{
                         </Col>
                         <Col span={7}>
 
-                                <FormItem
-                                        {...formItemLayout}
-                                        label="&nbsp;"
-                                        colon={false}
-                                    >
-                                        {getFieldDecorator('sysGYLUserWebParam.phone', {
-                                            initialValue: defaultValueDate.gylUserName || '',
-                                            rules: [
-                                                {
-                                                    pattern: /^[^ ]+$/, message: '不能包含空格'
-                                                }
-                                            ],
-                                        })(
-                                            <Input disabled={modalType ==='edit'} placeholder="请输入供应链金融平台账号" />
-                                        )}
-                                    </FormItem>
+                            <FormItem
+                                {...formItemLayout}
+                                label="&nbsp;"
+                                colon={false}
+                            >
+                                {getFieldDecorator('sysGYLUserWebParam.phone', {
+                                    initialValue: defaultValueDate.gylUserName || '',
+                                    rules: [
+                                        {
+                                            pattern: /^[^ ]+$/, message: '不能包含空格'
+                                        }
+                                    ],
+                                })(
+                                    <Input disabled={modalType ==='edit'} placeholder="请输入供应链金融平台账号" />
+                                )}
+                            </FormItem>
 
 
                         </Col>
                         <Col span={7}>
                             {
-                            getFieldValue('sysGYLUserWebParam.phone')  ? <FormItem
+                                getFieldValue('sysGYLUserWebParam.phone')  ? <FormItem
                                     {...formItemLayout}
                                     label="&nbsp;"
                                     colon={false}
@@ -299,23 +299,23 @@ class EditAddModel extends Component{
                         <Col span={7}>
                             {
                                 getFieldValue('sysPYTUserWebParam.phone') ? <FormItem
-                                        {...formItemLayout}
-                                        label="&nbsp;"
-                                        colon={false}
-                                    >
-                                        {getFieldDecorator('sysPYTUserWebParam.tokenKey', {
-                                            initialValue: defaultValueDate.pytTokenKey || '',
-                                            rules: [
-                                                {
-                                                    required: true, message: '请输入票易通单点登录key',
-                                                }, {
-                                                    pattern: /^[^ ]+$/, message: '不能包含空格'
-                                                }
-                                            ],
-                                        })(
-                                            <Input placeholder="请输入票易通单点登录key"/>
-                                        )}
-                                    </FormItem> : <div style={{textAlign:'center'}}><span> —</span></div>
+                                    {...formItemLayout}
+                                    label="&nbsp;"
+                                    colon={false}
+                                >
+                                    {getFieldDecorator('sysPYTUserWebParam.tokenKey', {
+                                        initialValue: defaultValueDate.pytTokenKey || '',
+                                        rules: [
+                                            {
+                                                required: true, message: '请输入票易通单点登录key',
+                                            }, {
+                                                pattern: /^[^ ]+$/, message: '不能包含空格'
+                                            }
+                                        ],
+                                    })(
+                                        <Input placeholder="请输入票易通单点登录key"/>
+                                    )}
+                                </FormItem> : <div style={{textAlign:'center'}}><span> —</span></div>
                             }
                         </Col>
                         <Col span={7}>

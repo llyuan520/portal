@@ -3,6 +3,6 @@
  * createTime   : 2017/9/21 15:47
  * description  :
  */
-import CompanySortSearch from './CompanyClass'
+import CompanyInfo from './CompanyInfo'
 
-export default CompanySortSearch
+export default CompanyInfo

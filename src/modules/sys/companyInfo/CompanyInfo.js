@@ -7,19 +7,12 @@ import React, { Component } from 'react';
 import Search from './Search.react'
 import Result from './Result.react'
 
-class CompanyInfoSearch extends Component {
+class CompanyInfo extends Component {
     state = {
         filters:{
             lastUpdated:Date.now()
         }
     };
-
-    refreshCurdTableTree = ()=>{
-        this.setState({
-            refKeyDate:Date.now()
-        })
-    }
-
     render(){
         return (
             <div>
@@ -31,10 +24,10 @@ class CompanyInfoSearch extends Component {
                         }
                     })
                 }} />
-                <Result key={this.state.refKeyDate} filters={this.state.filters} refreshCurdTableTree={this.refreshCurdTableTree.bind(this)}  />
+                <Result filters={this.state.filters} />
             </div>
         );
     }
 
 }
-export default CompanyInfoSearch
+export default CompanyInfo

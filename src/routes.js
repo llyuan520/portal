@@ -9,7 +9,7 @@ import {RouteWithSubRoutes} from './components'
 import {Layout} from 'antd'
 import Login from './modules/login'
 import DashBoard from './modules/dashBoard';
-import SysManagement from './modules/sysManagement'
+import Sys from './modules/sys'
 
 const PageNotFoundComponent =  ()=><div> 404 </div>;
 
@@ -24,8 +24,8 @@ const routes = [
         component:DashBoard,
         name:'首页'
     },{
-        path: '/sysManagement',
-        component: SysManagement,
+        path: '/sys',
+        component: Sys,
         name: '后台管理',
     },{
         path: '*',

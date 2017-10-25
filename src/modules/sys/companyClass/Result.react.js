@@ -225,7 +225,7 @@ class Result extends Component {
                     <Col span={18}>
                         <div className="resultWrap">
                             <Table columns={columns}
-                                   //rowSelection={rowSelection}  //TODO: 列表项是否可选择
+                                //rowSelection={rowSelection}  //TODO: 列表项是否可选择
                                    key={this.state.tableKeyDate}
                                    rowKey={record => record.id}
                                    dataSource={this.state.data}

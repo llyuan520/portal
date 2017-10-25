@@ -101,7 +101,7 @@ class EditAddWithClass extends Component{
 
         //console.log(nextProps)
         if(nextProps.selectedKeys !== this.props.selectedKeys){
-            
+
         }
 
 
@@ -147,9 +147,9 @@ class EditAddWithClass extends Component{
                                 {
                                     required: true, message: '请输入名称',
                                 },
-                               /* {
-                                    pattern:/^[^ ]+$/,message:'不能包含空格'
-                                }*/
+                                /* {
+                                     pattern:/^[^ ]+$/,message:'不能包含空格'
+                                 }*/
                             ],
                         })(
                             <Input placeholder="请输入分类名称" />

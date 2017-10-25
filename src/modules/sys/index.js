@@ -12,7 +12,7 @@ import PortalBreadCrumb from '../../modules/breadcrumb/Breadcrumb'
 import PortalSider from '../../components/sider'
 import {copyRight} from "../../config/index";
 import oauth from '../../oAuth';
-import routes from '../../modules/sysManagement/routes'
+import routes from './routes'
 import {composeMenus} from '../../utils'
 import './styles.css';
 
@@ -20,6 +20,9 @@ const { Header, Content,Footer } = Layout;
 
 const menusData = composeMenus(routes);
 class SysManagement extends Component {
+
+    componentDidMount() {
+    }
 
     componentWillMount(){
         if(!oauth.isLogin()){

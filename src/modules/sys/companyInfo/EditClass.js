@@ -21,7 +21,6 @@ class EditClass extends PureComponent{
 
 
         dataList : [],
-        checkeList:[],
         treeData:[],
         treeLoading:false,
         editClassModalKey:Date.now()+'1',
@@ -136,6 +135,7 @@ class EditClass extends PureComponent{
     }
 
     renderTreeNodes = data => {
+
         return data.map((item) => {
             const index = item.title.indexOf(this.state.searchValue);
             const beforeStr = item.title.substr(0, index);
@@ -143,26 +143,31 @@ class EditClass extends PureComponent{
 
             const title = index > -1 ? (
                 <span>
-              {beforeStr}
+                    {beforeStr}
                     <span style={{ color: '#f50' }}>{this.state.searchValue}</span>
                     {afterStr}
-            </span>
+                </span>
             ) : <span>{item.title}</span>;
+
 
             if (item.children) {
                 return (
-                    <TreeNode key={item.key} title={title} dataRef={item} >
+                    <TreeNode key={item.key} title={title} dataRef={item} disableCheckbox={this.props.modalType === 'look'} >
                         {this.renderTreeNodes(item.children)}
                     </TreeNode>
                 );
             }
-            return <TreeNode key={item.key} title={title} dataRef={item} />;
-        });
+            return <TreeNode key={item.key} title={title} dataRef={item} disableCheckbox={this.props.modalType === 'look'} />;
+
+
+        })
+
     }
 
     fetch = uuid => {
         request.get(`/companyInfo/queryCompanyTypeUuids/${uuid}`,{
         }).then(({data}) => {
+            console.log(data);
             if(data.code===200) {
                 this.setState((prevState) => {
                     return {
@@ -204,14 +209,14 @@ class EditClass extends PureComponent{
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.defaultItem.uuid){
+        if(nextProps.defaultItem.uuid || nextProps.defaultItem.uuid !== this.props.defaultItem.uuid){
             this.fetch(nextProps.defaultItem.uuid);
         }
     }
 
     render() {
         const {modalType,visible} = this.props;
-        const {expandedKeys,autoExpandParent,checkedKeys,selectedKeys,treeData,checkeList } = this.state;
+        const {expandedKeys,autoExpandParent,checkedKeys,selectedKeys,treeData } = this.state;
 
         return (
             <Modal
@@ -235,7 +240,7 @@ class EditClass extends PureComponent{
 
                     <div style={{height:400,overflowY: 'auto'}}>
                         <Tree
-                            checkable={modalType !=='look'}
+                            checkable
                             onExpand={this.onExpand}
                             expandedKeys={expandedKeys}
                             autoExpandParent={autoExpandParent}
@@ -245,7 +250,7 @@ class EditClass extends PureComponent{
                             selectedKeys={selectedKeys}
                         >
                             {
-                                modalType !=='look' ? this.renderTreeNodes(treeData) : this.renderTreeNodes(checkeList)
+                                this.renderTreeNodes(treeData)
                             }
 
                         </Tree>
