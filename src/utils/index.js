@@ -78,11 +78,12 @@ const fMoney = (s,n=2)=>{
  *              ： https://github.com/joernroeder/piwik-react-router
  */
 const PiwikReactRouter = require('piwik-react-router');
+
 const piwik = PiwikReactRouter({
     //TODO: 测试环境地址，上线修改
     url: configData.piwikData.URL,
     siteId: configData.piwikData.siteId,
-    //userId: oauth.getUser().userName || '',
+    //userId: oauth.getAuth().username || '',
     trackErrors: true,
 });
 

@@ -11,7 +11,6 @@ import oauth from '../../oAuth';
 import NoviceGuide from './NoviceGuide'
 import {request} from '../../utils';
 
-
 import logoImg from './media/logo-02.png';
 const SubMenu = Menu.SubMenu;
 const confirm = Modal.confirm;

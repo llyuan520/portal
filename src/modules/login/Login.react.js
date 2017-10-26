@@ -9,6 +9,7 @@ import {request,getUrlParam} from '../../utils';
 import {withRouter} from 'react-router-dom';
 import oauth from '../../oAuth';
 
+const PiwikReactRouter = require('piwik-react-router');
 class Login extends Component{
 
     state = {
@@ -23,11 +24,16 @@ class Login extends Component{
             token : token,
         }).then(({data}) =>{
             if(data.code === 200){
-
+                console.log(data);
                 oauth.destroy();
                 //保存token和用户信息
                 oauth.setToken(data.data.token);
                 oauth.setUser(data.data);
+
+
+                PiwikReactRouter({
+                    userId: oauth.getAuth().username,
+                });
 
                 this.mounted && this.setState({ refLoading: false });
 

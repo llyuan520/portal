@@ -9,8 +9,8 @@
 export const configData = {
     piwikData : {
         //测试
-        URL:'http://120.25.216.215:9009/piwik/',
-        siteId:6,
+        URL:'https://t1.servingcloud.com:4433/piwik/',
+        siteId:104,
     },
     address : 'http://t1.servingcloud.com/',
     homeProjectUrl:'http://t1.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM01',
