@@ -55,12 +55,12 @@ class Search extends Component {
         ];
         const data = [
             {
-                label:'分类名称',
+                label:'公司名称',
                 type:'text',
                 fieldName:'companyName'
             },
             {
-                label:'分类来源',
+                label:'分类状态',
                 type:'select',
                 fieldName:'typeStatus',
                 items: [

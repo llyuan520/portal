@@ -128,6 +128,10 @@ class Result extends Component {
 
     }
 
+    getKeyVal = params =>{
+        this.fetch(params);
+    }
+
     componentDidMount() {
         this.fetch();
     }
@@ -219,7 +223,7 @@ class Result extends Component {
                 <Row gutter={24}>
                     <Col span={6} className="resultWrap">
                         <Card noHovering>
-                            <TreeList refreshCurdTableTree={this.props.refreshCurdTableTree} />
+                            <TreeList getKeyVal={this.getKeyVal.bind(this)}  refreshCurdTableTree={this.props.refreshCurdTableTree} />
                         </Card>
                     </Col>
                     <Col span={18}>

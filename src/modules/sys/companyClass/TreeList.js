@@ -34,7 +34,7 @@ class TreeList extends Component {
     }
 
     onSelect = (selectedKeys, info) => {
-        console.log('onSelect', info);
+        console.log('onSelect', selectedKeys,info);
 
         if(info.selectedNodes.length > 0){
             const selectedNodes = info.selectedNodes[0].props.dataRef;
@@ -63,6 +63,7 @@ class TreeList extends Component {
             });
         }
 
+        this.props.getKeyVal({parentId:selectedKeys[0]});
     }
 
     renderTreeNodes = data => {

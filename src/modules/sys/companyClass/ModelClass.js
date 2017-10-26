@@ -162,11 +162,14 @@ class EditAddWithClass extends Component{
                     >
                         {getFieldDecorator('keywords', {
                             initialValue: defaultValue.keywords || '',
-                            /*rules: [
+                            rules: [
                                 {
+                                    required: true, message: '请输入分类关键字',
+                                },
+                                /*{
                                     pattern:/^[^ ]+$/,message:'不能包含空格'
-                                }
-                            ],*/
+                                }*/
+                            ],
                         })(
                             <Input placeholder="请输入分类关键字" />
                         )}

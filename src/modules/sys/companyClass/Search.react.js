@@ -66,10 +66,10 @@ class Search extends Component {
                 items: [
                     {
                         value:'1',
-                        label:'已分类',
+                        label:'手工指定',
                     },{
-                        value:'-1',
-                        label:'未分类',
+                        value:'2',
+                        label:'税收分类编码',
                     }
                 ],
             },
