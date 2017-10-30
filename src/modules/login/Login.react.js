@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import {Spin,message,Modal} from 'antd';
 import {request,getUrlParam} from '../../utils';
 import {withRouter} from 'react-router-dom';
+import {configData} from './../../config';
 import oauth from '../../oAuth';
 
 const PiwikReactRouter = require('piwik-react-router');
@@ -30,9 +31,12 @@ class Login extends Component{
                 oauth.setToken(data.data.token);
                 oauth.setUser(data.data);
 
-
                 PiwikReactRouter({
+                    //TODO: 测试环境地址，上线修改
+                    url: configData.piwikData.URL,
+                    siteId: configData.piwikData.siteId,
                     userId: oauth.getAuth().username,
+                    trackErrors: true,
                 });
 
                 this.mounted && this.setState({ refLoading: false });
