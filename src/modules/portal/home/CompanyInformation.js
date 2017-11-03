@@ -158,14 +158,10 @@ class CompanyInformation extends Component{
                 cartDate[i].refLoading = true;
                 this.mounted && this.setState({  data: cartDate });
 
-                let url = `${cartDate[i].apiUrl}`;
-                    if(cartDate[i].key !== 4){
-                        url+=`${companyCode}`;
-                    }
+                let url = `${cartDate[i].apiUrl}/${companyCode}`;
 
                 request.get(url, {
                 }).then(({data}) => {
-
                     if (data.code === 200) {
 
                         cartDate[i].productName = data.data.productName;

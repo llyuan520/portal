@@ -12,8 +12,8 @@ export const configData = {
         URL:'https://t1.servingcloud.com:4433/piwik/',
         siteId:104,
     },
-    address : 'http://t1.servingcloud.com/',
-    homeProjectUrl:'http://t1.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM01',
+    address:'https://t1.servingcloud.com/',
+    homeProjectUrl:'https://t1.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM02',
 }
 
 
@@ -25,7 +25,7 @@ export const configData = {
         URL:'https://t1.servingcloud.com:4433/piwik/',
         siteId:102,
     },
-    address : 'http://vat.servingcloud.com/',
+    address : 'https://vat.servingcloud.com/',
     homeProjectUrl:'https://vat.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM02',
 }*/
 

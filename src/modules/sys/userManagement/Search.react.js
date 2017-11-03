@@ -57,7 +57,7 @@ class Search extends Component {
             {
                 label:'用户名',
                 type:'text',
-                fieldName:'userName'
+                fieldName:'username'
             }
         ]
 

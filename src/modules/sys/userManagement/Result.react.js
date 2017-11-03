@@ -79,12 +79,12 @@ class Result extends PureComponent {
 
     //选中多少条数据 - 禁用
     handleDisabled = () => {
-        this.setState({
+        this.mounted && this.setState({
             disabledLoading: true
         });
         // ajax request after empty completing
         setTimeout(() => {
-            this.setState({
+            this.mounted &&  this.setState({
                 selectedRowKeys: [],
                 disabledLoading: false
             });
@@ -93,12 +93,12 @@ class Result extends PureComponent {
 
     //选中多少条数据 - 启用
     handleEnabled = () => {
-        this.setState({
+        this.mounted && this.setState({
             enabledLoading: true
         });
         // ajax request after empty completing
         setTimeout(() => {
-            this.setState({
+            this.mounted && this.setState({
                 selectedRowKeys: [],
                 enabledLoading: false
             });
@@ -107,12 +107,12 @@ class Result extends PureComponent {
 
     onSelectChange = (selectedRowKeys) => {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
-        this.setState({ selectedRowKeys });
+        this.mounted && this.setState({ selectedRowKeys });
     }
 
     //弹出框
     showModal = (type,record) =>{
-        this.setState({
+        this.mounted && this.setState({
             editAddVisible: true,
             type: type,
             defaultValueDate:record,
@@ -152,34 +152,39 @@ class Result extends PureComponent {
         //跳转到详情页
         const columns = [
             {
-                title: '状态',
-                dataIndex: 'typeStatus',
-                render: (text, record) => {
-                    let txt = '';
-                    switch (record.typeStatus){
-                        case '1':
-                            txt = <Badge count={'正常'} style={{ backgroundColor: '#87d068' }} />;
-                            break;
-                        case'-1':
-                            txt = <Badge count={'已禁用'} />;
-                            break;
-                        default:
-                            break;
-                    }
-                    return txt;
-                },
+
+                title: '供应商门户账号',
+                dataIndex: 'gysUserName',
             },{
                 title: '喜盈佳账号',
                 dataIndex: 'xyjUserName',
             },{
                 title: '票易通账号',
                 dataIndex: 'pytUserName',
-            },{
-                title: '供应商门户账号',
-                dataIndex: 'gysUserName',
+
             },{
                 title: '供应链金融账号',
                 dataIndex: 'gylUserName',
+            },{
+                title: '状态',
+                dataIndex: 'enabled',
+                render: (text, record) => {
+                    let txt = '';
+                    switch (parseInt(record.enabled,0)){
+                        case 1:
+                            txt = <Badge count={'可用'} style={{ backgroundColor: '#87d068' }} />;
+                            break;
+                        case 2:
+                            txt = <Badge count={'禁用'} />;
+                            break;
+                        case 3:
+                            txt = <Badge count={'删除'} />;
+                            break;
+                        default:
+                            break;
+                    }
+                    return txt;
+                },
             },{
                 title: '操作',
                 dataIndex: '5',
@@ -219,7 +224,7 @@ class Result extends PureComponent {
                         >
                             新增
                         </Button>
-                        <Button onClick={this.handleDisabled}
+                        {/*<Button onClick={this.handleDisabled}
                                 disabled={!hasSelected}
                                 loading={disabledLoading}>
                             禁用
@@ -228,7 +233,7 @@ class Result extends PureComponent {
                                 disabled={!hasSelected}
                                 loading={enabledLoading}>
                             启用
-                        </Button>
+                        </Button>*/}
                     </div>
 
                     <Table columns={columns}

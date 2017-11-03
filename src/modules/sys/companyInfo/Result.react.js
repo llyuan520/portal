@@ -87,7 +87,7 @@ class Result extends PureComponent {
     }
 
     onSelectChange = (selectedRowKeys, selectedRows) => {
-        this.setState({
+        this.mounted && this.setState({
             selectedRowKeys,
             selectedRows
         });
@@ -95,7 +95,7 @@ class Result extends PureComponent {
 
     //弹出框
     handleEditScope = record =>{
-        this.setState({
+        this.mounted &&  this.setState({
             editBusinessScopeVisible: true,
             defaultItem:record
         });
@@ -103,7 +103,7 @@ class Result extends PureComponent {
 
     //选中多少条数据
     handleAssociationClass = (type, record) => {
-        this.setState({
+        this.mounted &&  this.setState({
             editClassVisible: true,
             type: type,
             defaultItem:record
@@ -122,11 +122,11 @@ class Result extends PureComponent {
                 }
             })
         };
-        this.setState({ companyTypeloading: true });
+        this.mounted && this.setState({ companyTypeloading: true });
         request.post('/companyInfo/initCompanyTypes', bolist)
             .then(({data}) => {
                 if (data.code === 200) {
-                    this.setState({
+                    this.mounted && this.setState({
                         selectedRowKeys: [],
                         selectedRows:[],
                         companyTypeloading: false,
@@ -158,11 +158,11 @@ class Result extends PureComponent {
                 }
             })
         };
-        this.setState({ scopeloading: true });
+        this.mounted &&  this.setState({ scopeloading: true });
         request.post('/companyInfo/initScope', bolist)
             .then(({data}) => {
                 if (data.code === 200) {
-                    this.setState({
+                    this.mounted && this.setState({
                         selectedRowKeys: [],
                         selectedRows:[],
                         scopeloading: false,

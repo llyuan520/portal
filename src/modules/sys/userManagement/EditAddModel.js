@@ -31,7 +31,6 @@ class EditAddModel extends Component{
 
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-
                 //console.log('Received values of form: ', values);
 
                 this.mounted && this.setState({
@@ -61,7 +60,14 @@ class EditAddModel extends Component{
 
                 if(this.props.modalType === 'edit'){
 
-                    request.post('/userManage/modifyUserInfo', {...values})
+                    const defaultValueDate = {...this.props.defaultValueDate};
+                    const data = {...values};
+                    data.sysGYLUserWebParam['id'] = defaultValueDate.gylUserId;
+                    data.sysPYTUserWebParam['id'] = defaultValueDate.pytUserId;
+                    data.sysUserWebParam['userId'] = defaultValueDate.uuid;
+                    data.sysXYJUserWebParam['id'] = defaultValueDate.xyjUserId;
+
+                    request.post('/userManage/modifyUserInfo', {...data})
                         .then(({data}) => {
                             if (data.code === 200) {
                                 message.success('编辑成功！', 4);
@@ -107,6 +113,7 @@ class EditAddModel extends Component{
     render() {
         const {modalType} = this.props;
         const defaultValueDate = {...this.props.defaultValueDate};
+
         const { getFieldDecorator, getFieldValue } = this.props.form;
         const formItemLayout = {
             labelCol: { span: 2 },
@@ -161,7 +168,7 @@ class EditAddModel extends Component{
                                         }
                                     ],
                                 })(
-                                    <Input disabled={modalType ==='edit'} placeholder="请输入名称供应门户账号" />
+                                    <Input disabled={modalType ==='edit' && !!defaultValueDate.gysUserName } placeholder="请输入名称供应门户账号" />
                                 )}
                             </FormItem>
                         </Col>
@@ -193,7 +200,7 @@ class EditAddModel extends Component{
                                         }
                                     ],
                                 })(
-                                    <Input disabled={modalType ==='edit'} placeholder="请输入喜盈佳账号" />
+                                    <Input disabled={modalType ==='edit' && !!defaultValueDate.xyjUserName } placeholder="请输入喜盈佳账号" />
                                 )}
                             </FormItem>
                         </Col>
@@ -241,7 +248,7 @@ class EditAddModel extends Component{
                                         }
                                     ],
                                 })(
-                                    <Input disabled={modalType ==='edit'} placeholder="请输入供应链金融平台账号" />
+                                    <Input disabled={modalType ==='edit' && !!defaultValueDate.gylUserName } placeholder="请输入供应链金融平台账号" />
                                 )}
                             </FormItem>
 
@@ -292,7 +299,7 @@ class EditAddModel extends Component{
                                         }
                                     ],
                                 })(
-                                    <Input disabled={modalType ==='edit'} placeholder="请输入票易通平台账号" />
+                                    <Input disabled={modalType ==='edit' && !!defaultValueDate.pytUserName } placeholder="请输入票易通平台账号" />
                                 )}
                             </FormItem>
                         </Col>

@@ -83,7 +83,7 @@ const piwik = PiwikReactRouter({
     //TODO: 测试环境地址，上线修改
     url: configData.piwikData.URL,
     siteId: configData.piwikData.siteId,
-    //userId: oauth.getAuth().username || '',
+    //userId: oauth.getAuth().userName || '',
     trackErrors: true,
 });
 

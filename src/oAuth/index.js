@@ -78,7 +78,7 @@ export default {
     getAuth() {
         return {
             auth: this.getToken(),
-            username: this.getUser().sysUserBO.userName,
+            username: this.getUser().sysUserBO.username,
             administrator: this.getUser().sysUserBO.administrator,
             notificationStatus: this.getUser().sysUserBO.notificationStatus,
         }

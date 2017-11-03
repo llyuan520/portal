@@ -14,6 +14,7 @@ import logo05 from './img/media/logo-05.png';
 import logo010 from './img/media/logo-010.png';
 import logo09 from './img/media/logo-09.png';
 import logo011 from './img/media/logo-011.png';
+import logo06 from './img/media/logo-06.png';
 
 
 class Cooperativebillin extends Component{
@@ -44,7 +45,11 @@ class Cooperativebillin extends Component{
                 },{
                     title:'世贸集团',
                     imgUrl:logo011,
+                },{
+                    title:'建业集团',
+                    imgUrl:logo06,
                 }
+
             ],
 
             pytJumpUrl:'',
@@ -103,7 +108,7 @@ class Cooperativebillin extends Component{
                 <Row gutter={40} className="p-billing">
                     <Col span={12} className="p-billing-list">
                         <h3>给<span className="c108ee9">万科、保利地产</span>开票入口</h3>
-                        <Card noHovering className="p-billing-itme">
+                        <Card noHovering className="p-billing-itme" style={{ height: 328 }}>
                             <Row gutter={24} className="p-billing-img">
                                 {
                                     this.state.dataX.map((item,i)=>(
@@ -122,7 +127,7 @@ class Cooperativebillin extends Component{
                     </Col>
                     <Col span={12} className="p-billing-list">
                         <h3>
-                            给<span className="c108ee9">印力、深圳地铁、宝龙、世茂</span>开票入口
+                            给<span className="c108ee9">印力、深圳地铁、宝龙、世茂、建业</span>开票入口
                         </h3>
                         <Card noHovering className="p-billing-itme">
                             <Row gutter={24} className="p-billing-img">
