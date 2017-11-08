@@ -129,7 +129,37 @@ class Result extends Component {
     }
 
     getKeyVal = params =>{
-        this.fetch(params);
+
+        /*const pager = { ...this.state.pagination };
+        pager.current = pagination.current;
+        pager.results = pager.pageSize = pagination.pageSize;
+        this.mounted &&  this.setState({
+            pagination: pager,
+        });
+        //设置去掉排序默认设置的值
+        let sor = sorter.order ? sorter.order.replace('end', '') : undefined;
+
+        this.fetch({
+            results: pagination.pageSize,
+            page: pagination.current,
+            sortField: sorter.field,
+            sortOrder: sor,
+            ...this.props.filters.values,
+
+        });*/
+
+        const pager = { ...this.state.pagination };
+        pager.current = 1;
+        pager.results = 10;
+        this.mounted &&  this.setState({
+            pagination: pager,
+        });
+
+        this.fetch({
+            results: pager.pageSize,
+            page: pager.current,
+            ...params
+        });
     }
 
     componentDidMount() {
@@ -183,21 +213,19 @@ class Result extends Component {
                 render: (text, record) => {
                     return(
                         <div>
-                            <Icon title="编辑分类" style={{ fontSize: 16,marginRight:10 }}
-                                  onClick={(uuid)=>this.showModal(record)}
-                                  type="edit"
-                            />
-
-                            <Icon title="删除" type="delete"
-                                  style={{ fontSize: 16, color: 'red' }}
-                                  onClick={()=> {
-                                      confirm({
-                                          title: '提示',
-                                          content: '确定要删除吗',
-                                          onOk: () => this.handleDelect(record.id),
-                                          onCancel() { },
-                                      });
-                                  }} />
+                            <a onClick={(uuid)=>this.showModal(record)} style={{color:'#333',fontSize: 14,marginRight:10}} >
+                                <Icon title="编辑分类" type="edit" />
+                            </a>
+                            <a onClick={()=> {
+                                confirm({
+                                    title: '提示',
+                                    content: '确定要删除吗',
+                                    onOk: () => this.handleDelect(record.id),
+                                    onCancel() { },
+                                });
+                            }} style={{color:'red',fontSize: 14}}>
+                                <Icon title="删除" type="delete" />
+                            </a>
                         </div>
                     )
 

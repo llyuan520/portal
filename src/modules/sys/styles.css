@@ -76,3 +76,34 @@
     margin: 0;
     top: 0;
 }
+
+
+.demo-editor {
+    height: 275px !important;
+    border: 1px solid #F1F1F1 !important;
+    padding: 5px !important;
+    border-radius: 2px !important;
+}
+.demo-color-modal {
+    position: absolute;
+    right: -70px;
+    top: 135%;
+    z-index: 10;
+}
+
+
+label.rdw-image-modal-upload-option-label {
+    cursor: pointer;
+    height: 65px;
+    width: 80%;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 15px;
+    display: inline-block;
+    overflow: hidden;
+    word-wrap: normal;
+}

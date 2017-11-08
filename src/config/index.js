@@ -12,7 +12,7 @@ export const configData = {
         URL:'https://t1.servingcloud.com:4433/piwik/',
         siteId:104,
     },
-    address:'https://t1.servingcloud.com/',
+    address:'http://t1.servingcloud.com/',
     homeProjectUrl:'https://t1.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM02',
 }
 

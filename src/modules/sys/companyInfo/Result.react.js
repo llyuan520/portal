@@ -255,14 +255,17 @@ class Result extends PureComponent {
                 render: (text, record) => {
                     return(
                         <div>
-                            <Icon title="查看分类" type="search" onClick={()=>this.handleAssociationClass('look', record)} style={{marginRight:'10px'}} />
-                            <Icon title="编辑经营范围" onClick={()=>this.handleEditScope(record)} type="edit" style={{marginRight:'10px'}} />
-                            <Icon title="关联分类" onClick={()=>this.handleAssociationClass('edit', record)} type="link" />
-                            {/*<Icon title="编辑经营范围" onClick={()=>this.handleEditScope(record)} type="edit" />*/}
+                            <a onClick={()=>this.handleAssociationClass('look', record)} style={{color:'#333',marginRight:'10px',fontSize: 14}}>
+                                <Icon title="查看分类" type="search" />
+                            </a>
+                            <a onClick={()=>this.handleEditScope(record)} style={{color:'#333',marginRight:'10px',fontSize: 14}}>
+                                <Icon title="编辑经营范围" type="edit" />
+                            </a>
+                            <a onClick={()=>this.handleAssociationClass('edit', record)} style={{color:'#333',fontSize: 14}}>
+                                <Icon title="关联分类" type="link" />
+                            </a>
                         </div>
                     )
-
-
 
                 },
             }

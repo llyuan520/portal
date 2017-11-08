@@ -6,6 +6,7 @@
 import CompanyInfo from './companyInfo'
 import CompanyClass from './companyClass'
 import UserManagement from './userManagement'
+import MessageManagement from './messageManagement'
 
 const routes = [
     {
@@ -22,6 +23,11 @@ const routes = [
         path: '/sys/userManagement',
         component: UserManagement,
         name: '用户管理',
+        exact: true,
+    },{
+        path: '/sys/messageManagement',
+        component: MessageManagement,
+        name: '公告管理',
         exact: true,
     },{
         path: '/sys',
