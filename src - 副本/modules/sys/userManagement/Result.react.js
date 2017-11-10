@@ -4,11 +4,10 @@
  * description  :
  */
 import React,{PureComponent} from 'react';
-import {Table,Row,Col,Badge,Icon,Button,message,Modal} from 'antd';
+import {Table,Row,Col,Badge,Icon,Button} from 'antd';
 import {request} from '../../../utils';
 import EditAddModel from './EditAddModel'
 
-const confirm = Modal.confirm;
 class Result extends PureComponent {
     constructor(props) {
         super(props)
@@ -25,6 +24,8 @@ class Result extends PureComponent {
             tableKeyDate: Date.now(),
 
             selectedRowKeys: [],  // Check here to configure the default column
+            disabledLoading: false,
+            enabledLoading: false,
 
             editAddVisible: false,
             editAddKey:Date.now()+'1',
@@ -76,6 +77,34 @@ class Result extends PureComponent {
         });
     }
 
+    //选中多少条数据 - 禁用
+    handleDisabled = () => {
+        this.mounted && this.setState({
+            disabledLoading: true
+        });
+        // ajax request after empty completing
+        setTimeout(() => {
+            this.mounted &&  this.setState({
+                selectedRowKeys: [],
+                disabledLoading: false
+            });
+        }, 1000);
+    }
+
+    //选中多少条数据 - 启用
+    handleEnabled = () => {
+        this.mounted && this.setState({
+            enabledLoading: true
+        });
+        // ajax request after empty completing
+        setTimeout(() => {
+            this.mounted && this.setState({
+                selectedRowKeys: [],
+                enabledLoading: false
+            });
+        }, 1000);
+    }
+
     onSelectChange = (selectedRowKeys) => {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.mounted && this.setState({ selectedRowKeys });
@@ -89,28 +118,6 @@ class Result extends PureComponent {
             defaultValueDate:record,
         });
     }
-
-    handleDelect = id =>{
-        this.mounted && this.setState({ tableLoading: true });
-        request.post(`/companyType/deleteCompanyTypeInfo?uuid=${id}`, {
-        })
-            .then(({data}) => {
-                if (data.code === 200) {
-                    this.mounted && this.setState({ tableLoading: false });
-                    this.fetch();
-                    message.success('删除成功！')
-                } else {
-                    message.error(data.msg, 4)
-                    this.mounted && this.setState({ tableLoading: false });
-                }
-            })
-            .catch(err => {
-                message.error(err.message)
-                this.mounted && this.setState({ tableLoading: false });
-            })
-
-    }
-
     refreshCurdTable = ()=>{
         this.fetch();
     }
@@ -146,11 +153,18 @@ class Result extends PureComponent {
         const columns = [
             {
 
-                title: '公告标题',
+                title: '供应商门户账号',
                 dataIndex: 'gysUserName',
             },{
-                title: '公告日期',
+                title: '喜盈佳账号',
                 dataIndex: 'xyjUserName',
+            },{
+                title: '票易通账号',
+                dataIndex: 'pytUserName',
+
+            },{
+                title: '供应链金融账号',
+                dataIndex: 'gylUserName',
             },{
                 title: '状态',
                 dataIndex: 'enabled',
@@ -158,10 +172,13 @@ class Result extends PureComponent {
                     let txt = '';
                     switch (parseInt(record.enabled,0)){
                         case 1:
-                            txt = <Badge count={'已发布'} style={{ backgroundColor: '#87d068' }} />;
+                            txt = <Badge count={'可用'} style={{ backgroundColor: '#87d068' }} />;
                             break;
                         case 2:
-                            txt = <Badge count={'待发布'} style={{backgroundColor: '#ffbf00'}} />;
+                            txt = <Badge count={'禁用'} />;
+                            break;
+                        case 3:
+                            txt = <Badge count={'删除'} />;
                             break;
                         default:
                             break;
@@ -169,39 +186,12 @@ class Result extends PureComponent {
                     return txt;
                 },
             },{
-                title: '发布类型',
-                dataIndex: 'pytUserName',
-
-            },{
-                title: '版本号',
-                dataIndex: 'gylUserName',
-            },{
-                title: '发布日期',
-                dataIndex: 'uuid',
-            },{
                 title: '操作',
                 dataIndex: '5',
                 className:"textc",
                 render: (text, record) => {
                     return(
-                        <div>
-                            <a onClick={()=>this.handleAssociationClass('look', record)} style={{color:'#333',marginRight:'10px',fontSize: 14 }}>
-                                <Icon title="查看公告详情" type="search" />
-                            </a>
-                            <a onClick={()=>this.showModal('edit',record)} style={{marginRight:'10px',fontSize: 14 }}><Icon title="编辑公告" type="rollback" /></a>
-                            <a onClick={()=>this.showModal('edit',record)} style={{marginRight:'10px',fontSize: 14 }}><Icon title="发布公告" type="arrow-up" /></a>
-                            <a onClick={()=>this.showModal('edit',record)} style={{marginRight:'10px',fontSize: 14 }}><Icon title="撤销公告" type="edit" /></a>
-                            <a onClick={()=> {
-                                confirm({
-                                    title: '提示',
-                                    content: '确定要删除吗',
-                                    onOk: () => this.handleDelect(record.uuid),
-                                    onCancel() { },
-                                });
-                            }} style={{color:'red',fontSize: 14 }}>
-                                <Icon title="删除公告" type="delete" />
-                            </a>
-                        </div>
+                        <a onClick={()=>this.showModal('edit',record)} style={{color:'#333',fontSize: 14}}><Icon title="编辑" type="edit" /></a>
                     )
 
 
@@ -209,6 +199,13 @@ class Result extends PureComponent {
                 },
             }
         ];
+
+        const { disabledLoading,enabledLoading, selectedRowKeys } = this.state;
+        const rowSelection = {
+            selectedRowKeys,
+            onChange: this.onSelectChange,
+        };
+        const hasSelected = selectedRowKeys.length > 0;
 
         return (
             <div>
@@ -223,11 +220,22 @@ class Result extends PureComponent {
                             type="primary"
                             onClick={()=>this.showModal('create')}
                         >
-                            新增公告
+                            新增
                         </Button>
+                        {/*<Button onClick={this.handleDisabled}
+                                disabled={!hasSelected}
+                                loading={disabledLoading}>
+                            禁用
+                        </Button>
+                        <Button onClick={this.handleEnabled}
+                                disabled={!hasSelected}
+                                loading={enabledLoading}>
+                            启用
+                        </Button>*/}
                     </div>
 
                     <Table columns={columns}
+                           rowSelection={rowSelection}
                            key={this.state.tableKeyDate}
                            rowKey={record => record.uuid}
                            dataSource={this.state.data}

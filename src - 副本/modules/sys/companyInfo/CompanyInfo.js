@@ -1,19 +1,18 @@
 /**
  * author       : liuliyuan
- * createTime   : 2017/10/17 15:22
+ * createTime   : 2017/9/21 16:01
  * description  :
  */
 import React, { Component } from 'react';
 import Search from './Search.react'
 import Result from './Result.react'
 
-class MessageManagement extends Component {
+class CompanyInfo extends Component {
     state = {
         filters:{
             lastUpdated:Date.now()
         }
     };
-
     render(){
         return (
             <div>
@@ -31,4 +30,4 @@ class MessageManagement extends Component {
     }
 
 }
-export default MessageManagement
+export default CompanyInfo

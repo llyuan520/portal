@@ -3,6 +3,6 @@
  * createTime   : 2017/10/25 16:13
  * description  :
  */
-import MessageManagement from './MessageManagement'
+import UserManagement from './UserManagement'
 
-export default MessageManagement
+export default UserManagement

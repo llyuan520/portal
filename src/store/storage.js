@@ -12,7 +12,7 @@ export default {
      * @param data {object} 数据
      */
     set(key, data) {
-        localStorage.setItem(key, JSON.stringify(data))
+        localStorage.setItem(key, data)
     },
 
     /**
@@ -20,6 +20,18 @@ export default {
      * @param key {string} 键值
      */
     get(key) {
+        return localStorage.getItem(key)
+    },
+
+    setObj(key, data) {
+        localStorage.setItem(key, JSON.stringify(data))
+    },
+
+    /**
+     * 获取存储
+     * @param key {string} 键值
+     */
+    getObj(key) {
         return JSON.parse(localStorage.getItem(key))
     },
 
