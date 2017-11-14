@@ -4,9 +4,13 @@
  * description  :
  */
 import React,{PureComponent} from 'react';
-import {Table,Row,Col,Badge,Icon,Button,message,Modal} from 'antd';
-import {request} from '../../../utils';
+import {Table,Row,Col,Badge,Icon,Button,message,Modal } from 'antd';
+import {request,htmlDecode} from '../../../utils';
 import EditAddModel from './EditAddModel'
+import moment from 'moment';
+// 推荐在入口文件全局设置 locale
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
 
 const confirm = Modal.confirm;
 class Result extends PureComponent {
@@ -28,6 +32,10 @@ class Result extends PureComponent {
 
             editAddVisible: false,
             editAddKey:Date.now()+'1',
+
+            detailsVisible: false,
+            detailsKey:Date.now(),
+            modalInfo:{}
         };
     }
 
@@ -55,8 +63,7 @@ class Result extends PureComponent {
 
     fetch = (params = {}) => {
         this.mounted && this.setState({ tableLoading: true });
-        //根据参数查询融资申请信息
-        request.get('/userManage/loadUsersInfo',{
+        request.get('/announcement/queryPage',{
             params:{
                 results: 10,
                 ...params,
@@ -93,7 +100,7 @@ class Result extends PureComponent {
     //删除
     handleDelect = id =>{
         this.mounted && this.setState({ tableLoading: true });
-        request.post(`/companyType/deleteCompanyTypeInfo?uuid=${id}`, {
+        request.post(`/announcement/delete/${id}`, {
         })
             .then(({data}) => {
                 if (data.code === 200) {
@@ -114,7 +121,7 @@ class Result extends PureComponent {
     //发布
     handleRelease = id =>{
         this.mounted && this.setState({ tableLoading: true });
-        request.post(`/companyType/deleteCompanyTypeInfo?uuid=${id}`, {
+        request.post(`/announcement/updateStatus/${id}/20`, {
         })
             .then(({data}) => {
                 if (data.code === 200) {
@@ -135,7 +142,7 @@ class Result extends PureComponent {
     //撤销
     handleUndo = id =>{
         this.mounted && this.setState({ tableLoading: true });
-        request.post(`/companyType/deleteCompanyTypeInfo?uuid=${id}`, {
+        request.post(`/announcement/updateStatus/${id}/10`, {
         })
             .then(({data}) => {
                 if (data.code === 200) {
@@ -152,6 +159,19 @@ class Result extends PureComponent {
                 this.mounted && this.setState({ tableLoading: false });
             })
     }
+
+
+    handleOk = (e) => {
+        this.setState({
+            detailsVisible: false,
+        });
+    }
+    handleCancel = (e) => {
+        this.setState({
+            detailsVisible: false,
+        });
+    }
+
 
     refreshCurdTable = ()=>{
         this.fetch();
@@ -189,20 +209,20 @@ class Result extends PureComponent {
             {
 
                 title: '公告标题',
-                dataIndex: 'gysUserName',
-            },{
+                dataIndex: 'title',
+            }, {
                 title: '公告日期',
-                dataIndex: 'xyjUserName',
+                dataIndex: 'announcementDate',
             },{
                 title: '状态',
-                dataIndex: 'enabled',
+                dataIndex: 'status ',
                 render: (text, record) => {
                     let txt = '';
-                    switch (parseInt(record.enabled,0)){
-                        case 1:
+                    switch (parseInt(record.status,0)){
+                        case 20:
                             txt = <Badge count={'已发布'} style={{ backgroundColor: '#87d068' }} />;
                             break;
-                        case 2:
+                        case 10:
                             txt = <Badge count={'待发布'} style={{backgroundColor: '#ffbf00'}} />;
                             break;
                         default:
@@ -212,14 +232,28 @@ class Result extends PureComponent {
                 },
             },{
                 title: '发布类型',
-                dataIndex: 'pytUserName',
+                dataIndex: 'type ',
+                render: (text, record)=>{
+                    let txt = '';
+                    switch (parseInt(record.type,0)){
+                        case 20:
+                            txt = '系统定时发布';
+                            break;
+                        case 10:
+                            txt = '手工发布';
+                            break;
+                        default:
+                            break;
+                    }
+                    return txt;
+                }
 
             },{
                 title: '版本号',
-                dataIndex: 'gylUserName',
+                dataIndex: 'version',
             },{
                 title: '发布日期',
-                dataIndex: 'uuid',
+                dataIndex: 'publishTime',
             },{
                 title: '操作',
                 dataIndex: '5',
@@ -227,7 +261,12 @@ class Result extends PureComponent {
                 render: (text, record) => {
                     return(
                         <div>
-                            <a onClick={()=>this.handleAssociationClass('look', record)} style={{color:'#333',marginRight:'10px',fontSize: 14 }}>
+                            <a onClick={()=>{
+                                this.setState({
+                                    modalInfo:record,
+                                    detailsVisible: true,
+                                })
+                            }} style={{color:'#333',marginRight:'10px',fontSize: 14 }}>
                                 <Icon title="查看公告详情" type="search" />
                             </a>
                             <a onClick={()=> {
@@ -247,7 +286,10 @@ class Result extends PureComponent {
                                     },
                                 });
                             }} style={{marginRight:'10px',fontSize: 14 }}><Icon title="发布公告" type="arrow-up" /></a>
-                            <a onClick={()=>this.showModal('edit', record)}
+                            <a onClick={()=>this.showModal('edit', {
+                                    ...record, type:parseInt(record.type,0) === 20
+                                }
+                            )}
                                style={{marginRight:'10px',fontSize: 14 }}><Icon title="编辑公告" type="edit" /></a>
                             <a onClick={()=> {
                                 confirm({
@@ -268,6 +310,7 @@ class Result extends PureComponent {
             }
         ];
 
+        const modalInfo = this.state.modalInfo;
         return (
             <div>
                 <Row className="title" style={{marginTop:20}}>
@@ -308,10 +351,38 @@ class Result extends PureComponent {
                     refreshCurdTable={this.refreshCurdTable.bind(this)}
                     visible={this.state.editAddVisible}
                 />
+
+                <Modal
+                    title='查看详情'
+                    key={this.state.detailsKey}
+                    visible={this.state.detailsVisible}
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                    footer={null}
+                >
+                    <Row>
+
+                        <h1 style={{textAlign:'center',marginBottom:'10px'}}>{modalInfo.title}</h1>
+
+                        <p style={{marginBottom:'10px'}}>公告日期：{modalInfo.announcementDate}</p>
+
+                        <p style={{marginBottom:'30px'}}>版本号：{modalInfo.version}</p>
+
+                        <p style={{marginBottom:'10px'}}>本次更新内容：</p>
+
+                        <div style={{marginBottom:'10px'}} dangerouslySetInnerHTML={{  __html: htmlDecode(modalInfo.content) }}></div>
+
+                        <p style={{textAlign:'right',marginBottom:'10px'}}>
+                            ——喜盈佳产品团队
+                        </p>
+
+                    </Row>
+
+                </Modal>
+
             </div>
         );
     }
 }
 
 export default Result
-

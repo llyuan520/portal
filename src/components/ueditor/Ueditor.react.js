@@ -10,6 +10,7 @@ import oauth from '../../oAuth'
 
 import 'simditor/styles/simditor.css';
 
+
 class SimpEditor extends Component {
 
     constructor(props) {
@@ -17,13 +18,36 @@ class SimpEditor extends Component {
         this.state = {};
     }
 
+
     componentDidMount = () => {
         this.initEditor();
     };
 
     initEditor = () => {
-
         let config = {
+            toolbar:[
+                'title',
+                'bold',
+                'italic',
+                'underline',
+                'strikethrough',
+                'fontScale',
+                'color',
+                '|',
+                'ol' ,            // ordered list
+                'ul'  ,           // unordered list
+                'blockquote',
+                'code'  ,         // code block
+                'table',
+                '|',
+                'link',
+                'image',
+                'hr'    ,         // horizontal ruler
+                '|',
+                'indent',
+                'outdent',
+                'alignment',
+            ],
             placeholder: this.props.placeholder,
             defaultImage: 'images/image.png',
             upload: {
@@ -35,18 +59,18 @@ class SimpEditor extends Component {
                 connectionCount: 3,
                 leaveConfirm: '正在上传文件',
             },
-            success: function(data) {
-                alert(data);
-            },
             textarea: $(this.refs.textarea)
         };
 
+
         this.editor = new Simditor(config);// 初始化编辑器
+
         this.editor.setValue(this.props.value);
 
         //监听改变
         this.editor.on("valuechanged", (e, src) => {
             this.props.onChange(this.getValue());
+
         });
 
         //更改图片上传类型

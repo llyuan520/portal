@@ -24,7 +24,7 @@ class Login extends Component{
             token : token,
         }).then(({data}) =>{
             if(data.code === 200){
-                //oauth.destroy();
+                oauth.destroy();
 
                 //保存token和用户信息
                 oauth.setToken(data.data.token);

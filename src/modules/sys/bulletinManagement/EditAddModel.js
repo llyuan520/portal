@@ -4,18 +4,9 @@
  * description  :
  */
 import React,{Component} from 'react';
-import PropTypes from 'prop-types';
-import {Modal,Form,Input,message,Row,Col,Checkbox,DatePicker,icon,Select} from 'antd';
-import {request} from '../../../utils';
-import oauth from '../../../oAuth';
+import {Modal,Form,Input,message,Row,Col,Checkbox,DatePicker,Select} from 'antd';
+import {request,htmlDecode} from '../../../utils';
 import moment from 'moment';
-
-/*import { EditorState, convertToRaw, ContentState} from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
-import { BlockPicker } from 'react-color';
-import '../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';*/
 
 import SimpEditor from '../../../components/ueditor/Ueditor.react';
 
@@ -29,7 +20,6 @@ class EditAddModel extends Component{
     constructor(props) {
         super(props);
 
-
         this.state = {
             isContent : '',
 
@@ -39,24 +29,23 @@ class EditAddModel extends Component{
             //公告类型
             bType:[
                 {
-                    key:'0',
+                    key:'20',
                     val:'重要公告'
                 },{
-                    key:'1',
+                    key:'10',
                     val:'普通公告'
                 },
             ],
             //发布路径
             bPlatform:[
                 {
-                    key:'0',
+                    key:'10',
                     val:'喜盈佳云平台'
                 },{
-                    key:'1',
+                    key:'20',
                     val:'供应商门户'
                 },
             ],
-            checked:false,
         }
     }
 
@@ -75,17 +64,27 @@ class EditAddModel extends Component{
     handleSubmit = (e) => {
         e && e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                console.log(this.props, values);
-                console.log(this.props.content, values);
 
-                /*this.mounted && this.setState({
+            if (!err) {
+                const defaultValueDate = {...this.props.defaultValueDate};
+                const data = {
+                    ...values,
+                    type: values.type === true ? '10' : '20',
+                    announcementDate : values.announcementDate && values.announcementDate.format('YYYY-MM-DD'),
+                    publishTime: values.publishTime && values.publishTime.format('YYYY-MM-DD HH:mm:ss'),
+                    status: (defaultValueDate && defaultValueDate.status) || '10',
+                    uuid: defaultValueDate && defaultValueDate.uuid,
+                }
+                console.log(data);
+                //console.log(this.props.content, values);
+
+                this.mounted && this.setState({
                     submitLoading:true
                 })
 
                 if(this.props.modalType === 'create') {
 
-                    request.post('/userManage/saveUserInfo', {...values})
+                    request.post('/announcement/save', {...data})
                         .then(({data}) => {
                             if (data.code === 200) {
                                 message.success('新增成功！', 4)
@@ -105,15 +104,7 @@ class EditAddModel extends Component{
                 }
 
                 if(this.props.modalType === 'edit'){
-
-                    const defaultValueDate = {...this.props.defaultValueDate};
-                    const data = {...values};
-                    data.sysGYLUserWebParam['id'] = defaultValueDate.gylUserId;
-                    data.sysPYTUserWebParam['id'] = defaultValueDate.pytUserId;
-                    data.sysUserWebParam['userId'] = defaultValueDate.uuid;
-                    data.sysXYJUserWebParam['id'] = defaultValueDate.xyjUserId;
-
-                    request.post('/userManage/modifyUserInfo', {...data})
+                    request.post('/announcement/update', {...data})
                         .then(({data}) => {
                             if (data.code === 200) {
                                 message.success('编辑成功！', 4);
@@ -132,7 +123,7 @@ class EditAddModel extends Component{
                                 submitLoading: false
                             })
                         })
-                }*/
+                }
             }
         });
     }
@@ -149,14 +140,7 @@ class EditAddModel extends Component{
 
     componentWillReceiveProps(nextProps){
 
-        console.log(nextProps)
-        if(nextProps.defaultValueDate){
-            this.setState({
-                checked : nextProps.defaultValueDate.isRelease,
-            })
-        }
-
-
+       // console.log(nextProps.defaultValueDate);
     }
 
     render() {
@@ -227,8 +211,8 @@ class EditAddModel extends Component{
                                 label="公告类型"
 
                             >
-                                {getFieldDecorator('type', {
-                                    initialValue: defaultValueDate.type || '',
+                                {getFieldDecorator('announcementType', {
+                                    initialValue: defaultValueDate.announcementType && `${defaultValueDate.announcementType}`,
                                     rules: [
                                         {
                                             required: true, message: '请选择公告类型',
@@ -249,8 +233,8 @@ class EditAddModel extends Component{
                                 label="公告日期"
 
                             >
-                                {getFieldDecorator('date', {
-                                    initialValue: defaultValueDate.date && moment(`${defaultValueDate.date}`, 'YYYY-MM-DD'),
+                                {getFieldDecorator('announcementDate', {
+                                    initialValue: defaultValueDate.announcementDate && moment(`${defaultValueDate.announcementDate}`, 'YYYY-MM-DD'),
                                     rules: [
                                         {
                                             required: true, message: '请选择公告日期',
@@ -271,7 +255,7 @@ class EditAddModel extends Component{
                             >
                                 <div id="content">
                                     {getFieldDecorator('content', {
-                                        initialValue: defaultValueDate.content || '',
+                                        initialValue: htmlDecode(defaultValueDate.content) || '',
                                         rules: [{
                                             required: true, message: '请填写公告内容!'
                                         }],
@@ -288,10 +272,9 @@ class EditAddModel extends Component{
                             <FormItem
                                 {...formItemLayout}
                                 label="发布平台"
-
                             >
-                                {getFieldDecorator('platform', {
-                                    initialValue: defaultValueDate.platform || '',
+                                {getFieldDecorator('announcementPath', {
+                                    initialValue: defaultValueDate.announcementPath && `${defaultValueDate.announcementPath}`,
                                     rules: [
                                         {
                                             required: true, message: '请选择发布平台',
@@ -312,8 +295,8 @@ class EditAddModel extends Component{
                                 label="版本号"
 
                             >
-                                {getFieldDecorator('versionNumber', {
-                                    initialValue: defaultValueDate.versionNumber || '',
+                                {getFieldDecorator('version', {
+                                    initialValue: defaultValueDate.version || '',
                                 })(
                                     <Input placeholder="请输入版本号" />
                                 )}
@@ -325,35 +308,30 @@ class EditAddModel extends Component{
                             <FormItem
                                 {...formTailLayout}
                             >
-                                {getFieldDecorator('isRelease', {
+                                {getFieldDecorator('type', {
+                                    initialValue: defaultValueDate.type,
+                                    valuePropName:'checked',
                                 })(
-                                    <Checkbox checked={this.state.checked}
-                                              onChange={(e) => {
-                                                  console.log('checked = ', e.target.checked);
-                                                  this.mounted && this.setState({
-                                                      checked: e.target.checked,
-                                                  });
-                                              }}
-                                    > 是否定时发布 </Checkbox>
+                                    <Checkbox> 是否定时发布 </Checkbox>
                                 )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
                             {
-                                this.state.checked &&  <FormItem
+                                getFieldValue('type') &&  <FormItem
                                     {...formItemLayout}
                                     label="发布时间"
 
                                 >
-                                    {getFieldDecorator('time', {
-                                        initialValue: defaultValueDate.time && moment(`${defaultValueDate.time}`, 'YYYY-MM-DD'),
+                                    {getFieldDecorator('publishTime', {
+                                        initialValue: defaultValueDate.publishTime && moment(`${defaultValueDate.publishTime}`),
                                         rules: [
                                             {
                                                 required: true, message: '请选择发布时间',
                                             }
                                         ],
                                     })(
-                                        <DatePicker placeholder="请选择发布时间" />
+                                        <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请选择发布时间" />
                                     )}
                                 </FormItem>
                             }

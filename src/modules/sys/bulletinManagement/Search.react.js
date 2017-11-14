@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {Form, Row, Col, Input, Button, Icon,DatePicker } from 'antd';
+import {Form, Row, Col, Input, Button, Icon,DatePicker,Select } from 'antd';
 import { withRouter } from 'react-router'
 import moment from 'moment';
 // 推荐在入口文件全局设置 locale
@@ -12,6 +12,7 @@ import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
 const FormItem = Form.Item;
+const Option = Select.Option;
 
 class Search extends Component {
     constructor(props){
@@ -30,12 +31,11 @@ class Search extends Component {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-               for(let key in values){
-                    if(typeof (values[key]) === 'object'){
-                        values[key] = values[key].format('YYYY-MM-DD');
-                    }
+                const data = {
+                    ...values,
+                    announcementDate : values.announcementDate && values.announcementDate.format('YYYY-MM-DD'),
                 }
-                this.props.search && this.props.search(values, Date.now());
+                this.props.search && this.props.search(data, Date.now());
             }
 
         });
@@ -52,48 +52,93 @@ class Search extends Component {
 
     getFields(start,end) {
         const count = this.state.expand ? 10 : 0;
-        const { getFieldDecorator } = this.props.form;
+        const {getFieldDecorator} = this.props.form;
         const formItemLayout = {
-            labelCol: { span: 5 },
-            wrapperCol: { span: 19 },
+            labelCol: {span: 5},
+            wrapperCol: {span: 19},
         };
-        const children = [
-
-        ];
+        const children = [];
         const data = [
             {
-                label:'用户名',
-                type:'text',
-                fieldName:'username'
-            },{
-                label:'公告日期',
-                type:'DatePicker',
-                fieldName:'data'
+                label: '用户名',
+                type: 'text',
+                fieldName: 'title'
+            }, {
+                label: '公告日期',
+                type: 'rangePicker',
+                fieldName: 'announcementDate'
+            }, {
+                label: '公告类型',
+                type: 'select',
+                fieldName: 'announcementType',
+                items: [{
+                    label: '普通公告',
+                    value: '10',
+                }, {
+                    label: '重要公告',
+                    value: '20',
+                }]
+            }, {
+                label: '发布状态',
+                type: 'select',
+                fieldName: 'status',
+                items: [{
+                    label: '待发布',
+                    value: '10',
+                }, {
+                    label: '已发布',
+                    value: '20',
+                }]
             }
-        ]
+        ];
 
 
         for (let i = 0; i < data.length; i++) {
             let inputComponent;
-            if(data[i].type==='text'){
-                inputComponent = <Input placeholder={`请输入${data[i].label}`} />;
-            }else if(data[i].type === 'DatePicker'){
-                inputComponent = <DatePicker placeholder={`请输入${data[i].label}`} />;
+            if (data[i].type === 'text') {
+                inputComponent = <Input placeholder={`请输入${data[i].label}`}/>;
+            } else if (data[i].type === 'rangePicker') {
+                inputComponent = <DatePicker placeholder={`请输入${data[i].label}`}/>;
+            } else if (data[i].type === 'select') {
+                inputComponent = (
+                    <Select placeholder="请选择">
+                        {
+                            data[i].items.map((item, i) => <Option key={i} value={`${item.value}`}>{item.label}</Option>)
+                        }
+                    </Select>
+                )
             }
-            children.push(
-                <Col span={8} key={i} style={{ display: i < count ? 'block' : 'none'}}>
-                    <FormItem {...formItemLayout} label={data[i].label}>
-                        {getFieldDecorator(data[i]['fieldName'],{
-                            initialValue:data[i].initialValue || ''
-                        })(
-                            inputComponent
-                        )}
-                    </FormItem>
-                </Col>
-            );
+
+            if(data[i].type === 'rangePicker'){
+                children.push(
+                    <Col span={8} key={i} style={{display: i < count ? 'block' : 'none'}}>
+                        <FormItem {...formItemLayout} label={data[i].label}>
+                            {getFieldDecorator(data[i]['fieldName'], {
+                                initialValue: data[i].initialValue
+                            })(
+                                inputComponent
+                            )}
+                        </FormItem>
+                    </Col>
+                );
+            }else{
+                children.push(
+                    <Col span={8} key={i} style={{display: i < count ? 'block' : 'none'}}>
+                        <FormItem {...formItemLayout} label={data[i].label}>
+                            {getFieldDecorator(data[i]['fieldName'], {
+                                initialValue: data[i].initialValue || ''
+                            })(
+                                inputComponent
+                            )}
+                        </FormItem>
+                    </Col>
+                );
+            }
+
         }
-        return children.slice(start,end||null);
+        return children.slice(start, end || null);
     }
+
 
 
     componentDidMount(){
@@ -125,7 +170,9 @@ class Search extends Component {
                         {
                             this.getFields(0,3)
                         }
-
+                        {
+                            this.getFields(3,4)
+                        }
                     </Row>
                     <Row>
                         <Col span={24} style={{ textAlign: 'right' }}>

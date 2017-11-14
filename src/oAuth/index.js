@@ -6,9 +6,6 @@
 import storage from '../store/storage'
 import {configData} from '../config';
 
-let token = null;
-let user = null;
-
 export default {
     /**
      * 是否登录
@@ -62,7 +59,6 @@ export default {
      * 销毁 token 和 user
      */
     destroy() {
-        token = user = null
         storage.remove('token')
         storage.remove('user')
     },

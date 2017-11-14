@@ -75,10 +75,9 @@ request.interceptors.response.use(function (response) {
                 error.message = '请求错误'
                 break
             case 401:
-                debugger
                 // 返回 401 清除token信息并跳转到登录页面
-                //error.message = '登录超时,请重新登录'
-                //oauth.logout();
+                error.message = '登录超时,请重新登录'
+                oauth.logout();
                 break;
             case 403:
                 error.message = '拒绝访问'

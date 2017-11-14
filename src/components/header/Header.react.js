@@ -9,7 +9,7 @@ import { Menu,Row,Col,Icon,Avatar,Modal} from 'antd';
 import {withRouter,Link} from 'react-router-dom';
 import oauth from '../../oAuth';
 import NoviceGuide from './NoviceGuide'
-import {request} from '../../utils';
+import {request,htmlDecode} from '../../utils';
 
 import logoImg from './media/logo-02.png';
 const SubMenu = Menu.SubMenu;
@@ -88,6 +88,25 @@ class Headers extends Component{
                         })
                     }
 
+                    //获取公告弹窗信息
+                    request.get('/announcement/findPublishAnnouncement', {
+                    }).then(({data}) => {
+                        if (data.code === 200) {
+                            if(data.data){
+                                console.log(data.data);
+                                let ref = Modal.warning({
+                                    iconType:'notification',
+                                    title: '系统提示',
+                                    content: ModelContext(data.data),
+                                    okText:'关闭',
+                                    width:'600px',
+                                    onOk () {
+                                        ref.destroy();
+                                    },
+                                });
+                            }
+                        }
+                    })
                 })
             }
         }else{
@@ -186,6 +205,24 @@ class Headers extends Component{
 }
 
 export default withRouter(Headers)
+
+const ModelContext =(data)=>{
+    return(
+        <div>
+            <Row>
+                <h1 style={{textAlign:'center',marginBottom:'10px'}}>{data.title}</h1>
+
+                <div style={{marginBottom:'10px'}} dangerouslySetInnerHTML={{  __html: htmlDecode(data.content) }}></div>
+
+                <p style={{textAlign:'right',marginBottom:'10px',color:'#999'}}>{data.announcementDate}</p>
+                <p style={{textAlign:'right',marginBottom:'10px'}}>
+                    ——喜盈佳产品团队
+                </p>
+            </Row>
+
+        </div>
+    )
+}
 
 
 

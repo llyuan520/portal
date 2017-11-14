@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{PureComponent} from 'react';
-import {Table,Row,Col,Badge,Icon,Button} from 'antd';
+import {Table,Row,Col,Badge,Icon,Button,message,Switch} from 'antd';
 import {request} from '../../../utils';
 import EditAddModel from './EditAddModel'
 
@@ -24,8 +24,6 @@ class Result extends PureComponent {
             tableKeyDate: Date.now(),
 
             selectedRowKeys: [],  // Check here to configure the default column
-            disabledLoading: false,
-            enabledLoading: false,
 
             editAddVisible: false,
             editAddKey:Date.now()+'1',
@@ -78,31 +76,25 @@ class Result extends PureComponent {
     }
 
     //选中多少条数据 - 禁用
-    handleDisabled = () => {
-        this.mounted && this.setState({
-            disabledLoading: true
-        });
-        // ajax request after empty completing
-        setTimeout(() => {
-            this.mounted &&  this.setState({
-                selectedRowKeys: [],
-                disabledLoading: false
-            });
-        }, 1000);
-    }
+    handleChange = (checked,uuid) => {
+        const param = {
+            enabled:checked === true ? '1' : '2',
+            userId: uuid,
+        }
+        request.post('/userManage/modifyUserStatus', {...param})
+            .then(({data}) => {
+                if (data.code === 200) {
+                    message.success('修改状态成功！', 4)
+                    //新增成功，关闭当前窗口,刷新父级组件
+                    this.fetch();
+                } else {
+                    message.error(data.msg, 4)
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
 
-    //选中多少条数据 - 启用
-    handleEnabled = () => {
-        this.mounted && this.setState({
-            enabledLoading: true
-        });
-        // ajax request after empty completing
-        setTimeout(() => {
-            this.mounted && this.setState({
-                selectedRowKeys: [],
-                enabledLoading: false
-            });
-        }, 1000);
     }
 
     onSelectChange = (selectedRowKeys) => {
@@ -191,21 +183,27 @@ class Result extends PureComponent {
                 className:"textc",
                 render: (text, record) => {
                     return(
-                        <a onClick={()=>this.showModal('edit',record)} style={{color:'#333',fontSize: 14}}><Icon title="编辑" type="edit" /></a>
+                        <div>
+                            <a onClick={()=>this.showModal('edit',record)} style={{color:'#333',fontSize: 14,marginRight:'10px'}}><Icon title="编辑" type="edit" /></a>
+
+                                {/*TODO: 传值的几种写法
+                                onChange={(record=>checked=>this.handleChange(checked,record))(record)} 函数 写法
+                                onChange={this.handleChange.bind(this,record)} 用bind，this后面加上你要的参数，他会把value值传到你写的方法的最后一个参数上
+                                onChange={(checked)=>{this.handleChange(checked,record)}}  显式地把value写出来，这样就可以把value和参数都传过去*/}
+
+                            <Switch checkedChildren="禁用" unCheckedChildren="启用" defaultChecked={parseInt(record.enabled, 0) === 1}  onChange={(checked)=>{this.handleChange(checked,record.uuid)}} />
+                        </div>
                     )
-
-
-
                 },
             }
         ];
 
-        const { disabledLoading,enabledLoading, selectedRowKeys } = this.state;
+        /*const { selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
-        const hasSelected = selectedRowKeys.length > 0;
+        const hasSelected = selectedRowKeys.length > 0;*/
 
         return (
             <div>
@@ -222,20 +220,10 @@ class Result extends PureComponent {
                         >
                             新增
                         </Button>
-                        {/*<Button onClick={this.handleDisabled}
-                                disabled={!hasSelected}
-                                loading={disabledLoading}>
-                            禁用
-                        </Button>
-                        <Button onClick={this.handleEnabled}
-                                disabled={!hasSelected}
-                                loading={enabledLoading}>
-                            启用
-                        </Button>*/}
                     </div>
 
                     <Table columns={columns}
-                           rowSelection={rowSelection}
+                           //rowSelection={rowSelection}
                            key={this.state.tableKeyDate}
                            rowKey={record => record.uuid}
                            dataSource={this.state.data}

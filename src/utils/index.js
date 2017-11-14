@@ -87,4 +87,13 @@ const piwik = PiwikReactRouter({
     trackErrors: true,
 });
 
-export { request,getUrlParam,getParameters,fMoney,isEmpty,piwik,composeMenus}
+//获取html
+const htmlDecode = html =>{
+    if(html){
+        let div = document.createElement( 'div' );
+        div.innerHTML = html;
+        return div.textContent;
+    }
+};
+
+export { request,getUrlParam,getParameters,fMoney,isEmpty,piwik,composeMenus,htmlDecode}

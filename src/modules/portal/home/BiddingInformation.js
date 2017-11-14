@@ -103,7 +103,7 @@ class BiddingInformation extends Component{
                 ...params,
             }
         }).then(({data}) => {
-            console.log(data);
+            //console.log(data);
             if(data.code===200) {
                 const pagination = {...this.state.pagination};
                 // Read total count from server
