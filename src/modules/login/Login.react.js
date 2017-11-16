@@ -51,12 +51,13 @@ class Login extends Component{
         })
     }
 
-    componentDidMount() {
+    componentWillMount(){
         const appName = getUrlParam('appName'),
               token = getUrlParam('token');
-              oauth.setToken(token);
 
-        if(appName && token){
+        if(oauth.isLogin()){
+            return this.props.history.push('/dashboard');
+        }else if(appName && token){
             this.fetch(appName,token);
         }else{
             Modal.warning({
@@ -74,14 +75,9 @@ class Login extends Component{
         this.mounted = null;
     }
 
-    componentWillMount(){
-        if(!oauth.isLogin()){
-            return this.fetch();
-        }
-    }
 
     componentWillReceiveProps(nextProps){
-
+        console.log(nextProps)
     }
 
 
@@ -94,5 +90,6 @@ class Login extends Component{
     }
 
 }
+
 
 export default withRouter(Login)

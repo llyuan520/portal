@@ -15,13 +15,10 @@ class TenderDetails extends Component{
     }
 
     fetch = () => {
-        console.log(this.props.match.params.id);
         this.mounted && this.setState({ loading: true });
-        this.mounted && this.setState({ loading: false });
         //根据参数查询融资申请信息
         request.get(`/bizBids/queryBizBid/${this.props.match.params.id}`,{
         }).then(({data}) => {
-            console.log(data);
             if(data.code===200) {
                 this.mounted && this.setState({
                     data: {...data.data},

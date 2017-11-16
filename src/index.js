@@ -8,6 +8,7 @@ import {piwik} from './utils';
 import './index.less'
 
 const history = createBrowserHistory();
+
 ReactDOM.render(
     <Router history={piwik.connectToHistory(history)} >
          <App />

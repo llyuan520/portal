@@ -3,9 +3,13 @@
  * createTime   : 2017/9/14 18:08
  * description  :
  */
+import React from 'react';
 import request from './request.js';
 import {configData} from './../config';
+import DocumentTitle from 'react-document-title'
 import composeMenus from './composeMenus'
+
+export const wrapPage = (title,Component) => props => <DocumentTitle title={`${title}`}>{<Component {...props}/>}</DocumentTitle>
 
 //获取url中的参数
 const getUrlParam = name =>{
@@ -95,5 +99,7 @@ const htmlDecode = html =>{
         return div.textContent;
     }
 };
+
+
 
 export { request,getUrlParam,getParameters,fMoney,isEmpty,piwik,composeMenus,htmlDecode}

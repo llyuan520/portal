@@ -21,9 +21,6 @@ const { Header, Content,Footer } = Layout;
 const menusData = composeMenus(routes);
 class SysManagement extends Component {
 
-    componentDidMount() {
-    }
-
     componentWillMount(){
         if(!oauth.isLogin()){
             return oauth.logout();
@@ -31,7 +28,6 @@ class SysManagement extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        console.log(nextProps);
 
     }
 

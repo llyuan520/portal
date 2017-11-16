@@ -7,26 +7,27 @@ import CompanyInfo from './companyInfo'
 import CompanyClass from './companyClass'
 import UserManagement from './userManagement'
 import BulletinManagement from './bulletinManagement'
+import {wrapPage} from './../../utils'
 
 const routes = [
     {
         path: '/sys/companyInfo',
-        component: CompanyInfo,
+        component: wrapPage('公司信息',CompanyInfo),
         name: '公司信息',
         exact: true,
     },{
          path: '/sys/companyClass',
-         component: CompanyClass,
+         component: wrapPage('公司分类',CompanyClass),
          name: '公司分类',
          exact: true,
      },{
         path: '/sys/userManagement',
-        component: UserManagement,
+        component: wrapPage('用户管理',UserManagement),
         name: '用户管理',
         exact: true,
     },{
         path: '/sys/bulletinManagement',
-        component: BulletinManagement,
+        component: wrapPage('公告管理',BulletinManagement),
         name: '公告管理',
         exact: true,
     },{

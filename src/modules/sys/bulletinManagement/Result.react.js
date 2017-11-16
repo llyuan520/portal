@@ -69,7 +69,6 @@ class Result extends PureComponent {
                 ...params,
             }
         }).then(({data}) => {
-            console.log(data);
             if(data.code===200) {
                 const pagination = {...this.state.pagination};
                 // Read total count from server
@@ -84,7 +83,6 @@ class Result extends PureComponent {
     }
 
     onSelectChange = (selectedRowKeys) => {
-        console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.mounted && this.setState({ selectedRowKeys });
     }
 

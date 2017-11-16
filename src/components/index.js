@@ -6,10 +6,11 @@
 import RouteWithSubRoutes from './routeWithSubRoutes';
 import Headers from './header';
 import Footers from './footer';
+import LoadingPage from './loadingPage'
 
 export {
     RouteWithSubRoutes,
     Headers,
     Footers,
-
+    LoadingPage,
 }

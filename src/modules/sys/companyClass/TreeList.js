@@ -23,7 +23,7 @@ class TreeList extends Component {
         eidtLoading:false,
     }
     onExpand = (expandedKeys) => {
-        console.log('onExpand', expandedKeys);
+        //console.log('onExpand', expandedKeys);
         //console.log('onExpand', arguments);
         // if not set autoExpandParent to false, if children expanded, parent can not collapse.
         // or, you can remove all expanded children keys.
@@ -34,8 +34,6 @@ class TreeList extends Component {
     }
 
     onSelect = (selectedKeys, info) => {
-        console.log('onSelect', selectedKeys,info);
-
         if(info.selectedNodes.length > 0){
             const selectedNodes = info.selectedNodes[0].props.dataRef;
             if(selectedNodes.level < 3){

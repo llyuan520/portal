@@ -37,7 +37,6 @@ class EditClass extends PureComponent{
             companyId:this.props.defaultItem.uuid,
             companyTypes:[...this.state.checkedKeys]
         }
-        console.log(dataInfo);
         request.post('/companyInfo/assignCompanyType', dataInfo)
             .then(({data}) => {
                 if (data.code === 200) {
@@ -88,7 +87,6 @@ class EditClass extends PureComponent{
     };
 
     onExpand = (expandedKeys) => {
-        console.log('onExpand', arguments);
         // if not set autoExpandParent to false, if children expanded, parent can not collapse.
         // or, you can remove all expanded children keys.
         this.setState({
@@ -115,7 +113,6 @@ class EditClass extends PureComponent{
 
     }
     onSelect = (selectedKeys, info) => {
-        console.log('onSelect', info);
         this.setState({ selectedKeys });
     }
 

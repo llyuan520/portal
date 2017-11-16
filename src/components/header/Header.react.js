@@ -93,7 +93,6 @@ class Headers extends Component{
                     }).then(({data}) => {
                         if (data.code === 200) {
                             if(data.data){
-                                console.log(data.data);
                                 let ref = Modal.warning({
                                     iconType:'notification',
                                     title: '系统提示',

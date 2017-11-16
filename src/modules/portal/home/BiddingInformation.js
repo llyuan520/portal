@@ -93,7 +93,6 @@ class BiddingInformation extends Component{
     }
 
     fetch = (params = {}) => {
-        //console.log('params:', params);
         this.mounted && this.setState({ loading: true });
         //根据参数查询融资申请信息
         request.get('/bizBids/queryBizBids',{
@@ -103,7 +102,6 @@ class BiddingInformation extends Component{
                 ...params,
             }
         }).then(({data}) => {
-            //console.log(data);
             if(data.code===200) {
                 const pagination = {...this.state.pagination};
                 // Read total count from server
