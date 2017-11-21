@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{Component} from 'react';
-import {Modal,Form,Input,message,Row,Col,Checkbox,DatePicker,Select} from 'antd';
+import {Modal,Form,Input,message,Row,Col,Checkbox,DatePicker,Select,Upload,Button, Icon} from 'antd';
 import {request,htmlDecode} from '../../../utils';
 import moment from 'moment';
 
@@ -22,9 +22,10 @@ class EditAddModel extends Component{
 
         this.state = {
             isContent : '',
+            fileList: [],
 
             submitLoading:false,
-            modelClassModalKey:Date.now(),
+            modelClassModalKey:Date.now()+4,
 
             //公告类型
             bType:[
@@ -46,6 +47,12 @@ class EditAddModel extends Component{
                     val:'供应商门户'
                 },
             ],
+            //公告发布对象 所有用户、指定用户、指定公司
+            newOptions : [
+                { label: '所有用户', value: '10' },
+                { label: '指定用户', value: '20' },
+                { label: '指定公司', value: '30' },
+            ],
         }
     }
 
@@ -53,38 +60,56 @@ class EditAddModel extends Component{
         modalType:'create',
     }
 
+    normFile = (e) => {
+        if (Array.isArray(e)) {
+            return e;
+        }
+        return e && e.fileList;
+    }
 
     handleOk = (e) => {
         this.handleSubmit()
     }
     handleCancel = (e) => {
         this.props.changeVisable(false);
+        this.props.refreshCurdTable();
     }
 
     handleSubmit = (e) => {
         e && e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
 
+
+            //上传文件和参数一起提交到后台
+            const { fileList } = this.state;
+
+            const formData = new FormData();
+            fileList.forEach((file) => {
+                formData.append('files', file);
+            });
+
+            const defaultValueDate = {...this.props.defaultValueDate};
+            const data = {
+                ...values,
+                type: values.type === true ? '20' : '10',
+                announcementDate : values.announcementDate && values.announcementDate.format('YYYY-MM-DD'),
+                publishTime: values.publishTime && values.publishTime.format('YYYY-MM-DD HH:mm:ss'),
+                status: (defaultValueDate && defaultValueDate.status) || '10',
+                uuid: defaultValueDate && defaultValueDate.uuid,
+                files: defaultValueDate && defaultValueDate.fileId,
+            }
+            console.log(data);
+
             if (!err) {
-                const defaultValueDate = {...this.props.defaultValueDate};
-                const data = {
-                    ...values,
-                    type: values.type === true ? '10' : '20',
-                    announcementDate : values.announcementDate && values.announcementDate.format('YYYY-MM-DD'),
-                    publishTime: values.publishTime && values.publishTime.format('YYYY-MM-DD HH:mm:ss'),
-                    status: (defaultValueDate && defaultValueDate.status) || '10',
-                    uuid: defaultValueDate && defaultValueDate.uuid,
-                }
-                console.log(data);
-                //console.log(this.props.content, values);
 
                 this.mounted && this.setState({
                     submitLoading:true
                 })
 
                 if(this.props.modalType === 'create') {
-
-                    request.post('/announcement/save', {...data})
+                    request.post('/announcement/save', formData,{
+                        params:{...data}
+                    })
                         .then(({data}) => {
                             if (data.code === 200) {
                                 message.success('新增成功！', 4)
@@ -93,6 +118,9 @@ class EditAddModel extends Component{
                                 this.props.refreshCurdTable();
                             } else {
                                 message.error(data.msg, 4)
+                                this.mounted && this.setState({
+                                    submitLoading: false
+                                })
                             }
                         })
                         .catch(err => {
@@ -104,7 +132,10 @@ class EditAddModel extends Component{
                 }
 
                 if(this.props.modalType === 'edit'){
-                    request.post('/announcement/update', {...data})
+
+                    request.post('/announcement/update', formData,{
+                        params:{...data}
+                    })
                         .then(({data}) => {
                             if (data.code === 200) {
                                 message.success('编辑成功！', 4);
@@ -115,6 +146,9 @@ class EditAddModel extends Component{
 
                             } else {
                                 message.error(data.msg, 4)
+                                this.mounted && this.setState({
+                                    submitLoading: false
+                                })
                             }
                         })
                         .catch(err => {
@@ -125,8 +159,9 @@ class EditAddModel extends Component{
                         })
                 }
             }
-        });
+        })
     }
+
 
     componentDidMount() {
 
@@ -137,11 +172,10 @@ class EditAddModel extends Component{
         this.mounted = null;
     }
 
-
     componentWillReceiveProps(nextProps){
 
-       // console.log(nextProps.defaultValueDate);
     }
+
 
     render() {
 
@@ -168,6 +202,90 @@ class EditAddModel extends Component{
             labelCol: { span: 6 },
             wrapperCol: { span: 16, offset: 6 },
         };
+
+        const remove = file =>{
+            this.setState(({ fileList }) => {
+                const index = fileList.indexOf(file);
+                const newFileList = fileList.slice();
+                newFileList.splice(index, 1);
+                return {
+                    fileList: newFileList,
+                };
+            });
+        }
+
+        //手动上传
+        const props = {
+            //action: `${window.baseURL}/announcement/uploadFile`,
+           // headers: { authorization:oauth.getToken(),},
+            accept:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            multiple:false,
+            onPreview(file){
+                if(!!defaultValueDate.fileId){
+                    let url = `${window.baseURL}announcement/downloadFile/${defaultValueDate.fileId}`;
+                    let elemIF = document.createElement("iframe");
+                    elemIF.src = url;
+                    elemIF.style.display = "none";
+                    document.body.appendChild(elemIF);
+                }
+
+            },
+            onRemove: (file) => {
+                if(file.status==='error'){
+                    return true;
+                }
+                if(file.uuid && file.uid){
+                    return new Promise((resolve,reject)=>{
+                        request.delete(`/announcement/deleteFile/${file.uuid}/${file.uid}`)
+                            .then(({data})=>{
+                                if(data.code===200){
+                                    message.success('删除成功');
+                                    remove(file);
+                                    resolve()
+                                }else{
+                                    message.error(`删除失败,${data.msg}`)
+                                    reject(data.msg);
+                                }
+                            }).catch(err=>{
+                            reject(err.message);
+                        })
+                    })
+                }else{
+                    remove(file);
+                }
+
+                //return false;
+
+            },
+            beforeUpload: (file) => {
+                remove(file);
+
+                this.setState(({ fileList }) => ({
+                    fileList: [...fileList, file],
+                }));
+                return false;
+            },
+            defaultFileList: defaultValueDate.fileId && [{
+                uid: defaultValueDate.fileId,      // 文件唯一标识，建议设置为负数，防止和内部产生的 id 冲突
+                name: defaultValueDate.fileName,   // 文件名
+                status: 'done', // 状态有：uploading done error removed
+                url:`${window.baseURL}/announcement/downloadFile/${defaultValueDate.fileId}`,//文件链接
+                uuid:defaultValueDate.uuid,
+            }],
+        };
+
+        //自定义
+        const isNotDate = {
+            rules: [
+                {
+                    required: true, message: '请选择发布时间',
+                }
+            ],
+        };
+
+        if(!!defaultValueDate.publishTime){
+            isNotDate.initialValue = moment(`${defaultValueDate.publishTime}`);
+        }
 
         return (
             <Modal
@@ -271,6 +389,53 @@ class EditAddModel extends Component{
                         <Col span={12}>
                             <FormItem
                                 {...formItemLayout}
+                                label="通知对象"
+                            >
+                                {getFieldDecorator('rangeType', {
+                                    initialValue: (defaultValueDate.rangeType && `${defaultValueDate.rangeType}`) || '10',
+                                    rules: [
+                                        {
+                                            required: true, message: '请选择公告通知对象',
+                                        }
+                                    ],
+                                })(
+                                    <Select placeholder="请选择公告类型">
+                                        {
+                                            this.state.newOptions.map((item,i)=><Option key={i} value={item.value}>{item.label}</Option>)
+                                        }
+                                    </Select>
+                                )}
+                            </FormItem>
+                        </Col>
+                        <Col span={12}>
+                            {
+                                (getFieldValue('rangeType') !== '10') && <FormItem
+                                    {...formItemLayout}
+                                    label="添加附件"
+                                >
+                                    {getFieldDecorator('files', {
+                                        initialValue: defaultValueDate && defaultValueDate.fileId,
+                                        rules: [
+                                            { required: true, message: '请添加附件'
+                                            }
+                                        ],
+                                        getValueFromEvent: this.normFile,
+                                    })(
+                                        <Upload {...props} >
+                                            <Button>
+                                                <Icon type="upload" /> 上传附件
+                                            </Button>
+                                        </Upload>
+                                    )}
+                                </FormItem>
+                            }
+                        </Col>
+                    </Row>
+
+                    <Row gutter={24}>
+                        <Col span={12}>
+                            <FormItem
+                                {...formItemLayout}
                                 label="发布平台"
                             >
                                 {getFieldDecorator('announcementPath', {
@@ -318,19 +483,12 @@ class EditAddModel extends Component{
                         </Col>
                         <Col span={12}>
                             {
-                                getFieldValue('type') &&  <FormItem
+                                getFieldValue('type') === true &&  <FormItem
                                     {...formItemLayout}
                                     label="发布时间"
 
                                 >
-                                    {getFieldDecorator('publishTime', {
-                                        initialValue: defaultValueDate.publishTime && moment(`${defaultValueDate.publishTime}`),
-                                        rules: [
-                                            {
-                                                required: true, message: '请选择发布时间',
-                                            }
-                                        ],
-                                    })(
+                                    {getFieldDecorator('publishTime', isNotDate)(
                                         <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请选择发布时间" />
                                     )}
                                 </FormItem>

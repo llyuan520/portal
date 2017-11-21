@@ -211,6 +211,23 @@ class Result extends PureComponent {
             }, {
                 title: '公告日期',
                 dataIndex: 'announcementDate',
+            }, {
+                title: '公告类型',
+                dataIndex: 'announcementType',
+                render: (text, record) => {
+                    let txt = '';
+                    switch (parseInt(record.announcementType,0)){
+                        case 10:
+                            txt = '普通公告';
+                            break;
+                        case 20:
+                            txt = '重要公告';
+                            break;
+                        default:
+                            break;
+                    }
+                    return txt;
+                },
             },{
                 title: '状态',
                 dataIndex: 'status ',
@@ -247,6 +264,26 @@ class Result extends PureComponent {
                 }
 
             },{
+                title: '发布对象',
+                dataIndex: 'rangeType',
+                render: (text, record) => {
+                    let txt = '';
+                    switch (parseInt(record.rangeType,0)){
+                        case 10:
+                            txt = '所有用户';
+                            break;
+                        case 20:
+                            txt = '指定用户';
+                            break;
+                        case 30:
+                            txt = '指定公司';
+                            break;
+                        default:
+                            break;
+                    }
+                    return txt;
+                },
+            },{
                 title: '版本号',
                 dataIndex: 'version',
             },{
@@ -257,53 +294,73 @@ class Result extends PureComponent {
                 dataIndex: '5',
                 className:"textc",
                 render: (text, record) => {
-                    return(
-                        <div>
-                            <a onClick={()=>{
-                                this.setState({
-                                    modalInfo:record,
-                                    detailsVisible: true,
-                                })
-                            }} style={{color:'#333',marginRight:'10px',fontSize: 14 }}>
-                                <Icon title="查看公告详情" type="search" />
-                            </a>
-                            <a onClick={()=> {
-                                confirm({
-                                    title: '提示',
-                                    content: '确定要撤销吗？',
-                                    onOk: () => this.handleUndo(record.uuid),
-                                    onCancel() { },
-                                });
-                            }} style={{marginRight:'10px',fontSize: 14 }}><Icon title="撤销公告" type="rollback" /></a>
-                            <a onClick={()=> {
-                                confirm({
-                                    title: '提示',
-                                    content: '确定发布喜盈佳云平台版本更新公告？',
-                                    onOk: () => this.handleRelease(record.uuid),
-                                    onCancel() {
-                                    },
-                                });
-                            }} style={{marginRight:'10px',fontSize: 14 }}><Icon title="发布公告" type="arrow-up" /></a>
-                            <a onClick={()=>this.showModal('edit', {
-                                    ...record, type:parseInt(record.type,0) === 20
-                                }
-                            )}
-                               style={{marginRight:'10px',fontSize: 14 }}><Icon title="编辑公告" type="edit" /></a>
-                            <a onClick={()=> {
-                                confirm({
-                                    title: '提示',
-                                    content: '确定要删除吗？',
-                                    onOk: () => this.handleDelect(record.uuid),
-                                    onCancel() { },
-                                });
-                            }} style={{color:'red',fontSize: 14 }}>
-                                <Icon title="删除公告" type="delete" />
-                            </a>
-                        </div>
-                    )
+                    let txt = '';
+                    switch (parseInt(record.status,0)){
+                        case 20:
+                            txt = (
+                                <div>
+                                    <a onClick={()=>{
+                                        this.setState({
+                                            modalInfo:record,
+                                            detailsVisible: true,
+                                        })
+                                    }} style={{color:'#333',marginRight:'10px',fontSize: 14 }}>
+                                        <Icon title="查看公告详情" type="search" />
+                                    </a>
+                                    <a onClick={()=> {
+                                        confirm({
+                                            title: '提示',
+                                            content: '确定要撤销吗？',
+                                            onOk: () => this.handleUndo(record.uuid),
+                                            onCancel() { },
+                                        });
+                                    }} style={{marginRight:'10px',fontSize: 14 }}><Icon title="撤销公告" type="rollback" /></a>
+                                </div>
+                            );
+                            break;
+                        case 10:
+                            txt = (
+                                <div>
+                                    <a onClick={()=>{
+                                        this.setState({
+                                            modalInfo:record,
+                                            detailsVisible: true,
+                                        })
+                                    }} style={{color:'#333',marginRight:'10px',fontSize: 14 }}>
+                                        <Icon title="查看公告详情" type="search" />
+                                    </a>
+                                    <a onClick={()=> {
+                                        confirm({
+                                            title: '提示',
+                                            content: '确定发布喜盈佳云平台版本更新公告？',
+                                            onOk: () => this.handleRelease(record.uuid),
+                                            onCancel() {
+                                            },
+                                        });
+                                    }} style={{marginRight:'10px',fontSize: 14 }}><Icon title="发布公告" type="arrow-up" /></a>
+                                    <a onClick={()=>this.showModal('edit', {
+                                            ...record, type:parseInt(record.type,0) === 20
+                                        }
+                                    )}
+                                       style={{marginRight:'10px',fontSize: 14 }}><Icon title="编辑公告" type="edit" /></a>
+                                    <a onClick={()=> {
+                                        confirm({
+                                            title: '提示',
+                                            content: '确定要删除吗？',
+                                            onOk: () => this.handleDelect(record.uuid),
+                                            onCancel() { },
+                                        });
+                                    }} style={{color:'red',fontSize: 14 }}>
+                                        <Icon title="删除公告" type="delete" />
+                                    </a>
+                                </div>
+                            );
+                            break;
+                        default:
+                            break;
+                    }
 
-
-
+                    return txt;
                 },
             }
         ];
@@ -313,7 +370,7 @@ class Result extends PureComponent {
             <div>
                 <Row className="title" style={{marginTop:20}}>
                     <Col span={24}>
-                        <h2>用户信息维护查询</h2>
+                        <h2>公告信息维护查询</h2>
                     </Col>
                 </Row>
                 <div className="resultWrap">
@@ -342,7 +399,7 @@ class Result extends PureComponent {
                     changeVisable={ status =>{
                         this.setState({
                             editAddVisible:status,
-                            editAddKey:Date.now()
+                            editAddKey:Date.now()+2
                         })
                     }}
                     defaultValueDate= {this.state.defaultValueDate}
@@ -368,7 +425,7 @@ class Result extends PureComponent {
 
                         <p style={{marginBottom:'10px'}}>本次更新内容：</p>
 
-                        <div style={{marginBottom:'10px'}} dangerouslySetInnerHTML={{  __html: htmlDecode(modalInfo.content) }}></div>
+                        <div style={{marginBottom:'10px'}} dangerouslySetInnerHTML={{ html: htmlDecode(modalInfo.content) }}></div>
 
                         <p style={{textAlign:'right',marginBottom:'10px'}}>
                             ——喜盈佳产品团队
