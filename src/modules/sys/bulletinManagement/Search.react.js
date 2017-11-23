@@ -60,7 +60,7 @@ class Search extends Component {
         const children = [];
         const data = [
             {
-                label: '用户名',
+                label: '公告标题',
                 type: 'text',
                 fieldName: 'title'
             }, {

@@ -48,6 +48,9 @@ class EditAddModel extends Component{
                                 this.props.refreshCurdTable();
                             } else {
                                 message.error(data.msg, 4)
+                                this.mounted && this.setState({
+                                    submitLoading: false
+                                })
                             }
                         })
                         .catch(err => {
@@ -78,6 +81,9 @@ class EditAddModel extends Component{
 
                             } else {
                                 message.error(data.msg, 4)
+                                this.mounted && this.setState({
+                                    submitLoading: false
+                                })
                             }
                         })
                         .catch(err => {
@@ -165,6 +171,8 @@ class EditAddModel extends Component{
                                             required: true, message: '请输入名称供应门户账号',
                                         },{
                                             pattern: /^[^ ]+$/, message: '不能包含空格'
+                                        },{
+                                            max: 11	, message: '字符长度不能大于11位！',
                                         }
                                     ],
                                 })(
@@ -197,6 +205,8 @@ class EditAddModel extends Component{
                                             required: true, message: '请输入喜盈佳账号',
                                         },{
                                             pattern: /^[^ ]+$/, message: '不能包含空格'
+                                        },{
+                                            max: 6	, message: '字符长度不能大于6位！',
                                         }
                                     ],
                                 })(
@@ -217,6 +227,8 @@ class EditAddModel extends Component{
                                             required: true, message: '请输入喜盈佳单点登录key',
                                         },{
                                             pattern: /^[^ ]+$/, message: '不能包含空格'
+                                        },{
+                                            max: 6	, message: '字符长度不能大于6位！',
                                         }
                                     ],
                                 })(
@@ -245,6 +257,8 @@ class EditAddModel extends Component{
                                     rules: [
                                         {
                                             pattern: /^[^ ]+$/, message: '不能包含空格'
+                                        },{
+                                            max: 32	, message: '字符长度不能大于32位！',
                                         }
                                     ],
                                 })(
@@ -268,6 +282,8 @@ class EditAddModel extends Component{
                                                 required: true, message: '请输入供应链金融单点登录Key',
                                             },{
                                                 pattern:/^[^ ]+$/,message:'不能包含空格'
+                                            },{
+                                                max: 32	, message: '字符长度不能大于32位！',
                                             }
                                         ],
                                     })(
@@ -296,6 +312,8 @@ class EditAddModel extends Component{
                                     rules: [
                                         {
                                             pattern: /^[^ ]+$/, message: '不能包含空格'
+                                        },{
+                                            max: 20	, message: '字符长度不能大于20位！',
                                         }
                                     ],
                                 })(
@@ -317,6 +335,8 @@ class EditAddModel extends Component{
                                                 required: true, message: '请输入票易通单点登录key',
                                             }, {
                                                 pattern: /^[^ ]+$/, message: '不能包含空格'
+                                            },{
+                                                max: 20	, message: '字符长度不能大于20位！',
                                             }
                                         ],
                                     })(
@@ -338,7 +358,9 @@ class EditAddModel extends Component{
                                             {
                                                 required: true, message: '请输入票易通企业号',
                                             },{
-                                                pattern: /^[^ ]+$/, message: '不能包含空格'
+                                                pattern: /^[^ ]+$/, message: '不能包含空格',
+                                            },{
+                                                max: 5	, message: '字符长度不能大于5位！',
                                             }
                                         ],
                                     })(

@@ -273,10 +273,10 @@ class Result extends PureComponent {
                             txt = '所有用户';
                             break;
                         case 20:
-                            txt = '指定用户';
+                            txt = '指定公司';
                             break;
                         case 30:
-                            txt = '指定公司';
+                            txt = '指定用户';
                             break;
                         default:
                             break;
@@ -425,7 +425,7 @@ class Result extends PureComponent {
 
                         <p style={{marginBottom:'10px'}}>本次更新内容：</p>
 
-                        <div style={{marginBottom:'10px'}} dangerouslySetInnerHTML={{ html: htmlDecode(modalInfo.content) }}></div>
+                        <div style={{marginBottom:'10px'}} dangerouslySetInnerHTML={{  __html: htmlDecode(modalInfo.content) }}></div>
 
                         <p style={{textAlign:'right',marginBottom:'10px'}}>
                             ——喜盈佳产品团队

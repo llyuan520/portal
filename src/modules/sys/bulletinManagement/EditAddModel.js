@@ -50,8 +50,8 @@ class EditAddModel extends Component{
             //公告发布对象 所有用户、指定用户、指定公司
             newOptions : [
                 { label: '所有用户', value: '10' },
-                { label: '指定用户', value: '20' },
-                { label: '指定公司', value: '30' },
+                { label: '指定公司', value: '20' },
+                { label: '指定用户', value: '30' },
             ],
         }
     }
