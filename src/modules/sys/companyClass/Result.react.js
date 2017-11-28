@@ -23,6 +23,7 @@ class Result extends Component {
                 pageSize:10,
                 showTotal:(total, range) => `总数: ${total} 条`,
             },
+            parentId:'',
             tableLoading: false,
             tableKeyDate: Date.now(),
 
@@ -40,6 +41,7 @@ class Result extends Component {
 
 
     handleTableChange = (pagination, filters, sorter) => {
+
         const pager = { ...this.state.pagination };
         pager.current = pagination.current;
         pager.results = pager.pageSize = pagination.pageSize;
@@ -48,19 +50,18 @@ class Result extends Component {
         });
         //设置去掉排序默认设置的值
         let sor = sorter.order ? sorter.order.replace('end', '') : undefined;
-
         this.fetch({
             results: pagination.pageSize,
             page: pagination.current,
             sortField: sorter.field,
             sortOrder: sor,
             ...this.props.filters.values,
+            parentId:this.state.parentId,
 
         });
     }
 
     fetch = (params = {}) => {
-
         this.mounted && this.setState({ tableLoading: true });
         //根据参数查询融资申请信息
         request.get('/companyType/queryCompanyTypeList',{
@@ -94,8 +95,9 @@ class Result extends Component {
             });
         }, 1000);
     }
+
     //TODO:列表项是否可选择
-    /*onSelectChange = (selectedRowKeys) => {
+   /* onSelectChange = (selectedRowKeys) => {
         this.mounted && this.setState({ selectedRowKeys });
     }*/
 
@@ -130,36 +132,20 @@ class Result extends Component {
 
     getKeyVal = params =>{
 
-        /*const pager = { ...this.state.pagination };
-        pager.current = pagination.current;
-        pager.results = pager.pageSize = pagination.pageSize;
-        this.mounted &&  this.setState({
-            pagination: pager,
-        });
-        //设置去掉排序默认设置的值
-        let sor = sorter.order ? sorter.order.replace('end', '') : undefined;
-
-        this.fetch({
-            results: pagination.pageSize,
-            page: pagination.current,
-            sortField: sorter.field,
-            sortOrder: sor,
-            ...this.props.filters.values,
-
-        });*/
-
         const pager = { ...this.state.pagination };
         pager.current = 1;
         pager.results = 10;
-        this.mounted &&  this.setState({
+        this.mounted && this.setState({
             pagination: pager,
+            parentId: params.parentId
         });
 
-        this.fetch({
+        this.mounted && this.fetch({
             results: pager.pageSize,
             page: pager.current,
             ...params
         });
+
     }
 
     componentDidMount() {
@@ -172,16 +158,15 @@ class Result extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-
         //用来判断如果搜索字段是否有改变，改变了就需要把当前table选中页设置为1
         if(nextProps.filters.lastUpdated !== this.props.filters.lastUpdated){
             const currentPager = { ...this.state.pagination };
             currentPager.current = 1;
-            this.mounted &&  this.setState({
+            this.mounted && this.setState({
                 pagination: currentPager,
                 tableKeyDate: nextProps.filters.lastUpdated,
             });
-            this.mounted &&  this.fetch({
+            this.mounted && this.fetch({
                 ...nextProps.filters.values
             })
         }
@@ -245,7 +230,7 @@ class Result extends Component {
             <div>
                 <Row className="title" style={{marginTop:20}}>
                     <Col span={24}>
-                        <h2>公司基础资料维护查询</h2>
+                        <h2>公司分类维护查询</h2>
                     </Col>
                 </Row>
                 <Row gutter={24}>

@@ -414,6 +414,7 @@ class Result extends PureComponent {
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
                     footer={null}
+                    width="760px"
                 >
                     <Row>
 

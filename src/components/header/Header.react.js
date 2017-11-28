@@ -98,7 +98,7 @@ class Headers extends Component{
                                     title: '系统提示',
                                     content: ModelContext(data.data),
                                     okText:'关闭',
-                                    width:'600px',
+                                    width:'760px',
                                     onOk () {
                                         ref.destroy();
                                     },
