@@ -10,11 +10,14 @@ import {configData} from '../../../config';
 
 import logo013 from './img/media/logo-013.png';
 import logo01 from './img/media/logo-01.png';
-import logo05 from './img/media/logo-05.png';
+import logo03 from './img/media/logo-03.png';
+import logo04 from './img/media/logo-04.png';
 import logo010 from './img/media/logo-010.png';
 import logo09 from './img/media/logo-09.png';
 import logo011 from './img/media/logo-011.png';
 import logo06 from './img/media/logo-06.png';
+import logo015 from './img/media/logo-015.png';
+import logo016 from './img/media/logo-016.png';
 
 
 class Cooperativebillin extends Component{
@@ -34,8 +37,8 @@ class Cooperativebillin extends Component{
             xyjJumpUrl:`${configData.address}wims/yiw0000.page?home`,
             dataP:[
                 {
-                    title:'应力',
-                    imgUrl:logo05,
+                    title:'金地集团',
+                    imgUrl:logo04,
                 },{
                     title:'深圳地铁',
                     imgUrl:logo010,
@@ -48,6 +51,15 @@ class Cooperativebillin extends Component{
                 },{
                     title:'建业集团',
                     imgUrl:logo06,
+                },{
+                    title:'华夏幸福',
+                    imgUrl:logo03,
+                },{
+                    title:'龙光地产',
+                    imgUrl:logo015,
+                },{
+                    title:'星河控股',
+                    imgUrl:logo016,
                 }
 
             ],
@@ -127,7 +139,7 @@ class Cooperativebillin extends Component{
                     </Col>
                     <Col span={12} className="p-billing-list">
                         <h3>
-                            给<span className="c108ee9">印力、深圳地铁、宝龙、世茂、建业</span>开票入口
+                            给<span className="c108ee9">建业、金地、星河、龙光</span>开票入口
                         </h3>
                         <Card noHovering className="p-billing-itme">
                             <Row gutter={24} className="p-billing-img">

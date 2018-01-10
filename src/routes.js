@@ -8,9 +8,6 @@ import { withRouter,Route,Redirect,Switch } from 'react-router-dom';
 import LoadAble from 'react-loadable'
 import {RouteWithSubRoutes,LoadingPage} from './components'
 import {Layout,Button,Row,Col} from 'antd'
-import Login from './modules/login'
-import DashBoard from './modules/dashBoard';
-import Sys from './modules/sys'
 import {wrapPage} from './utils'
 
 import Img404 from './components/loadingPage/img/404.png'
