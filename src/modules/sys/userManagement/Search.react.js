@@ -4,10 +4,14 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {Form, Row, Col, Input, Button, Icon,Select} from 'antd';
+import {Form, Row, Col, Input, Button, Icon,Select,DatePicker} from 'antd';
 import { withRouter } from 'react-router'
-
-
+import moment from 'moment';
+// 推荐在入口文件全局设置 locale
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
+const { RangePicker } = DatePicker;
+const dateFormat = 'YYYY/MM/DD';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -28,6 +32,11 @@ class Search extends Component {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                if(values.createdDate && values.createdDate.length!==0){
+                    values.createdDateStart = values.createdDate[0].format('YYYY-MM-DD')
+                    values.createdDateEnd = values.createdDate[1].format('YYYY-MM-DD')
+                    values.createdDate = undefined;
+                }
                 this.props.search && this.props.search(values, Date.now());
             }
 
@@ -58,6 +67,18 @@ class Search extends Component {
                 label:'用户名',
                 type:'text',
                 fieldName:'username'
+            },{
+                label:'公司名称',
+                type:'text',
+                fieldName:'companyName'
+            },{
+                label:'手机号',
+                type:'text',
+                fieldName:'phone'
+            },{
+                label:'创建时间起止',
+                type: 'rangePicker',
+                fieldName:'createdDate'
             }
         ]
 
@@ -66,7 +87,9 @@ class Search extends Component {
             let inputComponent;
             if(data[i].type==='text'){
                 inputComponent = <Input placeholder={`请输入${data[i].label}`} />;
-            }else if(data[i].type==='select'){
+            } else if (data[i].type === 'rangePicker') {
+                inputComponent = <RangePicker format={dateFormat} style={{width:'100%'}} />;
+            } else if (data[i].type==='select'){
                 inputComponent = (
                     <Select placeholder={`请选择${data[i].label}`}>
                         {
@@ -75,17 +98,31 @@ class Search extends Component {
                     </Select>
                 )
             }
-            children.push(
-                <Col span={8} key={i} style={{ display: i < count ? 'block' : 'none'}}>
-                    <FormItem {...formItemLayout} label={data[i].label}>
-                        {getFieldDecorator(data[i]['fieldName'],{
-                            initialValue:data[i].initialValue || undefined
-                        })(
-                            inputComponent
-                        )}
-                    </FormItem>
-                </Col>
-            );
+            if(data[i].type === 'rangePicker'){
+                children.push(
+                    <Col span={8} key={i} style={{display: i < count ? 'block' : 'none'}}>
+                        <FormItem {...formItemLayout} label={data[i].label}>
+                            {getFieldDecorator(data[i]['fieldName'], {
+                                initialValue: data[i].initialValue
+                            })(
+                                inputComponent
+                            )}
+                        </FormItem>
+                    </Col>
+                );
+            }else {
+                children.push(
+                    <Col span={8} key={i} style={{display: i < count ? 'block' : 'none'}}>
+                        <FormItem {...formItemLayout} label={data[i].label}>
+                            {getFieldDecorator(data[i]['fieldName'], {
+                                initialValue: data[i].initialValue || undefined
+                            })(
+                                inputComponent
+                            )}
+                        </FormItem>
+                    </Col>
+                );
+            }
         }
         return children.slice(start,end||null);
     }
@@ -120,10 +157,10 @@ class Search extends Component {
                         {
                             this.getFields(0,3)
                         }
-
-                    </Row>
-                    <Row>
-                        <Col span={24} style={{ textAlign: 'right' }}>
+                        {
+                            this.getFields(3,4)
+                        }
+                        <Col span={16} style={{ textAlign: 'right' }}>
                             <Button type="primary" htmlType="submit">查询</Button>
                             <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
                                 重置

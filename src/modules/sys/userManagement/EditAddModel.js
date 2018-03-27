@@ -6,6 +6,7 @@
 import React,{Component} from 'react';
 import {Modal,Form,Input,message,Row,Col} from 'antd';
 import {request} from '../../../utils';
+import {CompanyList} from '../../../components'
 
 const FormItem = Form.Item;
 
@@ -32,7 +33,11 @@ class EditAddModel extends Component{
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 //console.log('Received values of form: ', values);
-
+                if(values.companyName){
+                    values.sysXYJUserWebParam['companyCode'] = values.companyName.key
+                    values.sysXYJUserWebParam['companyName'] = values.companyName.label
+                    values.companyName = undefined
+                }
                 this.mounted && this.setState({
                     submitLoading:true
                 })
@@ -97,6 +102,19 @@ class EditAddModel extends Component{
         });
     }
 
+    asyncFetchAccount = (data)=>{
+        request.get(`/userManage/loadUserAccount/${data.key}`)
+            .then(({data}) => {
+                if(data.code===200){
+                    this.props.form.setFieldsValue({
+                        'sysUserWebParam.userName':data.data,
+                        'sysXYJUserWebParam.name':data.data,
+                        'sysXYJUserWebParam.tokenKey':data.data,
+                    })
+                }
+            });
+    }
+
     componentDidMount() {
 
     }
@@ -119,7 +137,6 @@ class EditAddModel extends Component{
     render() {
         const {modalType} = this.props;
         const defaultValueDate = {...this.props.defaultValueDate};
-
         const { getFieldDecorator, getFieldValue } = this.props.form;
         const formItemLayout = {
             labelCol: { span: 2 },
@@ -139,6 +156,25 @@ class EditAddModel extends Component{
                 width="800px"
             >
                 <Form onSubmit={this.handleSubmit} className="form-item-required">
+                    <Row gutter={24}>
+                        <Col span={3} style={{textAlign:'right',lineHeight:'32px'}}>
+                            <label>公司名称</label>
+                        </Col>
+                        <Col span={7}>
+                            <CompanyList
+                                fieldName='companyName'
+                                form={this.props.form}
+                                formItemStyle={formItemLayout}
+                                onSuccess={(data)=>this.asyncFetchAccount(data)}
+                                fieldDecoratorOptions={{
+                                    initialValue:defaultValueDate.companyCode && {key: `${defaultValueDate.companyCode}`, label: defaultValueDate.companyName},
+                                }}
+                                componentProps={{
+                                    disabled: modalType==='edit'
+                                }}
+                            />
+                        </Col>
+                    </Row>
                     <Row gutter={24} style={{textAlign:'center',marginBottom: 14,marginTop:10}}>
                         <Col span={3}>
 
