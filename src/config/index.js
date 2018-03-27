@@ -1,7 +1,7 @@
 /**
  * author       : liuliyuan
  * createTime   : 2017/9/6 18:00
- * description  :
+ * description  : 访问的路径 http://localhost:3000/login?appName=xyj&token=<string>
  */
 
 
@@ -53,8 +53,6 @@ export const linkList =[
         name:'万科采购平台',
     },
 ]
-
-
 export const messageInfo = [
     {
         url:'',

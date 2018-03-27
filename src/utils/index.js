@@ -4,7 +4,7 @@
  * description  :
  */
 import React from 'react';
-import request from './request.js';
+import request from './request';
 import {configData} from './../config';
 import DocumentTitle from 'react-document-title'
 import composeMenus from './composeMenus'
@@ -57,22 +57,22 @@ const isEmpty = val=> {
 
 //千位号
 const fMoney = (s,n=2)=>{
-
     if(s === "" || s === 0 || typeof (s) === 'undefined'){
         return '0.00';
     }else{
         n = n > 0 && n <= 20 ? n : 2;
         s = parseFloat((s + "").replace(/[^\d\\.-]/g, "")).toFixed(n) + "";
-
-        let l = s.split(".")[0].split("").reverse(),
+        /**过滤负号 .replace(/-/g,'') 解决负数转换 2018/3/19*/
+        let l = s.split(".")[0].replace(/-/g,'').split("").reverse(),
             r = s.split(".")[1];
         let t = "";
-        for(let i = 0; i < l.length; i ++ )
-        {
+        for (let i = 0; i < l.length; i++) {
             t += l[i] + ((i + 1) % 3 === 0 && (i + 1) !== l.length ? "," : "");
         }
-        return t.split("").reverse().join("") + "." + r;
+        /**添加负号 (s.indexOf('-')>-1?"-":"") + 解决负数转换 2018/3/19*/
+        return  (s.indexOf('-')>-1?"-":"") + t.split("").reverse().join("") + "." + r;
     }
+
 }
 
 /**

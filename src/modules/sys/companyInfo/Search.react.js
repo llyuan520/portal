@@ -47,8 +47,8 @@ class Search extends Component {
         const count = this.state.expand ? 10 : 0;
         const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
-            labelCol: { span: 5 },
-            wrapperCol: { span: 19 },
+            labelCol: { span: 9 },
+            wrapperCol: { span: 15 },
         };
         const children = [
 

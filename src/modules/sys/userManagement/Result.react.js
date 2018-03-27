@@ -6,6 +6,7 @@
 import React,{PureComponent} from 'react';
 import {Table,Row,Col,Badge,Icon,Button,message,Switch} from 'antd';
 import {request} from '../../../utils';
+import {AutoFileUpload,FileExport} from '../../../components'
 import EditAddModel from './EditAddModel'
 
 class Result extends PureComponent {
@@ -142,7 +143,15 @@ class Result extends PureComponent {
         //跳转到详情页
         const columns = [
             {
-
+                title: '公司名称',
+                dataIndex: 'companyName',
+            },{
+                title: '公司代码',
+                dataIndex: 'companyCode',
+            },{
+                title: '创建时间',
+                dataIndex: 'createdDate',
+            },{
                 title: '供应商门户账号',
                 dataIndex: 'gysUserName',
             },{
@@ -151,10 +160,9 @@ class Result extends PureComponent {
             },{
                 title: '票易通账号',
                 dataIndex: 'pytUserName',
-
-            },{
+           /* },{
                 title: '供应链金融账号',
-                dataIndex: 'gylUserName',
+                dataIndex: 'gylUserName',*/
             },{
                 title: '状态',
                 dataIndex: 'enabled',
@@ -218,6 +226,30 @@ class Result extends PureComponent {
                         >
                             新增
                         </Button>
+                        <AutoFileUpload
+                            url={`userManage/upload/company`}
+                            title="导入单点登录公司"
+                            onSuccess={this.refreshCurdTable}
+                        />
+                        <AutoFileUpload
+                            url={`userManage/upload/user`}
+                            title="导入单点登录用户"
+                            onSuccess={this.refreshCurdTable}
+                        />
+                        <FileExport
+                            url='userManage/download/company'
+                            title="下载导入公司信息模板"
+                        />
+                        <FileExport
+                            url='userManage/download/user'
+                            title="下载导入用户模板"
+                        />
+                        <FileExport
+                            url={`userManage/export`}
+                            title="导出"
+                            params={this.props.filters}
+                            setButtonStyle={{marginRight:5}}
+                        />
                     </div>
 
                     <Table columns={columns}

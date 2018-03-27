@@ -98,7 +98,7 @@ class Search extends Component {
             if (data[i].type === 'text') {
                 inputComponent = <Input placeholder={`请输入${data[i].label}`}/>;
             } else if (data[i].type === 'rangePicker') {
-                inputComponent = <DatePicker placeholder={`请输入${data[i].label}`}/>;
+                inputComponent = <DatePicker placeholder={`请输入${data[i].label}`} style={{width:'100%'}} />;
             } else if (data[i].type === 'select') {
                 inputComponent = (
                     <Select placeholder="请选择">
@@ -173,9 +173,7 @@ class Search extends Component {
                         {
                             this.getFields(3,4)
                         }
-                    </Row>
-                    <Row>
-                        <Col span={24} style={{ textAlign: 'right' }}>
+                        <Col span={16} style={{ textAlign: 'right' }}>
                             <Button type="primary" htmlType="submit">查询</Button>
                             <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
                                 重置
