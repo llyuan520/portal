@@ -4,12 +4,9 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {Form, Row, Col, Input, Button, Icon,Select} from 'antd';
+import {Form, Row, Col, Button, Icon} from 'antd';
 import { withRouter } from 'react-router'
-
-
-const FormItem = Form.Item;
-const Option = Select.Option;
+import {getFields} from '../../../utils'
 
 class Search extends Component {
     constructor(props){
@@ -43,74 +40,6 @@ class Search extends Component {
         this.setState({ expand: !expand });
     }
 
-    getFields(start,end) {
-        const count = this.state.expand ? 10 : 0;
-        const { getFieldDecorator } = this.props.form;
-        const formItemLayout = {
-            labelCol: { span: 5 },
-            wrapperCol: { span: 19 },
-        };
-        const children = [
-
-        ];
-        const data = [
-            {
-                label:'分类名称',
-                type:'text',
-                fieldName:'name'
-            },
-            {
-                label:'分类来源',
-                type:'select',
-                fieldName:'source',
-                items: [
-                    {
-                        value:'1',
-                        label:'手工指定',
-                    },{
-                        value:'2',
-                        label:'税收分类编码',
-                    }
-                ],
-            },
-            {
-                label:'分类关键字',
-                type:'text',
-                fieldName:'keywords',
-            }
-
-        ]
-
-
-        for (let i = 0; i < data.length; i++) {
-            let inputComponent;
-            if(data[i].type==='text'){
-                inputComponent = <Input placeholder={`请输入${data[i].label}`} />;
-            }else if(data[i].type==='select'){
-                inputComponent = (
-                    <Select placeholder={`请选择${data[i].label}`}>
-                        {
-                            data[i].items.map((item,i)=><Option key={i} value={item.value}>{item.label}</Option>)
-                        }
-                    </Select>
-                )
-            }
-            children.push(
-                <Col span={8} key={i} style={{ display: i < count ? 'block' : 'none'}}>
-                    <FormItem {...formItemLayout} label={data[i].label}>
-                        {getFieldDecorator(data[i]['fieldName'],{
-                            initialValue:data[i].initialValue || undefined
-                        })(
-                            inputComponent
-                        )}
-                    </FormItem>
-                </Col>
-            );
-        }
-        return children.slice(start,end||null);
-    }
-
-
     componentDidMount(){
 
     }
@@ -142,9 +71,31 @@ class Search extends Component {
 
                     <Row gutter={40}>
                         {
-                            this.getFields(0,3)
+                            getFields(0,3,this.props.form,[
+                                {
+                                    label:'分类名称',
+                                    type:'input',
+                                    fieldName:'name'
+                                }, {
+                                    label:'分类来源',
+                                    type:'select',
+                                    fieldName:'source',
+                                    options: [
+                                        {
+                                            value:'1',
+                                            label:'手工指定',
+                                        },{
+                                            value:'2',
+                                            label:'税收分类编码',
+                                        }
+                                    ],
+                                }, {
+                                    label:'分类关键字',
+                                    type:'input',
+                                    fieldName:'keywords',
+                                }
+                            ])
                         }
-
                     </Row>
                     <Row>
                         <Col span={24} style={{ textAlign: 'right' }}>

@@ -4,15 +4,13 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {Form, Row, Col, Input, Button, Icon,DatePicker,Select } from 'antd';
+import {Form, Row, Col, Button, Icon,} from 'antd';
 import { withRouter } from 'react-router'
+import {getFields} from '../../../utils'
 import moment from 'moment';
 // 推荐在入口文件全局设置 locale
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
-
-const FormItem = Form.Item;
-const Option = Select.Option;
 
 class Search extends Component {
     constructor(props){
@@ -50,97 +48,6 @@ class Search extends Component {
         this.setState({ expand: !expand });
     }
 
-    getFields(start,end) {
-        const count = this.state.expand ? 10 : 0;
-        const {getFieldDecorator} = this.props.form;
-        const formItemLayout = {
-            labelCol: {span: 5},
-            wrapperCol: {span: 19},
-        };
-        const children = [];
-        const data = [
-            {
-                label: '公告标题',
-                type: 'text',
-                fieldName: 'title'
-            }, {
-                label: '公告日期',
-                type: 'rangePicker',
-                fieldName: 'announcementDate'
-            }, {
-                label: '公告类型',
-                type: 'select',
-                fieldName: 'announcementType',
-                items: [{
-                    label: '普通公告',
-                    value: '10',
-                }, {
-                    label: '重要公告',
-                    value: '20',
-                }]
-            }, {
-                label: '发布状态',
-                type: 'select',
-                fieldName: 'status',
-                items: [{
-                    label: '待发布',
-                    value: '10',
-                }, {
-                    label: '已发布',
-                    value: '20',
-                }]
-            }
-        ];
-
-
-        for (let i = 0; i < data.length; i++) {
-            let inputComponent;
-            if (data[i].type === 'text') {
-                inputComponent = <Input placeholder={`请输入${data[i].label}`}/>;
-            } else if (data[i].type === 'rangePicker') {
-                inputComponent = <DatePicker placeholder={`请输入${data[i].label}`} style={{width:'100%'}} />;
-            } else if (data[i].type === 'select') {
-                inputComponent = (
-                    <Select placeholder="请选择">
-                        {
-                            data[i].items.map((item, i) => <Option key={i} value={`${item.value}`}>{item.label}</Option>)
-                        }
-                    </Select>
-                )
-            }
-
-            if(data[i].type === 'rangePicker'){
-                children.push(
-                    <Col span={8} key={i} style={{display: i < count ? 'block' : 'none'}}>
-                        <FormItem {...formItemLayout} label={data[i].label}>
-                            {getFieldDecorator(data[i]['fieldName'], {
-                                initialValue: data[i].initialValue
-                            })(
-                                inputComponent
-                            )}
-                        </FormItem>
-                    </Col>
-                );
-            }else{
-                children.push(
-                    <Col span={8} key={i} style={{display: i < count ? 'block' : 'none'}}>
-                        <FormItem {...formItemLayout} label={data[i].label}>
-                            {getFieldDecorator(data[i]['fieldName'], {
-                                initialValue: data[i].initialValue || ''
-                            })(
-                                inputComponent
-                            )}
-                        </FormItem>
-                    </Col>
-                );
-            }
-
-        }
-        return children.slice(start, end || null);
-    }
-
-
-
     componentDidMount(){
 
     }
@@ -168,10 +75,39 @@ class Search extends Component {
 
                     <Row gutter={40}>
                         {
-                            this.getFields(0,3)
-                        }
-                        {
-                            this.getFields(3,4)
+                            getFields(0,4,this.props.form,[
+                                {
+                                    label: '公告标题',
+                                    type: 'input',
+                                    fieldName: 'title'
+                                }, {
+                                    label: '公告日期',
+                                    type: 'datePicker',
+                                    fieldName: 'announcementDate'
+                                }, {
+                                    label: '公告类型',
+                                    type: 'select',
+                                    fieldName: 'announcementType',
+                                    options: [{
+                                        label: '普通公告',
+                                        value: '10',
+                                    }, {
+                                        label: '重要公告',
+                                        value: '20',
+                                    }]
+                                }, {
+                                    label: '发布状态',
+                                    type: 'select',
+                                    fieldName: 'status',
+                                    options: [{
+                                        label: '待发布',
+                                        value: '10',
+                                    }, {
+                                        label: '已发布',
+                                        value: '20',
+                                    }]
+                                }
+                            ])
                         }
                         <Col span={16} style={{ textAlign: 'right' }}>
                             <Button type="primary" htmlType="submit">查询</Button>

@@ -368,7 +368,7 @@ class Result extends PureComponent {
         const modalInfo = this.state.modalInfo;
         return (
             <div>
-                <Row className="title" style={{marginTop:20}}>
+                <Row className="title">
                     <Col span={24}>
                         <h2>公告信息维护查询</h2>
                     </Col>

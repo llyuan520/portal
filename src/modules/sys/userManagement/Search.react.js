@@ -1,19 +1,18 @@
 /**
- * author       : liuliyuan
+ * author       : LiuLiYuan
  * createTime   : 2017/9/28 15:29
  * description  :
  */
 import React, { Component } from 'react';
-import {Form, Row, Col, Input, Button, Icon,Select,DatePicker} from 'antd';
+import {Form, Row, Col, Button, Icon} from 'antd';
 import { withRouter } from 'react-router'
 import moment from 'moment';
+import {getFields,regRules} from '../../../utils'
+
 // 推荐在入口文件全局设置 locale
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
-const { RangePicker } = DatePicker;
-const dateFormat = 'YYYY/MM/DD';
-const FormItem = Form.Item;
-const Option = Select.Option;
+
 
 class Search extends Component {
     constructor(props){
@@ -32,7 +31,7 @@ class Search extends Component {
         e && e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                if(values.createdDate && values.createdDate.length!==0){
+                if (values.createdDate && values.createdDate.length !== 0) {
                     values.createdDateStart = values.createdDate[0].format('YYYY-MM-DD')
                     values.createdDateEnd = values.createdDate[1].format('YYYY-MM-DD')
                     values.createdDate = undefined;
@@ -45,6 +44,8 @@ class Search extends Component {
 
     handleReset = () => {
         this.props.form.resetFields();
+        //手动触发一下是因为使用resetFields()不会触发form的onValuesChange
+        this.props.onValuesChange({})
     }
 
     toggle = () => {
@@ -52,84 +53,7 @@ class Search extends Component {
         this.setState({ expand: !expand });
     }
 
-    getFields(start,end) {
-        const count = this.state.expand ? 10 : 0;
-        const { getFieldDecorator } = this.props.form;
-        const formItemLayout = {
-            labelCol: { span: 5 },
-            wrapperCol: { span: 19 },
-        };
-        const children = [
-
-        ];
-        const data = [
-            {
-                label:'用户名',
-                type:'text',
-                fieldName:'username'
-            },{
-                label:'公司名称',
-                type:'text',
-                fieldName:'companyName'
-            },{
-                label:'手机号',
-                type:'text',
-                fieldName:'phone'
-            },{
-                label:'创建时间起止',
-                type: 'rangePicker',
-                fieldName:'createdDate'
-            }
-        ]
-
-
-        for (let i = 0; i < data.length; i++) {
-            let inputComponent;
-            if(data[i].type==='text'){
-                inputComponent = <Input placeholder={`请输入${data[i].label}`} />;
-            } else if (data[i].type === 'rangePicker') {
-                inputComponent = <RangePicker format={dateFormat} style={{width:'100%'}} />;
-            } else if (data[i].type==='select'){
-                inputComponent = (
-                    <Select placeholder={`请选择${data[i].label}`}>
-                        {
-                            data[i].items.map((item,i)=><Option key={i} value={item.value}>{item.label}</Option>)
-                        }
-                    </Select>
-                )
-            }
-            if(data[i].type === 'rangePicker'){
-                children.push(
-                    <Col span={8} key={i} style={{display: i < count ? 'block' : 'none'}}>
-                        <FormItem {...formItemLayout} label={data[i].label}>
-                            {getFieldDecorator(data[i]['fieldName'], {
-                                initialValue: data[i].initialValue
-                            })(
-                                inputComponent
-                            )}
-                        </FormItem>
-                    </Col>
-                );
-            }else {
-                children.push(
-                    <Col span={8} key={i} style={{display: i < count ? 'block' : 'none'}}>
-                        <FormItem {...formItemLayout} label={data[i].label}>
-                            {getFieldDecorator(data[i]['fieldName'], {
-                                initialValue: data[i].initialValue || undefined
-                            })(
-                                inputComponent
-                            )}
-                        </FormItem>
-                    </Col>
-                );
-            }
-        }
-        return children.slice(start,end||null);
-    }
-
-
     componentDidMount(){
-
     }
 
     mounted = true;
@@ -155,10 +79,30 @@ class Search extends Component {
 
                     <Row gutter={40}>
                         {
-                            this.getFields(0,3)
-                        }
-                        {
-                            this.getFields(3,4)
+                            getFields(0,4,this.props.form,[
+                                {
+                                    label:'用户名',
+                                    type:'input',
+                                    fieldName:'username'
+                                },{
+                                    label:'公司名称',
+                                    type:'input',
+                                    fieldName:'companyName'
+                                },{
+                                    label:'手机号',
+                                    type:'input',
+                                    fieldName:'phone',
+                                    fieldDecoratorOptions:{
+                                        rules:[
+                                            regRules.mobile_phone,
+                                        ]
+                                    },
+                                },{
+                                    label:'创建时间起止',
+                                    type: 'rangePicker',
+                                    fieldName:'createdDate'
+                                }
+                            ])
                         }
                         <Col span={16} style={{ textAlign: 'right' }}>
                             <Button type="primary" htmlType="submit">查询</Button>
@@ -171,6 +115,8 @@ class Search extends Component {
             </div>
         );
     }
-
 }
-export default Form.create()(withRouter(Search))
+
+export default Form.create({
+    onValuesChange(props, values) { props.onValuesChange(values) }
+})(withRouter(Search))
