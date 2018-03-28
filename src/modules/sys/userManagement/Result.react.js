@@ -123,7 +123,6 @@ class Result extends PureComponent {
     }
 
     componentWillReceiveProps(nextProps){
-
         //用来判断如果搜索字段是否有改变，改变了就需要把当前table选中页设置为1
         if(nextProps.filters.lastUpdated !== this.props.filters.lastUpdated){
             const currentPager = { ...this.state.pagination };
@@ -210,10 +209,9 @@ class Result extends PureComponent {
             onChange: this.onSelectChange,
         };
         const hasSelected = selectedRowKeys.length > 0;*/
-
         return (
             <div>
-                <Row className="title" style={{marginTop:20}}>
+                <Row className="title">
                     <Col span={24}>
                         <h2>用户信息维护查询</h2>
                     </Col>
@@ -247,7 +245,7 @@ class Result extends PureComponent {
                         <FileExport
                             url={`userManage/export`}
                             title="导出"
-                            params={this.props.filters}
+                            params={this.props.params}
                             setButtonStyle={{marginRight:5}}
                         />
                     </div>

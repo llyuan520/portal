@@ -228,7 +228,7 @@ class Result extends Component {
 
         return (
             <div>
-                <Row className="title" style={{marginTop:20}}>
+                <Row className="title">
                     <Col span={24}>
                         <h2>公司分类维护查询</h2>
                     </Col>

@@ -8,6 +8,8 @@ import request from './request';
 import {configData} from './../config';
 import DocumentTitle from 'react-document-title'
 import composeMenus from './composeMenus'
+import getFields from './getFields'
+import regRules from './regRules'
 
 export const wrapPage = (title,Component) => props => <DocumentTitle title={`${title}`}>{<Component {...props}/>}</DocumentTitle>
 
@@ -102,4 +104,15 @@ const htmlDecode = html =>{
 
 
 
-export { request,getUrlParam,getParameters,fMoney,isEmpty,piwik,composeMenus,htmlDecode}
+export {
+    request,
+    getUrlParam,
+    getParameters,
+    fMoney,
+    isEmpty,
+    piwik,
+    composeMenus,
+    htmlDecode,
+    getFields,
+    regRules
+}

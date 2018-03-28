@@ -36,6 +36,9 @@ class FileExport extends Component{
         let nextUrl =`${window.baseURL}${url}`;
 
         if(params){
+            console.log(params);
+            console.log(parseJsonToParams(params));
+
             nextUrl += `?${parseJsonToParams(params)}`;
         }
 

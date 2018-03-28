@@ -280,7 +280,7 @@ class Result extends PureComponent {
 
         return (
             <div>
-                <Row className="title" style={{marginTop:20}}>
+                <Row className="title">
                     <Col span={24}>
                         <h2>公司信息查询</h2>
                     </Col>

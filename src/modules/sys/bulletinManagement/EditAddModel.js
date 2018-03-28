@@ -359,7 +359,7 @@ class EditAddModel extends Component{
                                         }
                                     ],
                                 })(
-                                    <DatePicker placeholder="请选择公告日期" />
+                                    <DatePicker placeholder="请选择公告日期" style={{width:'100%'}} />
                                 )}
                             </FormItem>
                         </Col>
