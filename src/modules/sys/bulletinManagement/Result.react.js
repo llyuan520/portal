@@ -5,7 +5,7 @@
  */
 import React,{PureComponent} from 'react';
 import {Table,Row,Col,Badge,Icon,Button,message,Modal } from 'antd';
-import {request,htmlDecode} from '../../../utils';
+import {request,htmlDecode} from 'utils';
 import EditAddModel from './EditAddModel'
 import moment from 'moment';
 // 推荐在入口文件全局设置 locale

@@ -7,9 +7,9 @@
 import React,{ Component } from 'react';
 import { Menu,Row,Col,Icon,Avatar,Modal} from 'antd';
 import {withRouter,Link} from 'react-router-dom';
-import oauth from '../../oAuth';
+import oauth from 'oAuth';
 import NoviceGuide from './NoviceGuide'
-import {request,htmlDecode} from '../../utils';
+import {request,htmlDecode} from 'utils';
 
 import logoImg from './media/logo-02.png';
 const SubMenu = Menu.SubMenu;

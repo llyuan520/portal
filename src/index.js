@@ -4,7 +4,7 @@ import { Router } from 'react-router-dom';
 import registerServiceWorker from './registerServiceWorker';
 import createBrowserHistory from 'history/createBrowserHistory';
 import App from './App';
-import {piwik} from './utils';
+import {piwik} from 'utils';
 import './index.less'
 
 const history = createBrowserHistory();

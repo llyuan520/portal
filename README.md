@@ -2,6 +2,17 @@
 = 
 <code>npm i</code><br>
 <code>npm start</code>
+
+主要使用：
+
+- [react](https://github.com/facebook/react) --- UI层构建基础
+- [redux](https://github.com/reactjs/redux) --- 数据状态管理
+- [react-router](https://github.com/ReactTraining/react-router) --- 路由
+- [ant design](https://ant.design) --- 组件库
+- [cross-env](https://github.com/kentcdodds/cross-env) --- 跨平台设置环境变量
+
+- less、sass
+
 ## Commitizen
 > 使用目的:统一commit格式，增加可阅读性，自动生成版本的 changelog
 

@@ -7,7 +7,7 @@ import CompanyInfo from './companyInfo'
 import CompanyClass from './companyClass'
 import UserManagement from './userManagement'
 import BulletinManagement from './bulletinManagement'
-import {wrapPage} from './../../utils'
+import {wrapPage} from 'utils'
 
 const routes = [
     {

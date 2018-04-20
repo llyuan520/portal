@@ -5,9 +5,9 @@
  */
 import React, { Component } from 'react';
 import {Spin,message,Modal} from 'antd';
-import {request,getUrlParam} from '../../utils';
+import {request,getUrlParam} from 'utils';
 import {withRouter} from 'react-router-dom';
-import {configData} from './../../config';
+import {configData} from 'config';
 import oauth from '../../oAuth';
 
 const PiwikReactRouter = require('piwik-react-router');

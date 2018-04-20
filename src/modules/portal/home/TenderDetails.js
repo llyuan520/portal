@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react'
 import { Button,Spin} from 'antd';
-import {request,piwik} from '../../../utils'
+import {request,piwik} from 'utils'
 
 class TenderDetails extends Component{
 

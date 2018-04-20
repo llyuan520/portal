@@ -5,8 +5,8 @@
  */
 import React,{Component} from 'react';
 import { Spin,Icon,Card,Row,Col,Button,Modal,Select} from 'antd';
-import {request,fMoney,piwik} from '../../../utils'
-import oauth from '../../../oAuth';
+import {request,fMoney,piwik} from 'utils'
+import oauth from 'oAuth';
 import {configData} from '../../../../src/config/index'
 
 const Option = Select.Option;

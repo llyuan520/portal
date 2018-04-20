@@ -5,7 +5,7 @@
  */
 import React,{PureComponent} from 'react';
 import {Table,Row,Col,Badge,Icon,Button,message,Input,Modal,Form} from 'antd';
-import {request} from '../../../utils';
+import {request} from 'utils';
 import EditClass from './EditClass'
 
 const FormItem = Form.Item;

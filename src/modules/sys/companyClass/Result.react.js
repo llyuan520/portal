@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Table,Row,Col,Icon,Modal,Card,message} from 'antd';
-import {request} from '../../../utils';
+import {request} from 'utils';
 import TreeList from './TreeList'
 import EditAddWithClass from './ModelClass'
 

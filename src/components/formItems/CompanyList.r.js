@@ -6,7 +6,7 @@ import React,{Component} from 'react'
 import debounce from 'lodash/debounce';
 import {Form,Select,Spin} from 'antd'
 import PropTypes from 'prop-types'
-import {request} from '../../utils'
+import {request} from 'utils'
 const FormItem = Form.Item;
 const Option = Select.Option
 

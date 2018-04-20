@@ -6,7 +6,7 @@
 import React, { Component } from 'react';
 import {Form, Row, Col, Button, Icon} from 'antd';
 import { withRouter } from 'react-router'
-import {getFields} from '../../../utils'
+import {getFields} from 'utils'
 
 class Search extends Component {
     constructor(props){

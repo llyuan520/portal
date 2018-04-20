@@ -6,9 +6,9 @@
 import React,{Component} from 'react'
 import { withRouter,Route,Redirect,Switch } from 'react-router-dom';
 import LoadAble from 'react-loadable'
-import {RouteWithSubRoutes,LoadingPage} from './components'
+import {RouteWithSubRoutes,LoadingPage} from 'components'
 import {Layout,Button,Row,Col} from 'antd'
-import {wrapPage} from './utils'
+import {wrapPage} from 'utils'
 
 import Img404 from './components/loadingPage/img/404.png'
 

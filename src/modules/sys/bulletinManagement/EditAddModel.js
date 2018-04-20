@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import {Modal,Form,Input,message,Row,Col,Checkbox,DatePicker,Select,Upload,Button, Icon} from 'antd';
-import {request,htmlDecode} from '../../../utils';
+import {request,htmlDecode} from 'utils';
 import moment from 'moment';
 
 import SimpEditor from '../../../components/ueditor/Ueditor.react';

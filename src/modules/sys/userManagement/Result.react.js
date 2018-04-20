@@ -5,8 +5,8 @@
  */
 import React,{PureComponent} from 'react';
 import {Table,Row,Col,Badge,Icon,Button,message,Switch} from 'antd';
-import {request} from '../../../utils';
-import {AutoFileUpload,FileExport} from '../../../components'
+import {request} from 'utils';
+import {AutoFileUpload,FileExport} from 'components'
 import EditAddModel from './EditAddModel'
 
 class Result extends PureComponent {

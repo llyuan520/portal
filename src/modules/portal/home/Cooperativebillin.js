@@ -5,8 +5,8 @@
  */
 import React,{Component} from 'react';
 import { Spin,Card,Row,Col,Button} from 'antd';
-import {request,piwik} from '../../../utils'
-import {configData} from '../../../config';
+import {request,piwik} from 'utils'
+import {configData} from 'config';
 
 import logo013 from './img/media/logo-013.png';
 import logo01 from './img/media/logo-01.png';

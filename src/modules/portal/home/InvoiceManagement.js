@@ -5,7 +5,7 @@
  */
 import React,{Component} from 'react';
 import { Card,Spin,Row,Col,Button} from 'antd';
-import {request,piwik} from '../../../utils'
+import {request,piwik} from 'utils'
 
 import icon01 from './img/icon-01.png'
 import icon02 from './img/icon-02.png'

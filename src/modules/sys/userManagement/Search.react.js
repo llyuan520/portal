@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import {Form, Row, Col, Button, Icon} from 'antd';
 import { withRouter } from 'react-router'
 import moment from 'moment';
-import {getFields,regRules} from '../../../utils'
+import {getFields,regRules} from 'utils'
 
 // 推荐在入口文件全局设置 locale
 import 'moment/locale/zh-cn';

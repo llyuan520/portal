@@ -6,7 +6,7 @@
 import React,{Component} from 'react';
 import { Tree,Icon,Button,Spin } from 'antd';
 import EditAddWithClass from './ModelClass'
-import {request} from '../../../utils';
+import {request} from 'utils';
 
 const TreeNode = Tree.TreeNode;
 class TreeList extends Component {

@@ -13,7 +13,7 @@ import PortalSider from '../../components/sider'
 import {copyRight} from "../../config/index";
 import oauth from '../../oAuth';
 import routes from './routes'
-import {composeMenus} from '../../utils'
+import {composeMenus} from 'utils'
 import './styles.css';
 
 const { Header, Content,Footer } = Layout;

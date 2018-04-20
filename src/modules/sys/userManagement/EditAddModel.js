@@ -5,8 +5,8 @@
  */
 import React,{Component} from 'react';
 import {Modal,Form,Input,message,Row,Col} from 'antd';
-import {request} from '../../../utils';
-import {CompanyList} from '../../../components'
+import {request} from 'utils';
+import {CompanyList} from 'components'
 
 const FormItem = Form.Item;
 

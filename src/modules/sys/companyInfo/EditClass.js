@@ -5,7 +5,7 @@
  */
 import React,{PureComponent} from 'react';
 import {Modal,Tree,Input,Button,message} from 'antd';
-import {request} from '../../../utils';
+import {request} from 'utils';
 
 const TreeNode = Tree.TreeNode;
 const Search = Input.Search;
