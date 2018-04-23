@@ -18,14 +18,15 @@ export const configData = {
 
 //TODO:线上
 /*export const configData = {
-    piwikData : {
-        //线上
-        URL:'https://t1.servingcloud.com:4433/piwik/',
-        siteId:102,
-    },
-    address : 'https://vat.servingcloud.com/',
-    homeProjectUrl:'https://vat.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM02',
-}*/
+ piwikData : {
+     //线上
+     URL:'https://t1.servingcloud.com:4433/piwik/',
+     siteId:102,
+ },
+     address : 'https://vat.servingcloud.com/',
+     homeProjectUrl6:'https://vat.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM02',
+     homeProjectUrl5:'https://vat.servingcloud.com/wims/DispatchAction.do?efFormEname=IWCPGL',
+ }*/
 
 
 
