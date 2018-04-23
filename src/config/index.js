@@ -4,21 +4,20 @@
  * description  : 访问的路径 http://localhost:3000/login?appName=xyj&token=<string>
  */
 
-
 //TODO:测试
-/*export const configData = {
+export const configData = {
     piwikData : {
         //测试
         URL:'https://t1.servingcloud.com:4433/piwik/',
         siteId:104,
     },
-    address:'http://t1.servingcloud.com/',
-    homeProjectUrl:'http://t1.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM02',
-}*/
-
+    address:'https://test.servingcloud.com/',
+    homeProjectUrl6:'https://test.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM02',
+    homeProjectUrl5:'https://test.servingcloud.com/wims/DispatchAction.do?efFormEname=IWCPGL',
+}
 
 //TODO:线上
-export const configData = {
+/*export const configData = {
     piwikData : {
         //线上
         URL:'https://t1.servingcloud.com:4433/piwik/',
@@ -26,7 +25,7 @@ export const configData = {
     },
     address : 'https://vat.servingcloud.com/',
     homeProjectUrl:'https://vat.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM02',
-}
+}*/
 
 
 

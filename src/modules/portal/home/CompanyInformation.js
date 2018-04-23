@@ -5,8 +5,8 @@
  */
 import React,{Component} from 'react';
 import { Spin,Icon,Card,Row,Col,Button,Modal,Select} from 'antd';
-import {request,fMoney,piwik} from 'utils'
-import oauth from 'oAuth';
+import {request,fMoney,piwik} from '../../../utils'
+import oauth from '../../../oAuth';
 import {configData} from '../../../../src/config/index'
 
 const Option = Select.Option;
@@ -78,18 +78,18 @@ class CompanyInformation extends Component{
                     anchorHref:'#',
                     apiUrl:'',
                     refLoading:false,
-               /* },{
-                    key:3,
-                    icon:'file',
-                    title:'税务服务',
-                    productName:'国税申报、涉税查询',
-                    bgcolor:'#6854a3',
-                    tage:'',
-                    btn:'去咨询',
-                    unit:'',
-                    anchorHref:'#',
-                    apiUrl:'',
-                    refLoading:false,*/
+                    /* },{
+                     key:3,
+                     icon:'file',
+                     title:'税务服务',
+                     productName:'国税申报、涉税查询',
+                     bgcolor:'#6854a3',
+                     tage:'',
+                     btn:'去咨询',
+                     unit:'',
+                     anchorHref:'#',
+                     apiUrl:'',
+                     refLoading:false,*/
                 },{
                     key:6,
                     icon:'file',
@@ -263,8 +263,10 @@ class CompanyInformation extends Component{
 
     handleClickAnchor= item => e =>{
 
-        if(item.key === 6){
-           window.open(configData.homeProjectUrl);
+        if(item.key === 6) {
+            window.open(configData.homeProjectUrl6);
+        }else if(item.key === 5){
+            window.open(configData.homeProjectUrl5);
         }else{
             window.history.pushState(null, '', item.anchorHref);
             //TODO: 添加piwik点击事件跟踪
@@ -278,86 +280,86 @@ class CompanyInformation extends Component{
         const { companyLoading, companyVisible } = this.state;
 
         return(
-                <div className="p-main" style={{background: '#ececec'}}>
-                    <div className="mediaWidth" style={{  padding: '40px 0 12px 0' }}>
-                        <h1 style={{marginBottom:20,color: '#08c'}}>
-                            <Icon type="home" style={{marginRight:10 }} />
-                            {this.state.companyName}
-                            <span style={{ fontWeight: 'normal',color: '#333',cursor: 'pointer'}} onClick={this.showModal}>
+            <div className="p-main" style={{background: '#ececec'}}>
+                <div className="mediaWidth" style={{  padding: '40px 0 12px 0' }}>
+                    <h1 style={{marginBottom:20,color: '#08c'}}>
+                        <Icon type="home" style={{marginRight:10 }} />
+                        {this.state.companyName}
+                        <span style={{ fontWeight: 'normal',color: '#333',cursor: 'pointer'}} onClick={this.showModal}>
                                  【切换<Icon type="caret-down" style={{ fontSize: 12,marginTop: 5,verticalAlign: 'text-top'}} />】
                              </span>
-                        </h1>
-                        <div className="p-product-main">
+                    </h1>
+                    <div className="p-product-main">
 
-                            <Row gutter={16}>
-                                {
-                                    this.state.data.map((item,i)=>(
-                                        <Col span={6} key={i} style={{width:'auto'}}>
-                                            <Card loading={item.refLoading} noHovering className="p-product" bordered={false} style={{background:item.bgcolor}}>
-                                                <h2>
-                                                    <Icon type={item.icon} style={{ fontSize: 24, color: '#fff' }} />
-                                                    <b>{item.title}</b>
-                                                </h2>
-                                                <h3>
-                                                    <b>
-                                                        {
-                                                            item.key !==2 && item.key !==3 ? item.productName : '敬请期待...'
+                        <Row gutter={16}>
+                            {
+                                this.state.data.map((item,i)=>(
+                                    <Col span={6} key={i} style={{width:'auto'}}>
+                                        <Card loading={item.refLoading} noHovering className="p-product" bordered={false} style={{background:item.bgcolor}}>
+                                            <h2>
+                                                <Icon type={item.icon} style={{ fontSize: 24, color: '#fff' }} />
+                                                <b>{item.title}</b>
+                                            </h2>
+                                            <h3>
+                                                <b>
+                                                    {
+                                                        item.key !==2 && item.key !==3 ? item.productName : '敬请期待...'
 
-                                                        }
-                                                    </b>
-                                                    {item.unit}
-                                                </h3>
-                                                <p style={{ height: '28px', lineHeight: '28px'}}>
+                                                    }
+                                                </b>
+                                                {item.unit}
+                                            </h3>
+                                            <p style={{ height: '28px', lineHeight: '28px'}}>
                                                     <span>
                                                         {
                                                             item.key !==2 && item.tage
                                                         }
                                                     </span>
-                                                    {
-                                                        item.key !==2 && item.key !==3 && item.key !==5 &&   <a
-                                                            className="p-this-btn"
-                                                            href={item.anchorHref}
-                                                            onClick={this.handleClickAnchor(item)}
-                                                        >
-                                                            <Button ghost style={{ float: 'right',    borderRadius:'50px'}}>{item.btn}</Button>
-                                                        </a>
-                                                    }
+                                                {
+                                                    item.key !==2 && item.key !==3 && <a
+                                                        className="p-this-btn"
+                                                        href={item.anchorHref}
+                                                        onClick={this.handleClickAnchor(item)}
+                                                    >
+                                                        <Button ghost style={{ float: 'right',    borderRadius:'50px'}}>{item.btn}</Button>
+                                                    </a>
+                                                }
 
-                                                </p>
-                                            </Card>
-                                        </Col>
-                                    ))
-                                }
-                            </Row>
-                        </div>
-
-                        <Modal
-                            visible={companyVisible}
-                            title="请选择公司名称"
-                            onOk={this.handleOk}
-                            onCancel={this.handleCancel}
-                            footer={[
-                                <Button key="back" size="large" onClick={this.handleCancel}>取消</Button>,
-                                <Button key="submit" type="primary" size="large" loading={companyLoading} onClick={this.handleOk}>
-                                    确定
-                                </Button>,
-                            ]}
-                        >
-
-                            <Row style={{width: '80%', margin: '0 auto'}}>
-                                <Col span={5} style={{lineHeight: '28px'}}>
-                                    公司名称：
-                                </Col>
-                                <Col span={19}>
-                                    {
-                                        this.renderCompanyIdSelector()
-                                    }
-                                </Col>
-                            </Row>
-
-                        </Modal>
+                                            </p>
+                                        </Card>
+                                    </Col>
+                                ))
+                            }
+                        </Row>
                     </div>
+
+                    <Modal
+                        visible={companyVisible}
+                        title="请选择公司名称"
+                        onOk={this.handleOk}
+                        onCancel={this.handleCancel}
+                        footer={[
+                            <Button key="back" size="large" onClick={this.handleCancel}>取消</Button>,
+                            <Button key="submit" type="primary" size="large" loading={companyLoading} onClick={this.handleOk}>
+                                确定
+                            </Button>,
+                        ]}
+                    >
+
+                        <Row style={{width: '80%', margin: '0 auto'}}>
+                            <Col span={5} style={{lineHeight: '28px'}}>
+                                公司名称：
+                            </Col>
+                            <Col span={19}>
+                                {
+                                    this.renderCompanyIdSelector()
+                                }
+                            </Col>
+                        </Row>
+
+                    </Modal>
                 </div>
+            </div>
         )
     }
 }
