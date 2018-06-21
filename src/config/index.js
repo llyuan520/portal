@@ -1,7 +1,7 @@
 /**
  * author       : liuliyuan
  * createTime   : 2017/9/6 18:00
- * description  : 访问的路径 http://localhost:3000/login?appName=xyj&token=<string>
+ * description  : 访问的路径 http://localhost:3000/login?appName=xyj&token=<string>   也可以登录后直接拿 106528 admin
  */
 
 //TODO:测试
@@ -27,8 +27,6 @@ export const configData = {
      homeProjectUrl6:'https://vat.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM02',
      homeProjectUrl5:'https://vat.servingcloud.com/wims/DispatchAction.do?efFormEname=IWCPGL',
  }*/
-
-
 
 export const copyRight = 'servingcloud.com ©喜盈佳企业云服务有限公司 粤ICP备16030834号 粤公网安备 44030502000290号';
 export const linkList =[

@@ -4,8 +4,8 @@
  * description  :
  */
 import React,{Component} from 'react';
-import { Spin,Icon,Card,Row,Col,Button,Modal,Select} from 'antd';
-import {request,fMoney,piwik} from '../../../utils'
+import { Spin,Icon,Card,Row,Col,Button,Modal,Select,message} from 'antd';
+import {request,piwik} from '../../../utils'
 import oauth from '../../../oAuth';
 import {configData} from '../../../../src/config/index'
 
@@ -70,9 +70,9 @@ class CompanyInformation extends Component{
                     key:2,
                     icon:'file',
                     title:'融资服务',
-                    productName:fMoney('123456789'),
+                    productName:'', //fMoney('123456789'),
                     bgcolor:'#00a136',
-                    tage:'可融资金额',
+                    tage:'', //'可融资金额',
                     btn:'去融资',
                     unit:'',
                     anchorHref:'#',
@@ -170,9 +170,9 @@ class CompanyInformation extends Component{
                             case 1:
                                 cartDate[i].unit = `${data.data} (张)`;
                                 break;
-                            case 2:
+                            /*case 2:
                                 cartDate[i].unit = `${data.data.daysRemaining} (元)`;
-                                break;
+                                break;*/
                             case 4:
                                 cartDate[i].unit = `${data.data} (条)`;
                                 break;
@@ -267,6 +267,19 @@ class CompanyInformation extends Component{
             window.open(configData.homeProjectUrl6);
         }else if(item.key === 5){
             window.open(configData.homeProjectUrl5);
+        }else if(item.key === 2){
+            request.get('/link/credit/sso')
+                .then((res)=>{
+                    if(res.data.code ===200){
+                        console.log(res.data.data)
+                        window.open(res.data.data);
+                    }else{
+                        message.error(res.msg, 4)
+                    }
+                })
+                .catch(err=>{
+                    message.error(err, 4)
+                })
         }else{
             window.history.pushState(null, '', item.anchorHref);
             //TODO: 添加piwik点击事件跟踪
@@ -303,20 +316,21 @@ class CompanyInformation extends Component{
                                             <h3>
                                                 <b>
                                                     {
-                                                        item.key !==2 && item.key !==3 ? item.productName : '敬请期待...'
-
+                                                        item.key !==3 ? item.productName : '敬请期待...'
                                                     }
                                                 </b>
-                                                {item.unit}
+                                                {
+                                                    item.unit
+                                                }
                                             </h3>
                                             <p style={{ height: '28px', lineHeight: '28px'}}>
                                                     <span>
                                                         {
-                                                            item.key !==2 && item.tage
+                                                            item.tage
                                                         }
                                                     </span>
                                                 {
-                                                    item.key !==2 && item.key !==3 && <a
+                                                   item.key !==3 && <a
                                                         className="p-this-btn"
                                                         href={item.anchorHref}
                                                         onClick={this.handleClickAnchor(item)}
