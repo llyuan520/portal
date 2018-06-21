@@ -8,9 +8,7 @@ import { Spin,Icon,Card,Row,Col,Button,Modal,Select,message} from 'antd';
 import {request,piwik} from '../../../utils'
 import oauth from '../../../oAuth';
 import {configData} from '../../../../src/config/index'
-
 const Option = Select.Option;
-
 
 class CompanyInformation extends Component{
     constructor(props) {
@@ -271,10 +269,9 @@ class CompanyInformation extends Component{
             request.get('/link/credit/sso')
                 .then((res)=>{
                     if(res.data.code ===200){
-                        console.log(res.data.data)
                         window.open(res.data.data);
                     }else{
-                        message.error(res.msg, 4)
+                        message.error(res.data.msg, 4)
                     }
                 })
                 .catch(err=>{
