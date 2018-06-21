@@ -8,6 +8,8 @@ import { Spin,Icon,Card,Row,Col,Button,Modal,Select,message} from 'antd';
 import {request,piwik} from '../../../utils'
 import oauth from '../../../oAuth';
 import {configData} from '../../../../src/config/index'
+import logoFintech from './img/companyInformation/Logo-fintech.png'
+
 const Option = Select.Option;
 
 class CompanyInformation extends Component{
@@ -68,8 +70,8 @@ class CompanyInformation extends Component{
                     key:2,
                     icon:'file',
                     title:'融资服务',
-                    productName:'', //fMoney('123456789'),
-                    bgcolor:'#00a136',
+                    productName:'让你的资金运转更顺畅',
+                    bgcolor:'#108EE9',
                     tage:'', //'可融资金额',
                     btn:'去融资',
                     unit:'',
@@ -307,7 +309,9 @@ class CompanyInformation extends Component{
                                     <Col span={6} key={i} style={{width:'auto'}}>
                                         <Card loading={item.refLoading} noHovering className="p-product" bordered={false} style={{background:item.bgcolor}}>
                                             <h2>
-                                                <Icon type={item.icon} style={{ fontSize: 24, color: '#fff' }} />
+                                                {
+                                                    item.key === 2 ? <i className="anticon"><img src={logoFintech} alt="logo" style={{ width: 24, height: 24 }} /></i> : <Icon type={item.icon} style={{ fontSize: 24, color: '#fff' }} />
+                                                }
                                                 <b>{item.title}</b>
                                             </h2>
                                             <h3>
