@@ -8,7 +8,7 @@ import { Spin,Icon,Card,Row,Col,Button,Modal,Select,message} from 'antd';
 import {request,piwik} from '../../../utils'
 import oauth from '../../../oAuth';
 import {configData} from '../../../../src/config/index'
-import logoFintech from './img/companyInformation/Logo-fintech.png'
+import logoFintech from './img/companyInformation/Logo-fintech-48_48.png'
 
 const Option = Select.Option;
 
