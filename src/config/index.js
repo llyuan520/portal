@@ -6,27 +6,29 @@
 
 //TODO:测试
 export const configData = {
-    piwikData : {
-        //测试
-        URL:'https://t1.servingcloud.com:4433/piwik/',
-        siteId:104,
-    },
-    address:'https://test.servingcloud.com/',
-    homeProjectUrl6:'https://test.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM02',
-    homeProjectUrl5:'https://test.servingcloud.com/wims/DispatchAction.do?efFormEname=IWCPGL',
-}
+     piwikData : {
+         //测试
+         URL:'https://t1.servingcloud.com:4433/piwik/',
+         siteId:104,
+     },
+     jump:'http://120.76.154.202:9007',
+     address:'https://test.servingcloud.com/',
+     homeProjectUrl6:'https://test.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM02',
+     homeProjectUrl5:'https://test.servingcloud.com/wims/DispatchAction.do?efFormEname=IWCPGL',
+ }
 
 //TODO:线上
 /*export const configData = {
- piwikData : {
-     //线上
-     URL:'https://t1.servingcloud.com:4433/piwik/',
-     siteId:102,
- },
-     address : 'https://vat.servingcloud.com/',
-     homeProjectUrl6:'https://vat.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM02',
-     homeProjectUrl5:'https://vat.servingcloud.com/wims/DispatchAction.do?efFormEname=IWCPGL',
- }*/
+    piwikData : {
+        //线上
+        URL:'https://t1.servingcloud.com:4433/piwik/',
+        siteId:102,
+    },
+    jump:'http://supplier.servingcloud.com:9007',
+    address : 'https://vat.servingcloud.com/',
+    homeProjectUrl6:'https://vat.servingcloud.com/wims/DispatchAction.do?efFormEname=ISXM02',
+    homeProjectUrl5:'https://vat.servingcloud.com/wims/DispatchAction.do?efFormEname=IWCPGL',
+}*/
 
 export const copyRight = 'servingcloud.com ©喜盈佳企业云服务有限公司 粤ICP备16030834号 粤公网安备 44030502000290号';
 export const linkList =[

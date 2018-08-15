@@ -7,6 +7,7 @@
     "axios": "^0.16.2",
     "babel-plugin-import": "^1.5.0",
     "history": "^4.7.2",
+    "jquery": "^3.3.1",
     "piwik-react-router": "^0.10.0",
     "react": "^15.6.1",
     "react-addons-create-fragment": "^15.6.0",

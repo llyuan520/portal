@@ -4,7 +4,7 @@
  * description  :
  */
 import React,{PureComponent} from 'react';
-import {Table,Row,Col,Badge,Icon,Button,message,Switch} from 'antd';
+import {Table,Row,Col,Badge,Icon,Button,message,Switch,Modal} from 'antd';
 import {request} from 'utils';
 import {AutoFileUpload,FileExport} from 'components'
 import EditAddModel from './EditAddModel'
@@ -113,6 +113,33 @@ class Result extends PureComponent {
         this.fetch();
     }
 
+    deleteData = (id) =>{
+        const modalRef = Modal.confirm({
+            title: '友情提醒',
+            content: '是否要删除选中的记录？',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk:()=>{
+                modalRef && modalRef.destroy();
+                request.delete(`/userManage/deleteById/${id}`)
+                    .then(({data})=>{
+                        if(data.code===200){
+                            message.success('删除成功！');
+                            this.refreshCurdTable();
+                        }else{
+                            message.error(`删除失败:${data.msg}`)
+                        }
+                    }).catch(err=>{
+                        message.error(err.message)
+                    })
+            },
+            onCancel() {
+                modalRef.destroy()
+            },
+        });
+    }
+
     componentDidMount() {
         this.fetch();
     }
@@ -190,7 +217,7 @@ class Result extends PureComponent {
                     return(
                         <div>
                             <a onClick={()=>this.showModal('edit',record)} style={{color:'#333',fontSize: 14,marginRight:'10px'}}><Icon title="编辑" type="edit" /></a>
-
+                            <a onClick={()=>this.deleteData(record.uuid)} style={{color:'red',fontSize: 14,marginRight:'10px'}}><Icon title="删除" type="delete" /></a>
                                 {/*TODO: 传值的几种写法
                                 onChange={(record=>checked=>this.handleChange(checked,record))(record)} 函数 写法
                                 onChange={this.handleChange.bind(this,record)} 用bind，this后面加上你要的参数，他会把value值传到你写的方法的最后一个参数上

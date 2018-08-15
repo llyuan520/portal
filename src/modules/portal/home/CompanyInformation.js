@@ -8,6 +8,7 @@ import { Spin,Icon,Card,Row,Col,Button,Modal,Select,message} from 'antd';
 import {request,piwik} from '../../../utils'
 import oauth from '../../../oAuth';
 import {configData} from '../../../../src/config/index'
+import $ from "jquery";
 import logoFintech from './img/companyInformation/Logo-fintech-48_48.png'
 
 const Option = Select.Option;
@@ -261,6 +262,26 @@ class CompanyInformation extends Component{
 
     }
 
+    handleClickJump=()=>{
+        let url = "";
+        $.ajax({
+            headers: {
+                'Authorization':oauth.getToken()
+            },
+            url: configData.jump+'/link/credit/sso',
+            async: false,
+            success: function(data) {
+                url = data.data;
+            },
+            error: function(err) {
+                message.error(err.msg, 4)
+            },
+            complete: function(XMLHttpRequest, status) { //请求完成后最终执行参数　
+            }
+        });
+        window.open(url,'_blank');
+    }
+
     handleClickAnchor= item => e =>{
 
         if(item.key === 6) {
@@ -268,7 +289,8 @@ class CompanyInformation extends Component{
         }else if(item.key === 5){
             window.open(configData.homeProjectUrl5);
         }else if(item.key === 2){
-            request.get('/link/credit/sso')
+            this.handleClickJump()
+            /*request.get('/link/credit/sso')
                 .then((res)=>{
                     if(res.data.code ===200){
                         window.open(res.data.data);
@@ -278,7 +300,7 @@ class CompanyInformation extends Component{
                 })
                 .catch(err=>{
                     message.error(err, 4)
-                })
+                })*/
         }else{
             window.history.pushState(null, '', item.anchorHref);
             //TODO: 添加piwik点击事件跟踪
